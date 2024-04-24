@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz by Sourabh Sir</title>
+<title>Quiz</title>
 <style>
   body {
     background-color: black;
@@ -139,34 +139,57 @@
 
   // Function to handle correct answer
   function answeredCorrectly() {
-    // Add your logic here
+    const currentStudent = document.getElementById("studentName").textContent.split(" ")[2];
+    if (scores[currentStudent] === undefined) {
+      scores[currentStudent] = 1;
+    } else {
+      scores[currentStudent]++;
+    }
+    nextQuestion();
   }
 
   // Function to handle incorrect answer
   function answeredIncorrectly() {
-    // Add your logic here
+    nextQuestion();
   }
 
   // Function to pick another student
   function pickAnotherStudent() {
-    // Add your logic here
+    displayQuestion();
   }
 
   // Function to move to the next question
   function nextQuestion() {
-    // Add your logic here
+    currentQuestionIndex++;
+    if (currentQuestionIndex < window.questions.length) {
+      displayQuestion();
+    } else {
+      displayScores();
+    }
   }
 
   // Function to display scores
   function displayScores() {
-    // Add your logic here
+    const container = document.querySelector(".container");
+    container.innerHTML = "<h1>Scores</h1>";
+    for (const student in scores) {
+      container.innerHTML += "<p>" + student + ": " + scores[student] + "</p>";
+    }
+    container.innerHTML += "<footer id='footerText'>Powered by Sourabh Suneja</footer>";
   }
+
+  // Array to store scores
+  let scores = {};
 
   // Array to store absent students
   let absentStudents = [];
 
+  // Index to keep track of current question
+  let currentQuestionIndex = 0;
+
   // Initialize quiz when the page loads
   window.onload = initializeQuiz;
+
 </script>
 
 </body>
