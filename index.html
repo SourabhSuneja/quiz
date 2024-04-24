@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz | Powered by Sourabh Suneja</title>
+<title>Quiz</title>
 <style>
   body {
     background-color: black;
@@ -69,90 +69,57 @@
 </div>
 
 <script>
-  // Flags to check if data is loaded
-  let studentsLoaded = false;
-  let questionsLoaded = false;
-
   // Function to initialize quiz
-  function initializeQuiz() {
-    promptForFileNames();
-  }
-
-  // Function to prompt for file names
-  function promptForFileNames() {
-    const studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):");
-    const questionsFileName = prompt("Enter the file name for questions data (e.g., questions.txt):");
-    if (studentsFileName && questionsFileName) {
-      loadStudents(studentsFileName);
-      loadQuestions(questionsFileName);
-    } else {
-      console.error("Please enter valid file names");
+  async function initializeQuiz() {
+    try {
+      const studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):");
+      const questionsFileName = prompt("Enter the file name for questions data (e.g., questions.txt):");
+      if (!studentsFileName || !questionsFileName) {
+        throw new Error("Invalid file names");
+      }
+      const studentsData = await fetchData(studentsFileName);
+      const questionsData = await fetchData(questionsFileName);
+      startQuiz(studentsData, questionsData);
+    } catch (error) {
+      console.error(error.message);
     }
   }
 
-  // Function to load students from a text file using AJAX
-  function loadStudents(fileName) {
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          const studentsText = xhr.responseText;
-          const studentsArray = studentsText.split('\n').map(student => student.trim()).filter(student => student !== '');
-          window.students = studentsArray;
-          studentsLoaded = true;
-          checkQuizStart();
-        } else {
-          console.error("Failed to load students data");
+  // Function to fetch data from a file using AJAX and return a promise
+  function fetchData(fileName) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            const data = xhr.responseText.split('\n').map(item => item.trim()).filter(item => item !== '');
+            resolve(data);
+          } else {
+            reject(new Error("Failed to load data"));
+          }
         }
-      }
-    };
-    xhr.open("GET", fileName, true);
-    xhr.send();
-  }
-
-  // Function to load questions from a text file using AJAX
-  function loadQuestions(fileName) {
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          const questionsText = xhr.responseText;
-          const questionsArray = questionsText.split('\n').map(question => question.trim()).filter(question => question !== '');
-          startQuiz(questionsArray);
-          questionsLoaded = true;
-          checkQuizStart();
-        } else {
-          console.error("Failed to load questions data");
-        }
-      }
-    };
-    xhr.open("GET", fileName, true);
-    xhr.send();
-  }
-
-  // Function to check if both students and questions data are loaded to start the quiz
-  function checkQuizStart() {
-    if (studentsLoaded && questionsLoaded) {
-      startQuiz();
-    }
+      };
+      xhr.open("GET", fileName, true);
+      xhr.send();
+    });
   }
 
   // Function to start the quiz after questions and students are loaded
-  function startQuiz() {
-    console.log("Starting quiz...");
+  function startQuiz(students, questions) {
+    window.students = students;
+    window.questions = questions;
     displayQuestion();
   }
 
   // Function to display question and student name
   function displayQuestion() {
-    console.log("Displaying question...");
     if (!window.students || !window.questions) {
       console.log("Students or questions data not loaded.");
       return;
     }
     const questionText = document.getElementById("questionText");
     const studentName = document.getElementById("studentName");
-    questionText.textContent = window.questions[currentQuestionIndex];
+    questionText.textContent = window.questions[0];
     let randomStudent = pickRandomStudent();
     studentName.textContent = "Question for " + randomStudent;
   }
@@ -169,53 +136,31 @@
 
   // Function to handle correct answer
   function answeredCorrectly() {
-    const currentStudent = document.getElementById("studentName").textContent.split(" ")[2];
-    if (scores[currentStudent] === undefined) {
-      scores[currentStudent] = 1;
-    } else {
-      scores[currentStudent]++;
-    }
-    nextQuestion();
+    // Add your logic here
   }
 
   // Function to handle incorrect answer
   function answeredIncorrectly() {
-    nextQuestion();
+    // Add your logic here
   }
 
   // Function to pick another student
   function pickAnotherStudent() {
-    displayQuestion();
+    // Add your logic here
   }
 
   // Function to move to the next question
   function nextQuestion() {
-    currentQuestionIndex++;
-    if (currentQuestionIndex < window.questions.length) {
-      displayQuestion();
-    } else {
-      displayScores();
-    }
+    // Add your logic here
   }
 
   // Function to display scores
   function displayScores() {
-    const container = document.querySelector(".container");
-    container.innerHTML = "<h1>Scores</h1>";
-    for (const student in scores) {
-      container.innerHTML += "<p>" + student + ": " + scores[student] + "</p>";
-    }
-    container.innerHTML += "<footer id='footerText'>Powered by Sourabh Suneja</footer>";
+    // Add your logic here
   }
-
-  // Array to store scores
-  let scores = {};
 
   // Array to store absent students
   let absentStudents = [];
-
-  // Index to keep track of current question
-  let currentQuestionIndex = 0;
 
   // Initialize quiz when the page loads
   window.onload = initializeQuiz;
