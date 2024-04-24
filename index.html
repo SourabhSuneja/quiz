@@ -117,11 +117,21 @@
   function startQuiz(students, questions) {
     window.students = students;
     window.questions = questions;
+    initializeScores();
     displayQuestion();
     document.getElementById("correctBtn").addEventListener("click", answeredCorrectly);
     document.getElementById("incorrectBtn").addEventListener("click", answeredIncorrectly);
     document.getElementById("pickAnotherBtn").addEventListener("click", pickAnotherStudent);
   }
+
+
+// Function to initialize scores and chances for each student
+function initializeScores() {
+  for (const student of window.students) {
+    scores[student] = { correctAnswers: 0, chances: 0 };
+  }
+}
+
 
   // Function to display question and student name
   function displayQuestion() {
@@ -159,24 +169,25 @@
 
   // Function to handle correct answer
   function answeredCorrectly() {
-    const currentStudent = document.getElementById("studentName").textContent.split(" ")[2];
-    if (scores[currentStudent] === undefined) {
-      scores[currentStudent] = 1;
-    } else {
-      scores[currentStudent]++;
-    }
-    nextQuestion();
-  }
+  const currentStudent = document.getElementById("studentName").textContent.split(" ")[2];
+  scores[currentStudent].correctAnswers++;
+  scores[currentStudent].chances++;
+  nextQuestion();
+}
 
   // Function to handle incorrect answer
   function answeredIncorrectly() {
-    nextQuestion();
-  }
+  const currentStudent = document.getElementById("studentName").textContent.split(" ")[2];
+  scores[currentStudent].chances++;
+  nextQuestion();
+}
 
   // Function to pick another student
   function pickAnotherStudent() {
-    displayQuestion();
-  }
+  const currentStudent = document.getElementById("studentName").textContent.split(" ")[2];
+  scores[currentStudent].chances++;
+  displayQuestion();
+}
 
   // Function to move to the next question
   function nextQuestion() {
@@ -190,13 +201,14 @@
 
   // Function to display scores
   function displayScores() {
-    const container = document.querySelector(".container");
-    container.innerHTML = "<h1>Scores</h1>";
-    for (const student in scores) {
-      container.innerHTML += "<p>" + student + ": " + scores[student] + "</p>";
-    }
-    container.innerHTML += "<footer id='footerText'>Powered by Sourabh Suneja</footer>";
+  const container = document.querySelector(".container");
+  container.innerHTML = "<h1>Scores</h1>";
+  for (const student in scores) {
+    const { correctAnswers, chances } = scores[student];
+    container.innerHTML += "<p>" + student + ": " + correctAnswers + "/" + chances + "</p>";
   }
+  container.innerHTML += "<footer id='footerText'>Powered by Sourabh Suneja</footer>";
+}
 
   // Array to store scores
   let scores = {};
