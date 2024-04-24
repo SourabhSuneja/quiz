@@ -155,26 +155,27 @@
     studentName.textContent = "Question for " + randomStudent;
   }
 
-  // Function to pick a random student, ensuring they are not absent
-  function pickRandomStudent() {
-    let currentIndex = window.students.length;
-    let temporaryValue, randomIndex;
-
-    // While there remain elements to shuffle...
-    while (currentIndex !== 0) {
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-
-      // And swap it with the current element.
-      temporaryValue = window.students[currentIndex];
-      window.students[currentIndex] = window.students[randomIndex];
-      window.students[randomIndex] = temporaryValue;
+  // Function to pick a random student with reduced chances as they answer more questions
+function pickRandomStudent() {
+    let weightedStudents = [];
+    
+    // Populate the array with students based on their chances
+    for (let student of window.students) {
+        for (let i = 0; i < 5 - (chances[student] || 0); i++) {
+            weightedStudents.push(student);
+        }
     }
 
-    let randomStudentIndex = Math.floor(Math.random() * window.students.length);
-    return window.students[randomStudentIndex];
-  }
+    // Select a random student from the weighted array
+    let randomIndex;
+    let randomStudent;
+    do {
+        randomIndex = Math.floor(Math.random() * weightedStudents.length);
+        randomStudent = weightedStudents[randomIndex];
+    } while (absentStudents.includes(randomStudent));
+
+    return randomStudent;
+}
 
   // Function to handle correct answer
   function answeredCorrectly() {
