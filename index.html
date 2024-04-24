@@ -171,16 +171,51 @@ const currentStudent = text.substring(index + 4);
     } else {
       scores[currentStudent]++;
     }
+
+if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
+
+
     nextQuestion();
   }
 
   // Function to handle incorrect answer
   function answeredIncorrectly() {
+
+    var text = document.getElementById('studentName').textContent;
+
+var index = text.indexOf('for');
+
+const currentStudent = text.substring(index + 4);
+
+
+    if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
     nextQuestion();
   }
 
   // Function to pick another student
   function pickAnotherStudent() {
+   
+var text = document.getElementById('studentName').textContent;
+
+var index = text.indexOf('for');
+
+const currentStudent = text.substring(index + 4);
+
+
+    if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
+
     displayQuestion();
   }
 
@@ -199,13 +234,14 @@ const currentStudent = text.substring(index + 4);
     const container = document.querySelector(".container");
     container.innerHTML = "<h1>Scores</h1>";
     for (const student in scores) {
-      container.innerHTML += "<p>" + student + ": " + scores[student] + "</p>";
+      container.innerHTML += "<p>" + student + ": " + scores[student] + "/" + chances[student] + "</p>";
     }
     container.innerHTML += "<footer id='footerText'>Powered by Sourabh Suneja</footer>";
   }
 
   // Array to store scores
   let scores = {};
+  let chances = {};
 
   // Array to store absent students
   let absentStudents = [];
