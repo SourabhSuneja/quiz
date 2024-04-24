@@ -71,19 +71,28 @@
 <script>
   // Function to initialize quiz
   async function initializeQuiz() {
-    try {
-      const studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):");
-      const questionsFileName = prompt("Enter the file name for questions data (e.g., questions.txt):");
-      if (!studentsFileName || !questionsFileName) {
-        throw new Error("Invalid file names");
-      }
-      const studentsData = await fetchData(studentsFileName);
-      const questionsData = await fetchData(questionsFileName);
-      startQuiz(studentsData, questionsData);
-    } catch (error) {
-      console.error(error.message);
+  try {
+    let studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):");
+    let questionsFileName = prompt("Enter the file name for questions data (e.g., questions.txt):");
+    
+    // Add .txt extension if not already provided by the user
+    if (!studentsFileName.endsWith('.txt')) {
+      studentsFileName += '.txt';
     }
+    if (!questionsFileName.endsWith('.txt')) {
+      questionsFileName += '.txt';
+    }
+
+    if (!studentsFileName || !questionsFileName) {
+      throw new Error("Invalid file names");
+    }
+    const studentsData = await fetchData(studentsFileName);
+    const questionsData = await fetchData(questionsFileName);
+    startQuiz(studentsData, questionsData);
+  } catch (error) {
+    console.error(error.message);
   }
+}
 
   // Function to fetch data from a file using AJAX and return a promise
   function fetchData(fileName) {
