@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz</title>
+<title>Quiz by Sourabh Sir</title>
 <style>
   body {
     background-color: black;
@@ -61,9 +61,9 @@
     <p id="studentName"></p>
   </div>
   <div class="buttons">
-    <button id="correctBtn" onclick="answeredCorrectly()">Answered correctly</button>
-    <button id="incorrectBtn" onclick="answeredIncorrectly()">Couldn't answer correctly</button>
-    <button id="pickAnotherBtn" onclick="pickAnotherStudent()">Pick another student</button>
+    <button id="correctBtn">Answered correctly</button>
+    <button id="incorrectBtn">Couldn't answer correctly</button>
+    <button id="pickAnotherBtn">Pick another student</button>
   </div>
   <footer id="footerText"></footer>
 </div>
@@ -109,6 +109,9 @@
     window.students = students;
     window.questions = questions;
     displayQuestion();
+    document.getElementById("correctBtn").addEventListener("click", answeredCorrectly);
+    document.getElementById("incorrectBtn").addEventListener("click", answeredIncorrectly);
+    document.getElementById("pickAnotherBtn").addEventListener("click", pickAnotherStudent);
   }
 
   // Function to display question and student name
