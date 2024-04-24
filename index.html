@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz</title>
+<title>Quiz | Powered by Sourabh Suneja</title>
 <style>
   body {
     background-color: black;
@@ -69,6 +69,10 @@
 </div>
 
 <script>
+  // Flags to check if data is loaded
+  let studentsLoaded = false;
+  let questionsLoaded = false;
+
   // Function to initialize quiz
   function initializeQuiz() {
     promptForFileNames();
@@ -95,6 +99,8 @@
           const studentsText = xhr.responseText;
           const studentsArray = studentsText.split('\n').map(student => student.trim()).filter(student => student !== '');
           window.students = studentsArray;
+          studentsLoaded = true;
+          checkQuizStart();
         } else {
           console.error("Failed to load students data");
         }
@@ -113,6 +119,8 @@
           const questionsText = xhr.responseText;
           const questionsArray = questionsText.split('\n').map(question => question.trim()).filter(question => question !== '');
           startQuiz(questionsArray);
+          questionsLoaded = true;
+          checkQuizStart();
         } else {
           console.error("Failed to load questions data");
         }
@@ -122,10 +130,15 @@
     xhr.send();
   }
 
+  // Function to check if both students and questions data are loaded to start the quiz
+  function checkQuizStart() {
+    if (studentsLoaded && questionsLoaded) {
+      startQuiz();
+    }
+  }
+
   // Function to start the quiz after questions and students are loaded
-  function startQuiz(questions) {
-    // Set the loaded questions
-    window.questions = questions;
+  function startQuiz() {
     displayQuestion();
   }
 
@@ -157,7 +170,7 @@
       scores[currentStudent]++;
     }
     nextQuestion();
-  }
+}
 
   // Function to handle incorrect answer
   function answeredIncorrectly() {
@@ -176,7 +189,7 @@
       displayQuestion();
     } else {
       displayScores();
-   }
+    }
   }
 
   // Function to display scores
