@@ -185,7 +185,7 @@ function pickRandomStudent() {
         randomIndex = Math.floor(Math.random() * weightedStudents.length);
         randomStudent = weightedStudents[randomIndex];
     } while (absentStudents.includes(randomStudent));
-
+alert(weightedStudents);
     return randomStudent;
 }
 
