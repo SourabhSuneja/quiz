@@ -246,6 +246,13 @@ const currentStudent = text.substring(index + 4);
   // Function to move to the next question
   function nextQuestion() {
     currentQuestionIndex++;
+    
+const studentName = document.getElementById("studentName");
+
+if(studentName.includes("no one") {
+   currentQuestionIndex = window.questions.length
+}
+
     if (currentQuestionIndex < window.questions.length) {
       displayQuestion();
     } else {
