@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz | Powered By Sourabh Suneja</title>
+<title>Quiz | Powered by Sourabh Sir</title>
 <style>
   body {
     background-color: black;
@@ -129,12 +129,23 @@
 
   // Function to pick a random student, ensuring they are not absent
   function pickRandomStudent() {
-    let randomStudentIndex;
-    do {
-      randomStudentIndex = Math.floor(Math.random() * window.students.length);
-      var randomStudent = window.students[randomStudentIndex];
-    } while (absentStudents.includes(randomStudent));
-    return randomStudent;
+    let currentIndex = window.students.length;
+    let temporaryValue, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (currentIndex !== 0) {
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      temporaryValue = window.students[currentIndex];
+      window.students[currentIndex] = window.students[randomIndex];
+      window.students[randomIndex] = temporaryValue;
+    }
+
+    let randomStudentIndex = Math.floor(Math.random() * window.students.length);
+    return window.students[randomStudentIndex];
   }
 
   // Function to handle correct answer
