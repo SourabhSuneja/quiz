@@ -176,8 +176,8 @@ function pickRandomStudent() {
         randomIndex = Math.floor(Math.random() * weightedStudents.length);
         randomStudent = weightedStudents[randomIndex];
     } while (absentStudents.includes(randomStudent));
-alert(weightedStudents);
-    return randomStudent || 'no one (all students have exhausted their chances)';
+    currentQuestionIndex = window.questions.length;
+    return randomStudent || 'no one (all students have exhausted their chances). Click on "Couldn't answer correctly" to end quiz.';
 }
 
 
