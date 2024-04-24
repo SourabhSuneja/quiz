@@ -180,6 +180,13 @@ function answeredIncorrectly() {
   nextQuestion();
 }
 
+// Function to pick another student
+function pickAnotherStudent() {
+  const currentStudent = document.getElementById("studentName").textContent.split(" ")[2];
+  scores[currentStudent].chances++;
+  displayQuestion();
+}
+
   // Function to move to the next question
   function nextQuestion() {
     currentQuestionIndex++;
@@ -189,13 +196,6 @@ function answeredIncorrectly() {
       displayScores();
     }
   }
-
-// Function to pick another student
-function pickAnotherStudent() {
-  const currentStudent = document.getElementById("studentName").textContent.split(" ")[2];
-  scores[currentStudent].chances++;
-  displayQuestion();
-}
 
 
   // Function to display scores
