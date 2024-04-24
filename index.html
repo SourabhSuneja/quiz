@@ -190,6 +190,14 @@ function answeredIncorrectly() {
     }
   }
 
+// Function to pick another student
+function pickAnotherStudent() {
+  const currentStudent = document.getElementById("studentName").textContent.split(" ")[2];
+  scores[currentStudent].chances++;
+  displayQuestion();
+}
+
+
   // Function to display scores
 function displayScores() {
   const container = document.querySelector(".container");
