@@ -69,30 +69,28 @@
 </div>
 
 <script>
-  // Array of student names
-  const students = [
-    "Aanya Sharma", "Aryan Sharma", "Atharva Sharma", "Bhavya Choudhary", "Chitransh Agrawal",
-    "Devansh Ratnu", "Devanshi Sharma", "Dipanshu Choudhary", "Gourav Saini", "Harsh", "Harshita",
-    "Hemal Kanwar", "Himanshu Yadav", "Ishika Meena", "Jaanvi", "Jigyasa Sharma", "Karan Choudhary",
-    "Kartikay Sharma", "Keshav Vyas", "Krishna Meena", "Krishna Saini", "Kunal Jangid", "Kushagra Singh",
-    "Madhavi Kumawat", "Manas Jangid", "Pari Yadav", "Pradhuman Singh", "Pranjal Singh Meena",
-    "Reyansh Jangir", "Rishabh", "Ritu Rarh", "Riya Sharma", "Safal Kumawat", "Sameer",
-    "Shivam Sharma", "Sidarth", "Suhana Budania", "Supriya Yadav", "Vatsal Dhinwa", "Vihaan Choudhary",
-    "Vihan Chhabarwal", "Yashasvi Kumawat"
-  ];
-
-  // Array to store scores
-  let scores = {};
-
-  // Array to store absent students
-  let absentStudents = [];
-
-  // Index to keep track of current question
-  let currentQuestionIndex = 0;
-
   // Function to initialize quiz
   function initializeQuiz() {
+    loadStudents();
     loadQuestions();
+  }
+
+  // Function to load students from a text file using AJAX
+  function loadStudents() {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          const studentsText = xhr.responseText;
+          const studentsArray = studentsText.split('\n').map(student => student.trim()).filter(student => student !== '');
+          window.students = studentsArray;
+        } else {
+          console.error("Failed to load students");
+        }
+      }
+    };
+    xhr.open("GET", "students.txt", true);
+    xhr.send();
   }
 
   // Function to load questions from a text file using AJAX
@@ -113,7 +111,7 @@
     xhr.send();
   }
 
-  // Function to start the quiz after questions are loaded
+  // Function to start the quiz after questions and students are loaded
   function startQuiz(questions) {
     // Set the loaded questions
     window.questions = questions;
@@ -133,8 +131,8 @@
   function pickRandomStudent() {
     let randomStudentIndex;
     do {
-      randomStudentIndex = Math.floor(Math.random() * students.length);
-      var randomStudent = students[randomStudentIndex];
+      randomStudentIndex = Math.floor(Math.random() * window.students.length);
+      var randomStudent = window.students[randomStudentIndex];
     } while (absentStudents.includes(randomStudent));
     return randomStudent;
   }
@@ -179,6 +177,15 @@
     }
     container.innerHTML += "<footer id='footerText'>Powered by Sourabh Suneja</footer>";
   }
+
+  // Array to store scores
+  let scores = {};
+
+  // Array to store absent students
+  let absentStudents = [];
+
+  // Index to keep track of current question
+  let currentQuestionIndex = 0;
 
   // Initialize quiz when the page loads
   window.onload = initializeQuiz;
