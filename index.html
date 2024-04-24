@@ -50,6 +50,23 @@
     margin-top: 20px;
     font-size: 14px;
   }
+  .chart-container {
+    width: 90%;
+    max-width: 400px;
+    border: 2px solid white;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  .bar {
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+  }
+  .bar-text {
+    margin-right: 10px;
+  }
 </style>
 </head>
 <body>
@@ -236,6 +253,7 @@ const currentStudent = text.substring(index + 4);
     for (const student in scores) {
       container.innerHTML += "<p>" + student + ": " + scores[student] + "/" + chances[student] + "</p>";
     }
+    displayChart();
     container.innerHTML += "<footer id='footerText'>Powered by Sourabh Suneja</footer>";
   }
 
@@ -251,6 +269,46 @@ const currentStudent = text.substring(index + 4);
 
   // Initialize quiz when the page loads
   window.onload = initializeQuiz;
+
+
+
+
+
+// Function to calculate percentage and display chart
+  function displayChart() {
+    var chartContainer = document.createElement('div');
+    chartContainer.classList.add('chart-container');
+
+    // Sort students based on their scores (highest to lowest)
+    var sortedStudents = Object.keys(scores).sort(function(a, b) {
+      return scores[b] - scores[a];
+    });
+
+    sortedStudents.forEach(function(student) {
+      var percentage = (scores[student] / chances[student]) * 100;
+      var bar = document.createElement('div');
+      var shade = Math.round(205 - (percentage * 1.55)); // Calculate shade of green
+      shade = Math.max(shade, 50); // Ensure a minimum value for visibility
+      bar.style.backgroundColor = 'rgb(0,' + '180' + ',0)'; // Set background color
+      bar.classList.add('bar');
+      bar.style.width = percentage + '%';
+      
+      // Create span for text and percentage
+      var barText = document.createElement('span');
+      barText.classList.add('bar-text');
+      barText.textContent = student + ': ' + percentage.toFixed(2) + '%';
+      bar.appendChild(barText);
+      
+      chartContainer.appendChild(bar);
+    });
+
+    document.body.appendChild(chartContainer);
+  }
+
+
+
+
+
 </script>
 
 </body>
