@@ -165,14 +165,14 @@ function pickRandomStudent() {
     if (uniqueStudents.length === 3) {
         // Populate the array with each student's name 5 times
         for (let student of window.students) {
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 2; i++) {
                 weightedStudents.push(student);
             }
         }
     } else {
         // Populate the array with students based on their chances
         for (let student of window.students) {
-            for (let i = 0; i < 5 - (chances[student] || 0); i++) {
+            for (let i = 0; i < 2 - (chances[student] || 0); i++) {
                 weightedStudents.push(student);
             }
         }
