@@ -159,7 +159,15 @@
 
   // Function to handle correct answer
   function answeredCorrectly() {
-    const currentStudent = document.getElementById("studentName").textContent.split(" ")[2];
+    const fullName = document.getElementById('studentName').innerText;
+const nameParts = fullName.split(' ');
+
+let currentStudent;
+if (nameParts.length >= 2) {
+    currentStudent = nameParts.slice(-2).join(' '); // Extract last two words
+} else {
+    currentStudent = nameParts[0]; // Only first name available
+}
     if (scores[currentStudent] === undefined) {
       scores[currentStudent] = 1;
     } else {
