@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz | Powered by Sourabh Suneja</title>
+<title>Quiz</title>
 <style>
   body {
     background-color: black;
@@ -144,6 +144,9 @@
 
   // Function to display question and student name
   function displayQuestion() {
+    if (!window.students || !window.questions) {
+      return;
+    }
     const questionText = document.getElementById("questionText");
     const studentName = document.getElementById("studentName");
     questionText.textContent = window.questions[currentQuestionIndex];
@@ -170,7 +173,7 @@
       scores[currentStudent]++;
     }
     nextQuestion();
-}
+  }
 
   // Function to handle incorrect answer
   function answeredIncorrectly() {
