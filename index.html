@@ -71,12 +71,23 @@
 <script>
   // Function to initialize quiz
   function initializeQuiz() {
-    loadStudents();
-    loadQuestions();
+    promptForFileNames();
+  }
+
+  // Function to prompt for file names
+  function promptForFileNames() {
+    const studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):");
+    const questionsFileName = prompt("Enter the file name for questions data (e.g., questions.txt):");
+    if (studentsFileName && questionsFileName) {
+      loadStudents(studentsFileName);
+      loadQuestions(questionsFileName);
+    } else {
+      console.error("Please enter valid file names");
+    }
   }
 
   // Function to load students from a text file using AJAX
-  function loadStudents() {
+  function loadStudents(fileName) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
       if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -85,16 +96,16 @@
           const studentsArray = studentsText.split('\n').map(student => student.trim()).filter(student => student !== '');
           window.students = studentsArray;
         } else {
-          console.error("Failed to load students");
+          console.error("Failed to load students data");
         }
       }
     };
-    xhr.open("GET", "students.txt", true);
+    xhr.open("GET", fileName, true);
     xhr.send();
   }
 
   // Function to load questions from a text file using AJAX
-  function loadQuestions() {
+  function loadQuestions(fileName) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
       if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -103,11 +114,11 @@
           const questionsArray = questionsText.split('\n').map(question => question.trim()).filter(question => question !== '');
           startQuiz(questionsArray);
         } else {
-          console.error("Failed to load questions");
+          console.error("Failed to load questions data");
         }
       }
     };
-    xhr.open("GET", "questions.txt", true);
+    xhr.open("GET", fileName, true);
     xhr.send();
   }
 
@@ -164,7 +175,8 @@
     if (currentQuestionIndex < window.questions.length) {
       displayQuestion();
     } else {
-      displayScores();
+      display```html
+Scores();
     }
   }
 
