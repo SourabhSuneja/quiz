@@ -1,0 +1,14 @@
+What are the two types of data? 
+Which of these is an example of qualitative data? Age, Height, Beauty or Distance?
+Tanu is writing an application in MS Word. What form of data do you think she is creating?
+The data that be represented by finite numbers is called _______ data. 
+What is the difference between discrete and continuous data?
+What do you understand by data?
+Differentiate between qualitative and quantitative data.
+Explain text data with the help of an example.
+Why is data important? Explain with the help of an example.
+Describe quantitative data and its types with the help of an example.
+Give any one real life example that explains the use of data. 
+What is primary data? 
+In Binary representation, there are only ______ states. 
+How do you think e-commerce websites like Amazon use data science to improve their sales?
