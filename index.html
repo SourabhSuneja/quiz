@@ -279,24 +279,32 @@ const currentStudent = text.substring(index + 4);
     var chartContainer = document.createElement('div');
     chartContainer.classList.add('chart-container');
 
-    // Sort students based on their scores (highest to lowest)
-    var sortedStudents = Object.keys(scores).sort(function(a, b) {
-      return scores[b] - scores[a];
+    var studentData = [];
+
+    // Calculate percentages and store student data
+    for (var student in scores) {
+      var percentage = (scores[student] / chances[student]) * 100;
+      studentData.push({ name: student, percentage: percentage });
+    }
+
+    // Sort students based on their percentages (highest to lowest)
+    studentData.sort(function(a, b) {
+      return b.percentage - a.percentage;
     });
 
-    sortedStudents.forEach(function(student) {
-      var percentage = (scores[student] / chances[student]) * 100;
+    // Create bars for each student
+    studentData.forEach(function(student) {
       var bar = document.createElement('div');
-      var shade = Math.round(205 - (percentage * 1.55)); // Calculate shade of green
+      var shade = Math.round(205 - (student.percentage * 1.55)); // Calculate shade of green
       shade = Math.max(shade, 50); // Ensure a minimum value for visibility
       bar.style.backgroundColor = 'rgb(0,' + '180' + ',0)'; // Set background color
       bar.classList.add('bar');
-      bar.style.width = percentage + '%';
+      bar.style.width = student.percentage + '%';
       
       // Create span for text and percentage
       var barText = document.createElement('span');
       barText.classList.add('bar-text');
-      barText.textContent = student + ': ' + percentage.toFixed(2) + '%';
+      barText.textContent = student.name + ': ' + student.percentage.toFixed(2) + '%';
       bar.appendChild(barText);
       
       chartContainer.appendChild(bar);
@@ -304,9 +312,6 @@ const currentStudent = text.substring(index + 4);
 
     document.body.appendChild(chartContainer);
   }
-
-
-
 
 
 </script>
