@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz</title>
+<title>Quiz | Powered by Sourabh Suneja</title>
 <style>
   body {
     background-color: black;
@@ -139,12 +139,15 @@
 
   // Function to start the quiz after questions and students are loaded
   function startQuiz() {
+    console.log("Starting quiz...");
     displayQuestion();
   }
 
   // Function to display question and student name
   function displayQuestion() {
+    console.log("Displaying question...");
     if (!window.students || !window.questions) {
+      console.log("Students or questions data not loaded.");
       return;
     }
     const questionText = document.getElementById("questionText");
