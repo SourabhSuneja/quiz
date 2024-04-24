@@ -155,14 +155,26 @@
     studentName.textContent = "Question for " + randomStudent;
   }
 
-  // Function to pick a random student with reduced chances as they answer more questions
+  
+// Function to pick a random student with reduced chances as they answer more questions
 function pickRandomStudent() {
+    let uniqueStudents = Array.from(new Set(window.students)); // Get unique student names
     let weightedStudents = [];
     
-    // Populate the array with students based on their chances
-    for (let student of window.students) {
-        for (let i = 0; i < 5 - (chances[student] || 0); i++) {
-            weightedStudents.push(student);
+    // Check if there are only 3 unique students left
+    if (uniqueStudents.length === 3) {
+        // Populate the array with each student's name 5 times
+        for (let student of window.students) {
+            for (let i = 0; i < 5; i++) {
+                weightedStudents.push(student);
+            }
+        }
+    } else {
+        // Populate the array with students based on their chances
+        for (let student of window.students) {
+            for (let i = 0; i < 5 - (chances[student] || 0); i++) {
+                weightedStudents.push(student);
+            }
         }
     }
 
@@ -176,6 +188,9 @@ function pickRandomStudent() {
 
     return randomStudent;
 }
+
+
+
 
   // Function to handle correct answer
   function answeredCorrectly() {
