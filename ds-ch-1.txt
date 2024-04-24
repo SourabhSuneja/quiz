@@ -13,3 +13,6 @@ What is the difference between discrete and continuous data?
 How do you think e-commerce websites like Amazon use data science to improve their sales?
 What is primary data?
 In what ways do you think social media platforms like Facebook use data science?
+The temperature of a city is an example of ________ data. (discrete/continuous)
+The number of chocolates in Bhavya's bag is an example of ________ data. (discrete/continuous)
+Priya recently visited an optics shop for getting her eyesight checked. Afterwards, she noticed that Google started serving her with advertisements related to contact lenses. How do you think Google might have come to know that she might be interested in buying lenses?
