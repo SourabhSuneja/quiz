@@ -177,7 +177,7 @@ function pickRandomStudent() {
         randomStudent = weightedStudents[randomIndex];
     } while (absentStudents.includes(randomStudent));
 alert(weightedStudents);
-    return randomStudent;
+    return randomStudent || 'no one (all students have exhausted their chances)';
 }
 
 
