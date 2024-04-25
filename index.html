@@ -156,7 +156,7 @@ document.getElementById("endBtn").addEventListener("click", displayScores);
     questionText.textContent = window.questions[currentQuestionIndex];
     let randomStudent = pickRandomStudent();
     studentName.textContent = "Question for " + randomStudent;
-    speakUp(questionText.textContent + studentName.textContent);
+    speakUp(questionText.textContent, 0.8);
   }
 
   
