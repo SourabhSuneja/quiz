@@ -339,6 +339,23 @@ if (isNaN(maxChances) || maxChances <= 0) {
     });
 
     document.body.appendChild(chartContainer);
+
+// create download scoresheet button
+// Create a button element
+var button = document.createElement("button");
+// Set button text
+button.innerHTML = "Download Scoresheet";
+// Set button id
+button.id = "downloadBtn";
+// Center align the button
+button.style.display = "block";
+button.style.margin = "auto";
+
+// Append the button to the end of the page body
+document.body.appendChild(button);
+// Attach click event handler to the button
+document.getElementById("downloadBtn").addEventListener("click", downloadCSV);
+
   }
 
 
@@ -365,7 +382,47 @@ function speakUp(text, speed) {
     speechSynthesis.speak(utterance);
 }
 
+// Function to create CSV data
+function createCSV(scores, chances) {
+  // Create a CSV header
+  var csv = "Name, Score, Chance\n";
 
+  // Iterate through the chances object to ensure all names are included
+  Object.keys(chances).forEach(function(name) {
+    // Get the score for the current name
+    var score = scores[name] !== undefined ? scores[name] : 0;
+    // Get the chance for the current name
+    var chance = chances[name];
+    // Append data to CSV
+    csv += name + "," + score + "," + chance + "\n";
+  });
+
+  return csv;
+}
+
+// Function to download CSV file
+function downloadCSV() {
+  // Create CSV data
+  var csvData = createCSV(scores, chances);
+  // Create a Blob object from the CSV data
+  var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+  // Create a temporary URL for the Blob
+  var url = window.URL.createObjectURL(blob);
+  // Create a temporary anchor element
+  var a = document.createElement("a");
+  // Set the href attribute of the anchor to the temporary URL
+  a.href = url;
+  // Set the download attribute to specify the filename
+  a.download = "scoresheet.csv";
+  // Append the anchor to the body
+  document.body.appendChild(a);
+  // Click the anchor to trigger download
+  a.click();
+  // Remove the anchor from the body
+  document.body.removeChild(a);
+  // Revoke the temporary URL to free up memory
+  window.URL.revokeObjectURL(url);
+}
 
 </script>
 
