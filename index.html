@@ -344,10 +344,13 @@ if (isNaN(maxChances) || maxChances <= 0) {
 
 
 function speakUp(text, speed) {
+    // Replace underscores with "dash"
+    text = text.replace(/_{2,20}/g, "dash");
+
     // Create a new SpeechSynthesisUtterance instance
     var utterance = new SpeechSynthesisUtterance();
     
-    // Set the text to be spoken
+    // Set the modified text to be spoken
     utterance.text = text;
     
     // Set the Indian English voice
