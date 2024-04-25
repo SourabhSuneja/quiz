@@ -262,6 +262,8 @@ const currentStudent = text.substring(index + 4);
 
   // Function to display scores
   function displayScores() {
+    // cancel any speech synthesis going on
+    speechSynthesis.cancel();
     const container = document.querySelector(".container");
     container.innerHTML = "<h1>Scores</h1>";
     for (const student in scores) {
@@ -361,6 +363,9 @@ document.getElementById("downloadBtn").addEventListener("click", downloadCSV);
 
 
 function speakUp(text, speed) {
+
+    // cancel previous speech synthesis
+    speechSynthesis.cancel();
     // Replace underscores with "dash"
     text = text.replace(/_{2,20}/g, "dash");
 
