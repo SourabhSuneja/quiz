@@ -167,7 +167,7 @@ function pickRandomStudent() {
     
     // Populate the array with students based on their chances
     for (let student of window.students) {
-        for (let i = 0; i < 3 - (chances[student] || 0); i++) {
+        for (let i = 0; i < maxChances - (chances[student] || 0); i++) {
             weightedStudents.push(student);
         }
     }
@@ -273,6 +273,20 @@ const currentStudent = text.substring(index + 4);
   // Array to store scores
   let scores = {};
   let chances = {};
+
+
+// Ask the user for the maximum chances
+let maxChancesInput = prompt("How many maximum chances do you want to give to each student?");
+// Convert the input to a number
+let maxChances = parseInt(maxChancesInput);
+
+// Check if the input is a valid number
+if (isNaN(maxChances) || maxChances <= 0) {
+    // If not a valid number, set default value to 4
+    maxChances = 4;
+}
+
+
 
   // Array to store absent students
   let absentStudents = [];
