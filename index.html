@@ -83,6 +83,7 @@
     <button id="correctBtn">Answered correctly</button>
     <button id="incorrectBtn">Couldn't answer correctly</button>
     <button id="pickAnotherBtn">Pick another student</button>
+    <button id="endBtn">End Quiz</button>
   </div>
   <footer id="footerText">Powered by Sourabh Suneja</footer>
 </div>
@@ -140,6 +141,8 @@
     document.getElementById("correctBtn").addEventListener("click", answeredCorrectly);
     document.getElementById("incorrectBtn").addEventListener("click", answeredIncorrectly);
     document.getElementById("pickAnotherBtn").addEventListener("click", pickAnotherStudent);
+
+document.getElementById("endBtn").addEventListener("click", displayScores);
   }
 
   // Function to display question and student name
@@ -177,7 +180,7 @@ function pickRandomStudent() {
         randomStudent = weightedStudents[randomIndex];
     } while (absentStudents.includes(randomStudent));
      
-    return randomStudent || 'no one (all students have exhausted their chances). Click on "Couldn\'t answer correctly" to end quiz.';
+    return randomStudent || 'no one (all students have exhausted their chances). Click on "End Quiz" to display scores.';
 }
 
 
