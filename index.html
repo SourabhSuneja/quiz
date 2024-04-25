@@ -276,14 +276,14 @@ const currentStudent = text.substring(index + 4);
 
 
 // Ask the user for the maximum chances
-let maxChancesInput = prompt("How many maximum chances do you want to give to each student?");
+let maxChancesInput = prompt("How many maximum chances do you want to give to each student? (Defaults to 3)");
 // Convert the input to a number
 let maxChances = parseInt(maxChancesInput);
 
 // Check if the input is a valid number
 if (isNaN(maxChances) || maxChances <= 0) {
-    // If not a valid number, set default value to 4
-    maxChances = 4;
+    // If not a valid number, set default value to 3
+    maxChances = 3;
 }
 
 
