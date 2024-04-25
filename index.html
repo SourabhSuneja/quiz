@@ -156,6 +156,7 @@ document.getElementById("endBtn").addEventListener("click", displayScores);
     questionText.textContent = window.questions[currentQuestionIndex];
     let randomStudent = pickRandomStudent();
     studentName.textContent = "Question for " + randomStudent;
+    speakUp(questionText.textContent + studentName.textContent);
   }
 
   
@@ -339,6 +340,28 @@ if (isNaN(maxChances) || maxChances <= 0) {
 
     document.body.appendChild(chartContainer);
   }
+
+
+
+function speakUp(text, speed) {
+    // Create a new SpeechSynthesisUtterance instance
+    var utterance = new SpeechSynthesisUtterance();
+    
+    // Set the text to be spoken
+    utterance.text = text;
+    
+    // Set the Indian English voice
+    utterance.voice = speechSynthesis.getVoices().find(function(voice) {
+        return voice.lang === 'en-IN';
+    });
+
+    // Set the speed of speaking
+    utterance.rate = speed || 1.0; // If speed is not specified, default to 1.0
+
+    // Speak the text
+    speechSynthesis.speak(utterance);
+}
+
 
 
 </script>
