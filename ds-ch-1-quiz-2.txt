@@ -1,0 +1,2 @@
+House number is an example of ______ data. (discrete/continuous)
+Which of these statements is true about discrete data? (Options: A. It is always COUNTED. B. It cannot have decimal values. C. It is most often expressed as "number of...". D. All of these)
