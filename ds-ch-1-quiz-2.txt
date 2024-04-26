@@ -1,2 +1,5 @@
 House number is an example of ______ data. (discrete/continuous)
-Which of these statements is true about discrete data? (Options: A. It is always COUNTED. B. It cannot have decimal values. C. It is most often expressed as "number of...". D. All of these)
+Which of these statements is true about discrete data? (Options: A. It is always COUNTED. B. It cannot have decimal values. C. It is most often expressed as "number of so and so thing or item". D. All of these)
+All data, no matter what it is, when stored on computers gets converted into _______ form. Decimal, binary, octal or hexadecimal?
+Why is data important?
+Ankit approached 'Dhan Dhan' bank for obtaining a loan of Rs. 10 lakhs. But the bank refused to provide the loan to him because they suspected that he won't be able to repay the loan. What data do you think the bank has analysed to take this decision?
