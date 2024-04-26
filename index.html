@@ -92,8 +92,8 @@
   // Function to initialize quiz
   async function initializeQuiz() {
   try {
-    let studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):");
-    let questionsFileName = prompt("Enter the file name for questions data (e.g., questions.txt):");
+    let studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):").trim();
+    let questionsFileName = prompt("Enter the file name for questions data (e.g., questions.txt):").trim();
     
     // Add .txt extension if not already provided by the user
     if (!studentsFileName.endsWith('.txt')) {
@@ -153,9 +153,9 @@ document.getElementById("endBtn").addEventListener("click", displayScores);
     }
     const questionText = document.getElementById("questionText");
     const studentName = document.getElementById("studentName");
-    questionText.textContent = window.questions[currentQuestionIndex];
+    questionText.textContent = window.questions[currentQuestionIndex].trim();
     let randomStudent = pickRandomStudent();
-    studentName.textContent = "Question for " + randomStudent;
+    studentName.textContent = "Question for " + randomStudent.trim();
     speakUp(questionText.textContent, 0.8);
   }
 
