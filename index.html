@@ -82,6 +82,7 @@
   <div class="buttons">
     <button id="correctBtn">Answered correctly</button>
     <button id="incorrectBtn">Couldn't answer correctly</button>
+    <button id="partiallyCorrectBtn">Partially correct</button>
     <button id="pickAnotherBtn">Pick another student</button>
     <button id="endBtn">End Quiz</button>
   </div>
@@ -140,6 +141,8 @@
     displayQuestion();
     document.getElementById("correctBtn").addEventListener("click", answeredCorrectly);
     document.getElementById("incorrectBtn").addEventListener("click", answeredIncorrectly);
+
+document.getElementById("partiallyCorrectBtn").addEventListener("click", answeredPartiallyCorrectly);
     document.getElementById("pickAnotherBtn").addEventListener("click", pickAnotherStudent);
 
 document.getElementById("endBtn").addEventListener("click", displayScores);
@@ -198,6 +201,31 @@ const currentStudent = text.substring(index + 4);
       scores[currentStudent] = 1;
     } else {
       scores[currentStudent]++;
+    }
+
+if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
+
+
+    nextQuestion();
+  }
+
+  // Function to handle partially correct answer
+  function answeredPartiallyCorrectly() {
+    var text = document.getElementById('studentName').textContent;
+
+var index = text.indexOf('for');
+
+const currentStudent = text.substring(index + 4);
+
+
+    if (scores[currentStudent] === undefined) {
+      scores[currentStudent] = 0.5;
+    } else {
+      scores[currentStudent] += 0.5;
     }
 
 if (chances[currentStudent] === undefined) {
