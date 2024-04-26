@@ -1,5 +1,8 @@
-House number is an example of ______ data. (discrete/continuous)
+House/plot number is an example of ______ data. (discrete/continuous)
 Which of these statements is true about discrete data? (Options: A. It is always COUNTED. B. It cannot have decimal values. C. It is most often expressed as "number of so and so thing or item". D. All of these)
 All data, no matter what it is, when stored on computers gets converted into _______ form. Decimal, binary, octal or hexadecimal?
 Why is data important?
 Ankit approached 'Dhan Dhan' bank for obtaining a loan of Rs. 10 lakhs. But the bank refused to provide the loan to him because they suspected that he won't be able to repay the loan. What data do you think the bank has analysed to take this decision?
+Which of these is a real life example of using data science? (Options: A. Retail stores use data to see what customers like and stock items accordingly. B. Banks use data to decide whom to give loans to, based on how likely they are to pay back. C. Entertainment platforms use data to suggest songs or movies you might like, based on what you have enjoyed before. D. All of these)
+Give any two examples of continuous data.
+Qualitative data describes a quality or a characteristic of someone or something. True or false?
