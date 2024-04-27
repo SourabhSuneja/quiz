@@ -559,13 +559,18 @@ function downloadCSV() {
     }
   }
 
-  // Start the countdown only if countdown is a valid number
-  if (typeof countdown === 'number' && !isNaN(countdown) && countdown > 0) {
-    var timerInterval = setInterval(updateTimer, 1000);
-  } else {
-    document.getElementById("timer").innerHTML = "Invalid countdown value";
+  // Function to start the countdown timer
+  function startTimer() {
+    // Start the countdown only if countdown is a valid number
+    if (typeof countdown === 'number' && !isNaN(countdown) && countdown > 0) {
+      var timerInterval = setInterval(updateTimer, 1000);
+    } else {
+      document.getElementById("timer").innerHTML = "Invalid countdown value";
+    }
   }
 
+  // Start the timer
+  startTimer();
 
 </script>
 
