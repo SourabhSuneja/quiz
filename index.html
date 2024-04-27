@@ -519,6 +519,54 @@ function downloadCSV() {
   window.URL.revokeObjectURL(url);
 }
 
+
+
+
+// script to handle countdown, if required
+  // Initialize countdown variable based on parameter or user input
+  var countdownParam = parseInt(getParameterByName("countdown"));
+  var countdown;
+  if (typeof countdownParam === 'number' && !isNaN(countdownParam) && countdownParam > 0) {
+    countdown = countdownParam;
+  } else {
+    var userInput = prompt("Specify the countdown duration in seconds for the quiz. After this duration, another student will be prompted to answer the same question. If you prefer not to have a countdown, simply leave this field blank.");
+    countdown = userInput ? parseInt(userInput) : 0;
+  }
+
+  // Function to update the timer display
+  function updateTimer() {
+    var minutes = Math.floor(countdown / 60);
+    var seconds = countdown % 60;
+
+    // Add leading zeros if necessary
+    var formattedTime = (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+
+    document.getElementById("timer").innerHTML = formattedTime;
+    countdown--;
+
+    // If countdown reaches 0, restart the timer
+    if (countdown < 0) {
+      clearInterval(timerInterval);
+      document.getElementById("pickAnotherBtn").click();
+      countdown = 60;
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    // If countdown becomes falsy, stop starting the timer and clear the text
+    if (!countdown) {
+      clearInterval(timerInterval);
+      document.getElementById("timer").innerHTML = "";
+    }
+  }
+
+  // Start the countdown only if countdown is a valid number
+  if (typeof countdown === 'number' && !isNaN(countdown) && countdown > 0) {
+    var timerInterval = setInterval(updateTimer, 1000);
+  } else {
+    document.getElementById("timer").innerHTML = "Invalid countdown value";
+  }
+
+
 </script>
 
 </body>
