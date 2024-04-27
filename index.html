@@ -354,6 +354,8 @@ const currentStudent = text.substring(index + 4);
   function displayScores() {
     // cancel any speech synthesis going on
     speechSynthesis.cancel();
+    // stop the timer
+    stopCountdown();
     const container = document.querySelector(".container");
     container.innerHTML = "<h1>Scores</h1>";
     for (const student in scores) {
