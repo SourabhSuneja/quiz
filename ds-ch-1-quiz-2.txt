@@ -6,3 +6,9 @@ Ankit approached 'Dhan Dhan' bank for obtaining a loan of Rs. 10 lakhs. But the 
 Which of these is a real life example of using data science? (Options: A. Retail stores use data to see what customers like and stock items accordingly. B. Banks use data to decide whom to give loans to, based on how likely they are to pay back. C. Entertainment platforms use data to suggest songs or movies you might like, based on what you have enjoyed before. D. All of these)
 Give any two examples of continuous data.
 Qualitative data describes a quality or a characteristic of someone or something. True or false?
+In a survey about favorite ice cream flavors, respondents choose from a list of options. This is an example of ______ data. (discrete/continuous)
+Which of the following statements accurately describes continuous data? (Options: A. It can only take on specific, distinct values. B. It is often measured. C. It cannot have fractional values. D. None of these)
+When data is represented in the form of 0s and 1s, it is in ______ form. (binary/decimal/octal/hexadecimal)
+A car insurance company determines premiums based on the driving history of applicants. What type of data is most likely analyzed to assess risk?
+Which scenario exemplifies the application of data science? (Options: A. Weather forecasting using historical climate data. B. Predicting stock market trends based on past performance. C. Analyzing social media trends to tailor advertising campaigns. D. All of the above)
+Which characteristic is true about continuous data? (Options: A. It is always measured. B. It can only have whole number values. C. It is often counted. D. None of these)
