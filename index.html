@@ -90,11 +90,29 @@
 </div>
 
 <script>
+  // Function to get URL parameters
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
   // Function to initialize quiz
   async function initializeQuiz() {
   try {
-    let studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):").trim();
-    let questionsFileName = prompt("Enter the file name for questions data (e.g., questions.txt):").trim();
+    // Attempt to retrieve file names from URL parameters
+let studentsFileName = getParameterByName('s');
+let questionsFileName = getParameterByName('q');
+
+// If URL parameters are not available, prompt the user for file names
+if (!studentsFileName || !questionsFileName) {
+    studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):").trim();
+    questionsFileName = prompt("Enter the file name for questions data (e.g., questions.txt):").trim();
+}
     
     // Add .txt extension if not already provided by the user
     if (!studentsFileName.endsWith('.txt')) {
