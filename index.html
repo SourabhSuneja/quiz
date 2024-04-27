@@ -359,7 +359,7 @@ const currentStudent = text.substring(index + 4);
 
 
 // Ask the user for the maximum chances
-let maxChancesInput = prompt("How many maximum chances do you want to give to each student? (Defaults to 3)");
+let maxChancesInput = getParameterByName('maxchances') ||  prompt("How many maximum chances do you want to give to each student? (Defaults to 3)");
 // Convert the input to a number
 let maxChances = parseInt(maxChancesInput);
 
