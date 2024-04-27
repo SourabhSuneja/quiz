@@ -538,7 +538,15 @@ function downloadCSV() {
   }
 
 let countdown = countdownDuration; // Initial countdown value in seconds
-let stopCountDown = false; // Flag variable to stop countdown
+let stopCountDown; // Flag variable to start/stop countdown
+
+if(!countdown) {
+    stopCountDown = true;
+    document.getElementById('timer').style.display = 'none';
+    
+} else {
+    stopCountDown = false;
+}
 
 function startCountdown() {
     let timer = document.getElementById('timer');
