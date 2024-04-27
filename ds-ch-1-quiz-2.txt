@@ -12,3 +12,4 @@ When data is represented in the form of 0s and 1s, it is in ______ form. (binary
 A car insurance company determines premiums based on the driving history of applicants. What type of data is most likely analyzed to assess risk?
 Which scenario exemplifies the application of data science? (Options: A. Weather forecasting using historical climate data. B. Predicting stock market trends based on past performance. C. Analyzing social media trends to tailor advertising campaigns. D. All of the above)
 Which characteristic is true about continuous data? (Options: A. It is always measured. B. It can only have whole number values. C. It is often counted. D. None of these)
+Name any two examples of continuous data.
