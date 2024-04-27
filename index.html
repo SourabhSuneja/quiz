@@ -547,9 +547,8 @@ function downloadCSV() {
     // If countdown reaches 0, restart the timer
     if (countdown < 0) {
       clearInterval(timerInterval);
-      document.getElementById("pickAnotherBtn").click();
-      countdown = 60;
-      timerInterval = setInterval(updateTimer, 1000);
+      countdown = getParameterByName("countdown") || 60;
+      startTimer();
     }
 
     // If countdown becomes falsy, stop starting the timer and clear the text
