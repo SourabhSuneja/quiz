@@ -166,7 +166,8 @@ document.getElementById("partiallyCorrectBtn").addEventListener("click", answere
 document.getElementById("endBtn").addEventListener("click", displayScores);
   }
 
-  // Function to display question and student name
+  
+    // Function to display question and student name
   function displayQuestion() {
     if (!window.students || !window.questions) {
       console.log("Students or questions data not loaded.");
@@ -175,10 +176,31 @@ document.getElementById("endBtn").addEventListener("click", displayScores);
     const questionText = document.getElementById("questionText");
     const studentName = document.getElementById("studentName");
     questionText.textContent = window.questions[currentQuestionIndex].trim();
-    let randomStudent = pickRandomStudent();
+    let randomStudent; 
+    let selectionMode = getParameterByName('m') || 'random';
+    if(selectionMode == 'random') {
+            randomStudent = pickRandomStudent();
+   } else if(selectionMode == 'rotation') {
+            randomStudent = getNextStudent();
+  }
+     else {
+            randomStudent = pickRandomStudent();
+     }
+
     studentName.textContent = "Question for " + randomStudent.trim();
     speakUp(questionText.textContent, 0.8);
   }
+
+
+  // function to get next student in case of rotational selection
+  function getNextStudent() {
+  let index = 0; // initialize index to keep track of the current position
+  return function() {
+    const student = window.students[index]; // get the student at the current index
+    index = (index + 1) % window.students.length; // move to the next index, looping back to 0 if end is reached
+    return student; // return the current student
+  };
+}
 
   
 
