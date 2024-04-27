@@ -181,7 +181,7 @@ document.getElementById("endBtn").addEventListener("click", displayScores);
     if(selectionMode == 'random') {
             randomStudent = pickRandomStudent();
    } else if(selectionMode == 'rotation') {
-            randomStudent = getNextStudent(window.students);
+            randomStudent = getNextStudent();
   }
      else {
             randomStudent = pickRandomStudent();
@@ -193,14 +193,12 @@ document.getElementById("endBtn").addEventListener("click", displayScores);
 
 
   // function to get next student in case of rotational selection
-  function getNextStudent(students) {
-  let index = 0; // initialize index to keep track of the current position
-  return function() {
-    const student = students[index]; // get the student at the current index
-    index = (index + 1) % students.length; // move to the next index, looping back to 0 if end is reached
+  let nextIndex = 0;
+function getNextStudent() {
+    const student = window.students[nextIndex]; // get the student at the current index
+    nextIndex = (nextIndex + 1) % window.students.length; // move to the next index, looping back to 0 if end is reached
     return student; // return the current student
-  };
-}
+  }
 
   
 
