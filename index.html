@@ -74,7 +74,7 @@
 <body>
 
 <div class="container">
-  <h1>Quiz</h1>
+  <h1 id="quizTitle">Quiz</h1>
   <div class="question">
     <p id="questionText"></p>
     <p id="studentName"></p>
@@ -178,6 +178,8 @@ document.getElementById("partiallyCorrectBtn").addEventListener("click", answere
     document.getElementById("pickAnotherBtn").addEventListener("click", pickAnotherStudent);
 
 document.getElementById("endBtn").addEventListener("click", displayScores);
+
+document.getElementById("quizTitle").textContent = getParameterByName('title') || 'Quiz';
   }
 
   
