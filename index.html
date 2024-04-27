@@ -86,7 +86,7 @@
     <button id="pickAnotherBtn">Pick another student</button>
     <button id="endBtn">End Quiz</button>
   </div>
-  <footer id="footerText">Powered by Sourabh Suneja<br><br><span style = "font-size: 12px">(Student selection is randomised with weighted probability method. The chance of a student getting selected again reduces as they get more and more chances to answer)</span></footer>
+  <footer id="footerText">Powered by Sourabh Suneja<br><br><span id="footerSpanText" style="font-size: 12px">Student selection is randomised with weighted probability method. The chance of a student getting selected again reduces as they get more and more chances to answer.</span></footer>
 </div>
 
 <script>
@@ -169,6 +169,7 @@ if (!studentsFileName || !questionsFileName) {
     // shuffle student names if shuffle parameter is set to 'y' or sort alphabetically if set to az or za
 if(getParameterByName('shuffle') == 'y') {
      window.students = shuffleArray(window.students);
+     document.getElementById("footerSpanText").textContent += ' The names have been shuffled using Fisher-Yates algorithm.';
 }
 else if(getParameterByName('shuffle') == 'az') {
      window.students.sort();
