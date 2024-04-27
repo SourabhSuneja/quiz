@@ -557,6 +557,7 @@ function startCountdown() {
         timer.textContent = minutes + ':' + seconds;
 
         if (countdown === 0) {
+            document.getElementById("pickAnotherBtn").click() // programmatically click the pick another student button to give chance to another student
             countdown = countdownDuration; // Reset countdown to initial value
         } else {
             countdown--;
