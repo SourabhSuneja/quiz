@@ -78,6 +78,7 @@
   <div class="question">
     <p id="questionText"></p>
     <p id="studentName"></p>
+    <div id="timer">00:00</div>
   </div>
   <div class="buttons">
     <button id="correctBtn">Answered correctly</button>
@@ -520,6 +521,56 @@ function downloadCSV() {
 
 
 </script>
+
+
+<script>
+// script to handle countdown if required
+// Initialize countdown variable based on parameter or user input
+  var countdownParam = parseInt(getParameterByName("countdown"));
+  let countdownDuration;
+  if (typeof countdownParam === 'number' && !isNaN(countdownParam) && countdownParam > 0) {
+    countdownDuration = countdownParam;
+  } else {
+    var userInput = prompt("Specify the countdown duration in seconds for the quiz. After this duration, another student will be prompted to answer the same question. If you prefer not to have a countdown, simply leave this field blank.");
+    countdownDuration = userInput ? parseInt(userInput) : 0;
+  }
+
+let countdown = countdownDuration; // Initial countdown value in seconds
+let stopCountDown = false; // Flag variable to stop countdown
+
+function startCountdown() {
+    let timer = document.getElementById('timer');
+
+    let interval = setInterval(function() {
+        if (stopCountDown) {
+            clearInterval(interval);
+            return;
+        }
+
+        let minutes = Math.floor(countdown / 60);
+        let seconds = countdown % 60;
+
+        // Add leading zero if necessary
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        timer.textContent = minutes + ':' + seconds;
+
+        if (countdown === 0) {
+            countdown = countdownDuration; // Reset countdown to initial value
+        } else {
+            countdown--;
+        }
+    }, 1000);
+}
+
+function stopCountdown() {
+    stopCountDown = true;
+}
+startCountdown();
+</script>
+
+
 
 </body>
 </html>
