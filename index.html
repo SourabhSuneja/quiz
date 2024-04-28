@@ -85,6 +85,7 @@
     <button id="incorrectBtn">Couldn't answer correctly</button>
     <button id="partiallyCorrectBtn">Partially correct</button>
     <button id="pickAnotherBtn">Pick another student</button>
+    <button id="pauseBtn">Pause countdown</button>
     <button id="endBtn">End Quiz</button>
   </div>
   <footer id="footerText">Powered by Sourabh Suneja<br><br><span id="footerSpanText" style="font-size: 12px">Student selection is randomised with weighted probability method. The chance of a student getting selected again reduces as they get more and more chances to answer.</span></footer>
@@ -184,6 +185,8 @@ else if(getParameterByName('shuffle') == 'za') {
 
 document.getElementById("partiallyCorrectBtn").addEventListener("click", answeredPartiallyCorrectly);
     document.getElementById("pickAnotherBtn").addEventListener("click", pickAnotherStudent);
+
+document.getElementById("pauseBtn").addEventListener("click", pauseCountdown);
 
 document.getElementById("endBtn").addEventListener("click", displayScores);
 
@@ -590,6 +593,8 @@ let countdownPaused = false;
 
 function pauseCountdown() {
   countdownPaused = !countdownPaused;
+  const button = document.getElementById('pauseBtn');
+  button.textContent = countdownPaused ? 'Resume countdown' : 'Pause countdown';
 }
 
 </script>
