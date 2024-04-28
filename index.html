@@ -566,7 +566,7 @@ function createCSV(scores, chances) {
     // Get the chance for the current name
     var chance = chances[name];
    // Calculate percentage
-    var percentage = (parseInt(score)/parseInt(chance)) * 100;
+    var percentage = (parseFloat(score)/parseInt(chance)) * 100;
    // Round off percentage to two decimal places
    percentage = percentage.toFixed(2);
     // Append data to CSV
