@@ -509,6 +509,7 @@ document.getElementById("downloadBtn").addEventListener("click", downloadCSV);
 // code to handle utterances
 
 let currentUtterance; // Variable to store the current speaking utterance
+let intialVolume = parseInt(getParameterByName ('volume')) || 50 // Initial volume value
 
 function speakUp(text, speed) {
     // Cancel previous speech synthesis if there is an ongoing utterance
@@ -534,7 +535,7 @@ function speakUp(text, speed) {
     utterance.rate = speed || 1.0; // If speed is not specified, default to 1.0
 
     // Set the initial volume
-    utterance.volume = 50 / 100; // Map slider volume range (1-100) to SpeechSynthesisUtterance volume range (0-1)
+    utterance.volume = initialVolume / 100; // Map slider volume range (1-100) to SpeechSynthesisUtterance volume range (0-1)
 
     // Speak the text
     speechSynthesis.speak(utterance);
@@ -662,9 +663,7 @@ function pauseCountdown() {
 
 
 
-// code to handle the volume slider
-let intialVolume = parseInt(getParameterByName ('volume')) || 50 // Initial volume value
-  
+  // code to handle the volume slider
   // Get the slider element
   var slider = document.getElementById("volumeRange");
   slider.value = initialVolume;
