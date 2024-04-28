@@ -569,7 +569,7 @@ function startCountdown() {
 
         timer.textContent = minutes + ':' + seconds;
 
-        if (countdown === 0) {
+        if (countdown === 0 && !countdownPaused) {
             document.getElementById("pickAnotherBtn").click() // programmatically click the pick another student button to give chance to another student
             
         } else {
