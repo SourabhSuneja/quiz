@@ -506,19 +506,25 @@ document.getElementById("downloadBtn").addEventListener("click", downloadCSV);
 
 
 
-function speakUp(text, speed) {
+// code to handle utterances
 
-    // cancel previous speech synthesis
-    speechSynthesis.cancel();
+let currentUtterance; // Variable to store the current speaking utterance
+
+function speakUp(text, speed, volume = 50) {
+    // Cancel previous speech synthesis if there is an ongoing utterance
+    if (currentUtterance) {
+        speechSynthesis.cancel();
+    }
+
     // Replace underscores with "dash"
     text = text.replace(/_{2,20}/g, "dash");
 
     // Create a new SpeechSynthesisUtterance instance
     var utterance = new SpeechSynthesisUtterance();
-    
+
     // Set the modified text to be spoken
     utterance.text = text;
-    
+
     // Set the Indian English voice
     utterance.voice = speechSynthesis.getVoices().find(function(voice) {
         return voice.lang === 'en-IN';
@@ -527,9 +533,18 @@ function speakUp(text, speed) {
     // Set the speed of speaking
     utterance.rate = speed || 1.0; // If speed is not specified, default to 1.0
 
+    // Set the initial volume
+    utterance.volume = volume / 100; // Map slider volume range (1-100) to SpeechSynthesisUtterance volume range (0-1)
+
     // Speak the text
     speechSynthesis.speak(utterance);
+
+    // Store the current utterance
+    currentUtterance = utterance;
 }
+
+
+
 
 // Function to create CSV data
 function createCSV(scores, chances) {
@@ -648,16 +663,20 @@ function pauseCountdown() {
 
 
 // code to handle the volume slider
-let volume = parseInt(getParameterByName ('volume')) || 50 // Initial volume value
+let intialVolume = parseInt(getParameterByName ('volume')) || 50 // Initial volume value
   
   // Get the slider element
   var slider = document.getElementById("volumeRange");
-  slider.value = volume;
+  slider.value = initialVolume;
   
-  // Update the volume value when the slider is changed
-  slider.oninput = function() {
-    volume = this.value;
-  }
+  // Listen for the input event on the slider
+slider.addEventListener("input", function() {
+    // If there is an ongoing utterance, update its volume
+    if (currentUtterance) {
+        var volume = this.value; // Get the slider value
+        currentUtterance.volume = volume / 100; // Map slider volume range (1-100) to SpeechSynthesisUtterance volume range (0-1)
+    }
+});
 
 
 
