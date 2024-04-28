@@ -251,8 +251,10 @@ if (!studentsFileName || !questionsFileName) {
     window.students = students;
     window.questions = questions;
 
-    // create custom select box
-    attachCustomSelect();
+    // create custom select box if custom selection is allowed
+    if(getParameterByName('customselect') == 'y') {
+         attachCustomSelect();
+    }
 
     // change footer text in case of rotational selection
     if(getParameterByName('m') == 'rotation') {
