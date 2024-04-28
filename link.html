@@ -134,7 +134,11 @@
     function generateLink() {
         const form = document.getElementById('quizForm');
         const formData = new FormData(form);
-        let queryString = new URLSearchParams(formData).toString();
+        let trimmedFormData = {};
+        for (const [key, value] of formData.entries()) {
+            trimmedFormData[key] = typeof value === 'string' ? value.trim() : value;
+        }
+        let queryString = new URLSearchParams(trimmedFormData).toString();
         const link = document.createElement('a');
         link.href = `https://sourabhsuneja.github.io/quiz/?${queryString}`;
         link.textContent = link.href;
