@@ -509,7 +509,7 @@ document.getElementById("downloadBtn").addEventListener("click", downloadCSV);
 // code to handle utterances
 
 let currentUtterance; // Variable to store the current speaking utterance
-let intialVolume = parseInt(getParameterByName ('volume')) || 50 // Initial volume value
+let initialVolume = parseInt(getParameterByName ('volume')) || 50 // Initial volume value
 
 function speakUp(text, speed) {
     // Cancel previous speech synthesis if there is an ongoing utterance
