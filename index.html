@@ -222,7 +222,13 @@ if(!countdownDuration) {
 
     studentName.textContent = "Question for " + randomStudent.trim();
     resetCountdown();
+    if(!pass) {
     speakUp(questionText.textContent, 0.8);
+}
+else {
+    speakUp("Question passed", 0.8);
+}
+
   }
 
 
