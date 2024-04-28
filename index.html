@@ -570,7 +570,9 @@ function startCountdown() {
             document.getElementById("pickAnotherBtn").click() // programmatically click the pick another student button to give chance to another student
             
         } else {
-            countdown--;
+            if(!countdownPaused) {
+              countdown--;
+            }
         }
     }, 1000);
 }
@@ -582,6 +584,12 @@ startCountdown();
 
 function resetCountdown() {
     countdown = countdownDuration;
+}
+
+let countdownPaused = false;
+
+function pauseCountdown() {
+  countdownPaused = !countdownPaused;
 }
 
 </script>
