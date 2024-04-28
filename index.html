@@ -201,7 +201,7 @@ if(!countdownDuration) {
 
   
     // Function to display question and student name
-  function displayQuestion() {
+  function displayQuestion(pass = false) {
     if (!window.students || !window.questions) {
       console.log("Students or questions data not loaded.");
       return;
@@ -344,7 +344,7 @@ const currentStudent = text.substring(index + 4);
       chances[currentStudent]++;
     }
 
-    displayQuestion();
+    displayQuestion(true);
   }
 
   // Function to move to the next question
