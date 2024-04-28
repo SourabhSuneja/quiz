@@ -782,6 +782,7 @@ function attachCustomSelect() {
             option.classList.add('custom-dialog-option');
             option.addEventListener('click', function() {
                 studentName.textContent = "Question for " + student;
+resetCountdown();
                 document.body.removeChild(dialogBox); // Close dialog box
             });
             optionsList.appendChild(option);
