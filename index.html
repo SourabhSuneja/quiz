@@ -155,6 +155,70 @@
             width: 80%;
         }
     }
+    /* Style for floating button */
+    #scoresButton {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    
+    /* Style for overlay table */
+    #scoreTableContainer {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background-color: #111; /* Change background color to dark */
+      border: 1px solid #666; /* Adjust border color */
+      border-radius: 10px;
+      padding: 20px;
+      z-index: 999;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1); /* Add box shadow effect */
+      max-width: 90%; /* Limit maximum width for small screens */
+      overflow-x: auto; /* Add horizontal scroll for small screens */
+    }
+    
+    /* Style for table */
+    #scoreTable {
+      width: 100%; /* Make the table width 100% */
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    
+    #scoreTable th, #scoreTable td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #666; /* Adjust border color */
+      color: white; /* Change text color to white */
+    }
+    
+    #scoreTable th {
+      background-color: #007bff;
+    }
+    
+    /* Alternate row background color for better readability */
+    #scoreTable tbody tr:nth-child(even) {
+      background-color: #222; /* Darker background for alternate rows */
+    }
+    
+    /* Style for percentage column */
+    .percentage {
+      background-color: #007bff;
+    }
+    
+    /* Media query for small screens */
+    @media (max-width: 600px) {
+      #scoreTableContainer {
+        max-width: 100%; /* Remove max-width for small screens */
+      }
+    }
 </style>
 </head>
 <body>
@@ -173,6 +237,7 @@
     <button id="pickAnotherBtn">Pick another student</button>
     <button id="pauseBtn">Pause countdown</button>
     <button id="endBtn">End Quiz</button>
+    <button id="scoresButton">Scores</button>
 
   </div>
 
@@ -182,6 +247,30 @@
 
   <footer id="footerText">Powered by Sourabh Suneja<br><br><span id="footerSpanText" style="font-size: 12px">Student selection is randomised with weighted probability method. The chance of a student getting selected again reduces as they get more and more chances to answer.</span></footer>
 </div>
+
+
+
+
+<div id="scoreTableContainer">
+  <table id="scoreTable">
+    <thead>
+      <tr>
+        <th>Student</th>
+        <th>Score</th>
+        <th>Chances</th>
+        <th>%</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Scores, chances, and percentage will be populated here dynamically using JavaScript -->
+    </tbody>
+  </table>
+</div>
+
+
+
+
+
 
 <script>
   // Function to get URL parameters
@@ -855,6 +944,56 @@ resetCountdown();
         clearTimeout(longPressTimer); // Cancel long press timer if button is released before the specified duration
     });
 }
+
+
+
+
+
+// show scores button handling here
+  // Function to calculate percentage
+  function calculatePercentage(score, chance) {
+    return ((score / chance) * 100).toFixed(2);
+  }
+
+  // Function to populate table with scores, chances, and percentage
+  function populateTable() {
+    var tableBody = document.querySelector('#scoreTable tbody');
+    tableBody.innerHTML = '';
+
+    Object.keys(scores).forEach(function(student) {
+      var row = document.createElement('tr');
+      var nameCell = document.createElement('td');
+      var scoreCell = document.createElement('td');
+      var chanceCell = document.createElement('td');
+      var percentageCell = document.createElement('td');
+
+      nameCell.textContent = student;
+      scoreCell.textContent = scores[student];
+      chanceCell.textContent = chances[student];
+      percentageCell.textContent = calculatePercentage(scores[student], chances[student]) + '%';
+
+      row.appendChild(nameCell);
+      row.appendChild(scoreCell);
+      row.appendChild(chanceCell);
+      row.appendChild(percentageCell);
+
+      tableBody.appendChild(row);
+    });
+  }
+
+  // Show/hide table on button hover
+  var scoresButton = document.getElementById('scoresButton');
+  var scoreTableContainer = document.getElementById('scoreTableContainer');
+
+  scoresButton.addEventListener('mouseenter', function() {
+    scoreTableContainer.style.display = 'block';
+    populateTable();
+  });
+
+  scoresButton.addEventListener('mouseleave', function() {
+    scoreTableContainer.style.display = 'none';
+  });
+
 
 
 
