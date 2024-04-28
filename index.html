@@ -69,6 +69,36 @@
   .bar-text {
     margin-right: 10px;
   }
+  .slider {
+    -webkit-appearance: none;
+    width: 80%;
+    max-width: 400px;
+    height: 15px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4caf50;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4caf50;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
@@ -87,6 +117,11 @@
     <button id="pickAnotherBtn">Pick another student</button>
     <button id="pauseBtn">Pause countdown</button>
     <button id="endBtn">End Quiz</button>
+
+<h3>Volume</h3>
+
+<input type="range" min="1" max="100" value="50" class="slider" id="speedRange">
+
   </div>
   <footer id="footerText">Powered by Sourabh Suneja<br><br><span id="footerSpanText" style="font-size: 12px">Student selection is randomised with weighted probability method. The chance of a student getting selected again reduces as they get more and more chances to answer.</span></footer>
 </div>
