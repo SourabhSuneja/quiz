@@ -191,6 +191,12 @@ document.getElementById("pauseBtn").addEventListener("click", pauseCountdown);
 document.getElementById("endBtn").addEventListener("click", displayScores);
 
 document.getElementById("quizTitle").textContent = getParameterByName('title') || 'Quiz';
+
+// if countdown is not set, do not show the pause countdown button
+if(!countdownDuration) {
+   document.getElementById("pauseBtn").style.display = 'none';
+}
+
   }
 
   
