@@ -204,6 +204,11 @@ if (!studentsFileName || !questionsFileName) {
     window.students = students;
     window.questions = questions;
 
+
+    // change footer text in case of rotational selection
+    if(getParameterByName('m') == 'rotation') {
+       document.getElementById("footerSpanText").textContent = 'Student selection is done on a rotational basis. Students will get a chance to answer one after another in the pre-decided order.';
+    }
     // shuffle student names if shuffle parameter is set to 'y' or sort alphabetically if set to az or za
 if(getParameterByName('shuffle') == 'y') {
      window.students = shuffleArray(window.students);
@@ -211,9 +216,11 @@ if(getParameterByName('shuffle') == 'y') {
 }
 else if(getParameterByName('shuffle') == 'az') {
      window.students.sort();
+     document.getElementById("footerSpanText").textContent += ' The names have been alphabetically sorted A-Z.';
 }
 else if(getParameterByName('shuffle') == 'za') {
      window.students.sort((a, b) => b.localeCompare(a));
+     document.getElementById("footerSpanText").textContent += ' The names have been alphabetically sorted Z-A.';
 }
     displayQuestion();
     document.getElementById("correctBtn").addEventListener("click", answeredCorrectly);
