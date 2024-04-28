@@ -510,7 +510,7 @@ document.getElementById("downloadBtn").addEventListener("click", downloadCSV);
 
 let currentUtterance; // Variable to store the current speaking utterance
 
-function speakUp(text, speed, volume = 50) {
+function speakUp(text, speed, volume = initialVolume) {
     // Cancel previous speech synthesis if there is an ongoing utterance
     if (currentUtterance) {
         speechSynthesis.cancel();
