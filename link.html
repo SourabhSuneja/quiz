@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Quiz Link Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #4CAF50;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        p.subtitle {
+            color: #777;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: box-shadow 0.3s ease;
+        }
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            box-shadow: 0 0 10px #4CAF50;
+        }
+        input[type="radio"] {
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #quizLink {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            word-wrap: break-word; /* Added to ensure proper wrapping */
+        }
+        #quizLink a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Dynamic Quiz Link Generator</h2>
+    <p class="subtitle">Powered by Sourabh Suneja</p>
+    <form id="quizForm">
+        <label for="quizTitle">Quiz Title:</label>
+        <input type="text" id="quizTitle" name="title">
+        <label for="studentData">Student Data (s):</label>
+        <input type="text" id="studentData" name="s">
+        <label for="questionData">Question Data (q):</label>
+        <input type="text" id="questionData" name="q">
+        <label>Student Selection Method (m):</label>
+        <label><input type="radio" name="m" value="random" checked> Random</label>
+        <label><input type="radio" name="m" value="rotation"> Rotation</label>
+        <label for="shuffleMethod">Shuffle Method:</label>
+        <select id="shuffleMethod" name="shuffle">
+            <option value="n" selected>No Shuffling</option>
+            <option value="y">Fisher-Yates</option>
+            <option value="az">Sort A-Z</option>
+            <option value="za">Sort Z-A</option>
+        </select>
+        <label for="maxChances">Max Chances:</label>
+        <input type="number" id="maxChances" name="maxchances" value="3">
+        <label for="countdownDuration">Countdown Duration (in seconds):</label>
+        <input type="number" id="countdownDuration" name="countdown" value="0">
+        <label for="initialVolume">Initial Volume:</label>
+        <input type="number" id="initialVolume" name="volume" value="100">
+        <button type="button" onclick="generateLink()">Generate Link</button>
+    </form>
+    <div id="quizLink"></div>
+</div>
+
+<script>
+    function generateLink() {
+        const form = document.getElementById('quizForm');
+        const formData = new FormData(form);
+        let queryString = new URLSearchParams(formData).toString();
+        const link = document.createElement('a');
+        link.href = `https://sourabhsuneja.github.io/quiz/?${queryString}`;
+        link.textContent = link.href;
+        document.getElementById('quizLink').innerHTML = '';
+        document.getElementById('quizLink').appendChild(link);
+    }
+</script>
+
+</body>
+</html>
