@@ -674,7 +674,8 @@ slider.addEventListener("input", function() {
     if (currentUtterance) {
         var volume = this.value; // Get the slider value
         currentUtterance.volume = volume / 100; // Map slider volume range (1-100) to SpeechSynthesisUtterance volume range (0-1)
-        speechSynthesis.speak(currentUtterance); // Speak again to apply the new volume
+
+speechSynthesis.cancel(); // cancel any ongoing utterance        speechSynthesis.speak(currentUtterance); // Speak again to apply the new volume
 
         initialVolume = volume;
     }
