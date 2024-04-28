@@ -99,6 +99,52 @@
     background: #4caf50;
     cursor: pointer;
   }
+
+  /* CSS for custom dialog box */
+    .custom-dialog {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 9999;
+    }
+
+    .custom-dialog-title {
+        font-size: 20px;
+        margin-bottom: 10px;
+        text-align: center;
+        color: #333333;
+    }
+
+    .custom-dialog-options {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        max-height: 200px; /* Set max height for scrollability */
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+
+    .custom-dialog-option {
+        padding: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .custom-dialog-option:hover {
+        background-color: #5cb85c; /* Beautiful green color */
+        color: #ffffff; /* Change text color on hover */
+    }
+
+    /* Mobile styles */
+    @media only screen and (max-width: 600px) {
+        .custom-dialog {
+            width: 80%;
+        }
+    }
 </style>
 </head>
 <body>
@@ -204,6 +250,8 @@ if (!studentsFileName || !questionsFileName) {
     window.students = students;
     window.questions = questions;
 
+    // create custom select box
+    attachCustomSelect();
 
     // change footer text in case of rotational selection
     if(getParameterByName('m') == 'rotation') {
@@ -693,6 +741,71 @@ slider.addEventListener("input", function() {
         initialVolume = volume;
     }
 });
+
+
+
+
+
+
+// script to handle the custom select box
+function attachCustomSelect() {
+    const pickAnotherBtn = document.getElementById('pickAnotherBtn');
+    const studentName = document.getElementById('studentName');
+    const students = window.students || []; // Get student names from window.students or default to an empty array
+    
+    const longPressDelay = 2500; // Long press delay in milliseconds
+
+    let longPressTimer;
+
+    function showCustomDialog() {
+        // Create custom dialog box
+        const dialogBox = document.createElement('div');
+        dialogBox.classList.add('custom-dialog');
+
+        // Dialog box title
+        const title = document.createElement('div');
+        title.classList.add('custom-dialog-title');
+        title.textContent = "Select a student";
+        dialogBox.appendChild(title);
+
+        // List of options
+        const optionsList = document.createElement('ul');
+        optionsList.classList.add('custom-dialog-options');
+
+        // Populate options from students array
+        students.forEach(function(student) {
+            const option = document.createElement('li');
+            option.textContent = student;
+            option.classList.add('custom-dialog-option');
+            option.addEventListener('click', function() {
+                studentName.textContent = "Question for " + student;
+                document.body.removeChild(dialogBox); // Close dialog box
+            });
+            optionsList.appendChild(option);
+        });
+
+        dialogBox.appendChild(optionsList);
+
+        // Append dialog box to body
+        document.body.appendChild(dialogBox);
+    }
+
+    pickAnotherBtn.addEventListener('mousedown', function(event) {
+        longPressTimer = setTimeout(showCustomDialog, longPressDelay); // Start timer for long press
+    });
+
+    pickAnotherBtn.addEventListener('mouseup', function() {
+        clearTimeout(longPressTimer); // Cancel long press timer if button is released before the specified duration
+    });
+
+    pickAnotherBtn.addEventListener('touchstart', function(event) {
+        longPressTimer = setTimeout(showCustomDialog, longPressDelay); // Start timer for long press
+    });
+
+    pickAnotherBtn.addEventListener('touchend', function() {
+        clearTimeout(longPressTimer); // Cancel long press timer if button is released before the specified duration
+    });
+}
 
 
 
