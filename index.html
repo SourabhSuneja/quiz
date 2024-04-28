@@ -122,7 +122,7 @@
 
 <h3>Volume</h3>
 
-<input type="range" min="1" max="100" value="50" class="slider" id="speedRange">
+<input type="range" min="1" max="100" value="50" class="slider" id="volumeRange">
 
   <footer id="footerText">Powered by Sourabh Suneja<br><br><span id="footerSpanText" style="font-size: 12px">Student selection is randomised with weighted probability method. The chance of a student getting selected again reduces as they get more and more chances to answer.</span></footer>
 </div>
@@ -644,6 +644,22 @@ function pauseCountdown() {
   const button = document.getElementById('pauseBtn');
   button.textContent = countdownPaused ? 'Resume countdown' : 'Pause countdown';
 }
+
+
+
+// code to handle the volume slider
+let volume = parseInt(getParameterByName ('volume')) || 50 // Initial volume value
+  
+  // Get the slider element
+  var slider = document.getElementById("volumeRange");
+  slider.value = volume;
+  
+  // Update the volume value when the slider is changed
+  slider.oninput = function() {
+    volume = this.value;
+  }
+
+
 
 </script>
 
