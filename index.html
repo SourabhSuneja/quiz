@@ -140,6 +140,15 @@
         color: #ffffff; /* Change text color on hover */
     }
 
+    .custom-dialog-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #777777;
+    }
+
     /* Mobile styles */
     @media only screen and (max-width: 600px) {
         .custom-dialog {
@@ -764,6 +773,17 @@ function attachCustomSelect() {
         // Create custom dialog box
         const dialogBox = document.createElement('div');
         dialogBox.classList.add('custom-dialog');
+
+
+        // Dialog box close button
+const closeButton = document.createElement('span');
+closeButton.classList.add('custom-dialog-close');
+closeButton.textContent = '×';
+closeButton.addEventListener('click', function() {
+    document.body.removeChild(dialogBox); // Close dialog box
+});
+dialogBox.appendChild(closeButton);
+
 
         // Dialog box title
         const title = document.createElement('div');
