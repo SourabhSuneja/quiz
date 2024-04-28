@@ -534,7 +534,7 @@ function speakUp(text, speed) {
     utterance.rate = speed || 1.0; // If speed is not specified, default to 1.0
 
     // Set the initial volume
-    utterance.volume = initialVolume / 100; // Map slider volume range (1-100) to SpeechSynthesisUtterance volume range (0-1)
+    utterance.volume = 50 / 100; // Map slider volume range (1-100) to SpeechSynthesisUtterance volume range (0-1)
 
     // Speak the text
     speechSynthesis.speak(utterance);
