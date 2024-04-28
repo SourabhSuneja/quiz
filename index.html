@@ -510,7 +510,7 @@ document.getElementById("downloadBtn").addEventListener("click", downloadCSV);
 
 let currentUtterance; // Variable to store the current speaking utterance
 
-function speakUp(text, speed, volume = initialVolume) {
+function speakUp(text, speed) {
     // Cancel previous speech synthesis if there is an ongoing utterance
     if (currentUtterance) {
         speechSynthesis.cancel();
@@ -534,7 +534,7 @@ function speakUp(text, speed, volume = initialVolume) {
     utterance.rate = speed || 1.0; // If speed is not specified, default to 1.0
 
     // Set the initial volume
-    utterance.volume = volume / 100; // Map slider volume range (1-100) to SpeechSynthesisUtterance volume range (0-1)
+    utterance.volume = initialVolume / 100; // Map slider volume range (1-100) to SpeechSynthesisUtterance volume range (0-1)
 
     // Speak the text
     speechSynthesis.speak(utterance);
@@ -675,6 +675,7 @@ slider.addEventListener("input", function() {
     if (currentUtterance) {
         var volume = this.value; // Get the slider value
         currentUtterance.volume = volume / 100; // Map slider volume range (1-100) to SpeechSynthesisUtterance volume range (0-1)
+        intialVolume = volume;
     }
 });
 
