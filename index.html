@@ -952,7 +952,7 @@ resetCountdown();
 
 
 // show scores button handling here
-  // Function to calculate percentage
+   // Function to calculate percentage
   function calculatePercentage(score, chance) {
     return ((score / chance) * 100).toFixed(2);
   }
@@ -962,17 +962,26 @@ resetCountdown();
     var tableBody = document.querySelector('#scoreTable tbody');
     tableBody.innerHTML = '';
 
-    Object.keys(scores).forEach(function(student) {
+    // Combine scores and chances objects to get unique student names
+    var students = Array.from(new Set([...Object.keys(scores), ...Object.keys(chances)]));
+
+    // Sort student names in A to Z order
+    students.sort();
+
+    students.forEach(function(student) {
       var row = document.createElement('tr');
       var nameCell = document.createElement('td');
       var scoreCell = document.createElement('td');
       var chanceCell = document.createElement('td');
       var percentageCell = document.createElement('td');
 
+      // Check if student is in scores object
+      var score = scores[student] || 0;
+
       nameCell.textContent = student;
-      scoreCell.textContent = scores[student];
-      chanceCell.textContent = chances[student];
-      percentageCell.textContent = calculatePercentage(scores[student], chances[student]) + '%';
+      scoreCell.textContent = score;
+      chanceCell.textContent = chances[student] || 0;
+      percentageCell.textContent = calculatePercentage(score, chances[student] || 1) + '%';
 
       row.appendChild(nameCell);
       row.appendChild(scoreCell);
@@ -998,7 +1007,6 @@ resetCountdown();
       scoreTableContainer.style.display = 'none';
     }
   });
-
 
 
 
