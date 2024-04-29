@@ -1,0 +1,16 @@
+The base of a binary number system is _______.
+The base of a _______ number system is 10.
+In Binary addition, 1+1 = ______?
+Which number system consists of only 8 digits?
+_________ number system uses digits 0-9 and letters A-F.
+745 is a decimal number. True or False?
+To convert a decimal number into its binary equivalent, we keep dividing the decimal number repeatedly by _______ (1, 2, 8 or 10)
+Computers can directly understand ________ number system. Binary, decimal, octal or hexadecimal?
+The Most Significant Digit (MSD) in the number 1024 is _______.
+Differentiate between LSD and MSD with the help of an example.
+What is a number system?
+What is the importance of the binary number system?
+What is hexadecimal number system?
+In Binary number system, 10 + 01 = _____?
+You cannot perform arithmetic operations on binary numbers. True or False?
+The number of digits used in a number system is called _______ of that number system.
