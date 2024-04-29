@@ -1,0 +1,12 @@
+Combining and summarising data from two or more worksheets into a master worksheet is called _________.
+_________ is an elaborated form of goal seek.
+Explain the use of scenarios.
+What is the difference between Goal Seek and Solver?
+Which dialog box helps you to fix conflict changes in a spreadsheet? (A. Manage changes B. Resolve conflicts C. Correct conflicts D. Fix conflicts)
+Why do you use the "Changes" feature of Calc?
+What are comments? How are they useful?
+Why do we compare and merge spreadsheets?
+What is Goal seek?
+_______ can solve equations with multiple unknown variables. Goal seek or solver?
+How can you name a range of cells?
+Goal seek is present in _______ menu.
