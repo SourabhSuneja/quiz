@@ -14,3 +14,5 @@ What is hexadecimal number system?
 In Binary number system, 10 + 01 = _____?
 You cannot perform arithmetic operations on binary numbers. True or False?
 The number of digits used in a number system is called _______ of that number system.
+What are the steps to convert a decimal number to a binary number?
+Name the different types of number systems.
