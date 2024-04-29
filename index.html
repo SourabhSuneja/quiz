@@ -983,17 +983,20 @@ resetCountdown();
     });
   }
 
-  // Show/hide table on button hover
+  // Show table when scores button is clicked
   var scoresButton = document.getElementById('scoresButton');
   var scoreTableContainer = document.getElementById('scoreTableContainer');
 
-  scoresButton.addEventListener('mouseenter', function() {
+  scoresButton.addEventListener('click', function() {
     scoreTableContainer.style.display = 'block';
     populateTable();
   });
 
-  scoresButton.addEventListener('mouseleave', function() {
-    scoreTableContainer.style.display = 'none';
+  // Hide table when clicking anywhere outside the table
+  window.addEventListener('click', function(event) {
+    if (!scoreTableContainer.contains(event.target) && event.target !== scoresButton) {
+      scoreTableContainer.style.display = 'none';
+    }
   });
 
 
