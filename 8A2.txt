@@ -2,8 +2,6 @@ Aanya Sharma
 Atharva Sharma
 Bhanupriya
 Bhavya Choudhary
-Bhavya Choudhary
-Bhavya Choudhary
 Bhumi Rathi
 Bhumika Choudhary
 Chitransh Agrawal
@@ -12,10 +10,6 @@ Devanshi Sharma
 Dipanshu Choudhary
 Gourav Saini
 Harsh
-Harshita
-Harshita
-Harshita
-Harshita
 Harshita
 Hemal Kanwar
 Himanshu Yadav
@@ -33,8 +27,6 @@ Monika Yadav
 Muskaan Yadav
 Niharika Jangid
 Pari Yadav
-Pari Yadav
-Pari Yadav
 Pradhuman Singh
 Pranjal Singh Meena
 Reyansh Jangir
@@ -50,5 +42,4 @@ Supriya Yadav
 Vatsal Dhinwa
 Vihaan Choudhary
 Vihan Chhabarwal
-Yashasvi Kumawat
 Yashasvi Kumawat
