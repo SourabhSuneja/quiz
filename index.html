@@ -297,6 +297,7 @@ let maxChancesInput;
 let currentUtterance;
 let volume;
 let slider;
+let dataPickedFromCookie = false;
 
 
 
@@ -390,6 +391,8 @@ async function checkQuizCookie() {
             var pickUp = confirm("The previous quiz session didn't complete properly. Do you want to pick up from where you left off?");
             if(!pickUp) {
                deleteQuizCookie();
+            } else {
+               dataPickedFromCookie = true;
             }
             resolve(pickUp);
         } else {
@@ -606,7 +609,13 @@ if(!countdownDuration) {
     const studentName = document.getElementById("studentName");
     questionText.textContent = window.questions[currentQuestionIndex].trim();
     let randomStudent; 
-    let selectionMode = m || 'random';
+    
+    if(dataPickedFromCookie) {
+    randomStudent = retrieveQuizData('currentStudent');
+    dataPickedFromCookie = false;
+}  else {
+
+let selectionMode = m || 'random';
     if(selectionMode == 'random') {
             randomStudent = pickRandomStudent();
    } else if(selectionMode == 'rotation') {
@@ -615,6 +624,11 @@ if(!countdownDuration) {
      else {
             randomStudent = pickRandomStudent();
      }
+
+}
+
+
+
 
     studentName.textContent = "Question for " + randomStudent.trim();
     resetCountdown();
