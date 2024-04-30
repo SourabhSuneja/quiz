@@ -279,7 +279,6 @@
 
 let studentsFileName;
 let questionsFileName;
-let studentPickedFromCookieFlag = 0;
 
 
 
@@ -293,8 +292,6 @@ async function checkQuizCookie() {
             var pickUp = confirm("The previous quiz session didn't complete properly. Do you want to pick up from where you left off?");
             if(!pickUp) {
                document.cookie = "quizData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            } else {
-               studentPickedFromCookieFlag = 1;
             }
             resolve(pickUp);
         } else {
