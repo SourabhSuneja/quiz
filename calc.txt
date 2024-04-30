@@ -10,3 +10,8 @@ What is Goal seek?
 _______ can solve equations with multiple unknown variables. Goal seek or solver?
 How can you name a range of cells?
 Goal seek is present in _______ menu.
+What is the need to link data?
+Ritu is working on a budget report in Calc. She wants her office colleagues to be able to work on the same report. Which feature should she use for this?
+The ______ option generates subtotals to summarise the data. (Options: A. Subtotals B. Scenarios C. Solver D. Goal seek)
+What is an absolute hyperlink?
+Changes made in a shared spreadsheet can be accepted or rejected. True or False?
