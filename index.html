@@ -278,7 +278,7 @@
 
 
 // Function to store key values as cookies so that the quiz can be picked from where we left off in case of unexpected failure
-function storeQuizData() {
+function storeQuizData(currentStudent) {
     // Define key values to be stored
     var dataToStore = {
         currentQuestionIndex: currentQuestionIndex,
@@ -286,6 +286,7 @@ function storeQuizData() {
         chances: chances,
         studentsFileName: studentsFileName,
         questionsFileName: questionsFileName,
+        currentStudent: currentStudent,
         countdownDuration: countdownDuration,
         maxChances: maxChances,
         m: getParameterByName('m'),
@@ -477,6 +478,8 @@ if(!countdownDuration) {
 
     studentName.textContent = "Question for " + randomStudent.trim();
     resetCountdown();
+    storeQuizData(randomStudent.trim());
+
     if(!pass) {
     speakUp(questionText.textContent, 0.8);
 }
