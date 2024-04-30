@@ -8,10 +8,14 @@
 <style>
   /* Styles for table */
   table {
-    width: 100%;
+    width: 90%;
+    max-width: 600px; /* Limit maximum width */
+    margin: 0 auto; /* Center the table */
     border-collapse: collapse;
     margin-bottom: 20px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden; /* Hide overflowing content */
   }
 
   th, td {
@@ -28,7 +32,7 @@
   /* Responsive table */
   @media screen and (max-width: 600px) {
     table {
-      overflow-x: auto;
+      width: 100%;
     }
   }
 </style>
