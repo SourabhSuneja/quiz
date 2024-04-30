@@ -277,6 +277,31 @@
 <script>
 
 
+let studentsFileName;
+let questionsFileName;
+
+
+
+// Function to check if quiz cookie exists
+function checkQuizCookie() {
+    var cookieData = document.cookie.split(';').find(cookie => cookie.trim().startsWith('quizData='));
+
+    if (cookieData) {
+        // Prompt the user with a dialog box
+        var pickUp = confirm("The previous quiz session didn't complete properly. Do you want to pick up from where you left off?");
+
+        if (!pickUp) {
+            // If user selects no, delete the cookie
+            document.cookie = "quizData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+    }
+}
+
+// Call the function to check quiz cookie
+checkQuizCookie();
+
+
+
 // Function to store key values as cookies so that the quiz can be picked from where we left off in case of unexpected failure
 function storeQuizData(currentStudent) {
     // Define key values to be stored
@@ -317,23 +342,12 @@ function retrieveQuizData(key) {
 }
 
 
-// Function to check if quiz cookie exists
-function checkQuizCookie() {
-    var cookieData = document.cookie.split(';').find(cookie => cookie.trim().startsWith('quizData='));
 
-    if (cookieData) {
-        // Prompt the user with a dialog box
-        var pickUp = confirm("The previous quiz session didn't complete properly. Do you want to pick up from where you left off?");
 
-        if (!pickUp) {
-            // If user selects no, delete the cookie
-            document.cookie = "quizData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        }
-    }
-}
 
-// Call the function to check quiz cookie
-checkQuizCookie();
+
+
+
 
 
 
@@ -361,8 +375,8 @@ function getParameterByName(name, url) {
   async function initializeQuiz() {
   try {
     // Attempt to retrieve file names from URL parameters
-let studentsFileName = getParameterByName('s');
-let questionsFileName = getParameterByName('q');
+studentsFileName = getParameterByName('s');
+questionsFileName = getParameterByName('q');
 
 // If URL parameters are not available, prompt the user for file names
 if (!studentsFileName || !questionsFileName) {
