@@ -481,8 +481,7 @@ if(!countdownDuration) {
     }
     const questionText = document.getElementById("questionText");
     const studentName = document.getElementById("studentName");
-    const qindex = retrieveQuizData(currentQuestionIndex) || currentQuestionIndex;
-    questionText.textContent = window.questions[qindex].trim();
+    questionText.textContent = window.questions[currentQuestionIndex].trim();
     let randomStudent; 
     let selectionMode = getParameterByName('m') || 'random';
     if(selectionMode == 'random') {
@@ -679,7 +678,7 @@ if (isNaN(maxChances) || maxChances <= 0) {
   let absentStudents = [];
 
   // Index to keep track of current question
-  let currentQuestionIndex = 0;
+  let currentQuestionIndex = retrieveQuizData("currentQuestionIndex") || 0;
 
   // Initialize quiz when the page loads
   window.onload = initializeQuiz;
