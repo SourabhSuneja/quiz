@@ -282,23 +282,26 @@ let questionsFileName;
 
 
 
-// Function to check if quiz cookie exists
-function checkQuizCookie() {
-    var cookieData = document.cookie.split(';').find(cookie => cookie.trim().startsWith('quizData='));
 
-    if (cookieData) {
-        // Prompt the user with a dialog box
-        var pickUp = confirm("The previous quiz session didn't complete properly. Do you want to pick up from where you left off?");
+// Asynchronous function to check quiz cookie and prompt user
+async function checkQuizCookie() {
+    return new Promise((resolve) => {
+        var cookieData = document.cookie.split(';').find(cookie => cookie.trim().startsWith('quizData='));
 
-        if (!pickUp) {
-            // If user selects no, delete the cookie
-            document.cookie = "quizData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        if (cookieData) {
+            // Prompt the user with a dialog box
+            var pickUp = confirm("The previous quiz session didn't complete properly. Do you want to pick up from where you left off?");
+            resolve(pickUp);
+        } else {
+            // If cookie is not present, resolve to false
+            resolve(false);
         }
-    }
+    });
 }
 
-// Call the function to check quiz cookie
-checkQuizCookie();
+
+
+
 
 
 
@@ -377,9 +380,22 @@ function getParameterByName(name, url) {
   // Function to initialize quiz
   async function initializeQuiz() {
   try {
-    // Attempt to retrieve file names from URL parameters
-studentsFileName = retrieveQuizData('studentsFileName') || getParameterByName('s');
-questionsFileName = retrieveQuizData('questionsFileName') || getParameterByName('q');
+
+
+    // wait till the presence of cookies is checked
+    let useCookie = await checkQuizCookie();
+
+   // if user wants to pick up from wherethe quiz was left off
+    if(useCookie) {
+         studentsFileName = retrieveQuizData('studentsFileName');
+         questionsFileName = retrieveQuizData('questionsFileName');
+    } else {
+         // Attempt to retrieve file names from URL parameters
+studentsFileName = getParameterByName('s');
+questionsFileName =  getParameterByName('q');
+    }
+
+
 
 // If URL parameters are not available, prompt the user for file names
 if (!studentsFileName || !questionsFileName) {
