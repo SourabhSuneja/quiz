@@ -302,10 +302,8 @@ let slider;
 
 // Function to delete the quiz cookie
 function deleteQuizCookie() {
-    document.cookie = "quizData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
+    document.cookie = "quizData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }
-
-
 
 
 
@@ -426,7 +424,11 @@ function storeQuizData(currentStudent) {
     };
 
     // Store data as a cookie
-    document.cookie = "quizData=" + JSON.stringify(dataToStore);
+    // Set cookie with expiration date one year from now
+    var expiryDate = new Date();
+    expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+    document.cookie = "quizData=" + JSON.stringify(dataToStore) + "; expires=" + expiryDate.toUTCString() + "; path=/;";
+
 }
 
 
