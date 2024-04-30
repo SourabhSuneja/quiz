@@ -475,8 +475,7 @@ function getParameterByName(name, url) {
     // wait till the presence of cookies is checked
     let useCookie = await checkQuizCookie();
     
-   // intialize all variables
-   intializeQuizVariables();
+   
    
 
    // if user wants to pick up from wherethe quiz was left off
@@ -539,6 +538,9 @@ if (!studentsFileName || !questionsFileName) {
   function startQuiz(students, questions) {
     window.students = students;
     window.questions = questions;
+
+    // intialize all quiz variables
+   intializeQuizVariables();
 
     // create custom select box if custom selection is allowed
     if(customselect == 'y') {
