@@ -657,12 +657,12 @@ const currentStudent = text.substring(index + 4);
   }
 
   // Array to store scores
-  let scores = {};
-  let chances = {};
+  let scores = retrieveQuizData('scores') || {};
+  let chances = retrieveQuizData('chances') || {};
 
 
 // Ask the user for the maximum chances
-let maxChancesInput = getParameterByName('maxchances') ||  prompt("How many maximum chances do you want to give to each student? (Defaults to 3)");
+let maxChancesInput = retrieveQuizData('maxChances') ||  getParameterByName('maxchances') ||  prompt("How many maximum chances do you want to give to each student? (Defaults to 3)");
 // Convert the input to a number
 let maxChances = parseInt(maxChancesInput);
 
@@ -678,7 +678,7 @@ if (isNaN(maxChances) || maxChances <= 0) {
   let absentStudents = [];
 
   // Index to keep track of current question
-  let currentQuestionIndex = retrieveQuizData("currentQuestionIndex") || 0;
+  let currentQuestionIndex = parseInt(retrieveQuizData("currentQuestionIndex")) || 0;
 
   // Initialize quiz when the page loads
   window.onload = initializeQuiz;
@@ -841,7 +841,7 @@ function downloadCSV() {
 
 // script to handle countdown if required
 // Initialize countdown variable based on parameter or user input
-  var countdownParam = parseInt(getParameterByName("countdown"));
+  var countdownParam = parseInt(retrieveQuizData('countdownDuration')) || parseInt(getParameterByName("countdown"));
   let countdownDuration;
   if (typeof countdownParam === 'number' && !isNaN(countdownParam) && countdownParam >= 0) {
     countdownDuration = countdownParam;
