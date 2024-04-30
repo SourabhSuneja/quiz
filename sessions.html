@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Past Quiz Sessions</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+<script>
+  
+  // Function to get cookie by name
+  function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName.trim() === name) {
+        return decodeURIComponent(cookieValue);
+      }
+    }
+    return null;
+  }
+
+  function downloadCSV() {
+    const allScoresCookie = JSON.parse(getCookie('allscores') || '[]');
+    const zip = new JSZip();
+    
+    allScoresCookie.forEach((session, index) => {
+      const csvContent = `Quiz Title,Date,Time,Scores,Chances\n"${session.quizTitle}","${session.date}","${session.time}","${JSON.stringify(session.scores)}","${JSON.stringify(session.chances)}"`;
+      zip.file(`quiz_session_${index + 1}.csv`, csvContent);
+    });
+
+    zip.generateAsync({ type: "blob" }).then(function(content) {
+      // Force download the zip file
+      const zipBlob = new Blob([content]);
+      const zipUrl = URL.createObjectURL(zipBlob);
+      const link = document.createElement("a");
+      link.href = zipUrl;
+      link.setAttribute("download", "quiz_sessions.zip");
+      document.body.appendChild(link);
+      link.click();
+    });
+  }
+
+// trigger zip download
+window.onload = downloadCSV;
+
+</script>
+</head>
+<body>
+</body>
+</html>
