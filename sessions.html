@@ -40,11 +40,62 @@
     });
   }
 
+  function displayQuizSessions() {
+    const allScoresCookie = JSON.parse(getCookie('allscores') || '[]');
+
+    const sessionDetailsContainer = document.getElementById('session-details');
+    sessionDetailsContainer.innerHTML = '';
+
+    allScoresCookie.forEach((session, index) => {
+      // Create heading for session details
+      const heading = document.createElement('h2');
+      heading.textContent = `Quiz Session ${index + 1}: ${session.quizTitle} conducted on ${session.date} at ${session.time}`;
+      sessionDetailsContainer.appendChild(heading);
+
+      // Create table for scores
+      const scoresTable = createTable(session.scores, session.chances);
+      sessionDetailsContainer.appendChild(scoresTable);
+    });
+  }
+
+  function createTable(scores, chances) {
+    // Combine scores and chances to ensure all students are included
+    const allStudents = { ...chances, ...scores };
+    const studentNames = Object.keys(allStudents).sort();
+
+    // Create table element
+    const table = document.createElement('table');
+    const headerRow = table.insertRow();
+    const nameHeader = headerRow.insertCell();
+    nameHeader.textContent = 'Name';
+    const scoreHeader = headerRow.insertCell();
+    scoreHeader.textContent = 'Score';
+    const chancesHeader = headerRow.insertCell();
+    chancesHeader.textContent = 'Chances';
+
+    // Populate table with student data
+    studentNames.forEach(name => {
+      const row = table.insertRow();
+      const nameCell = row.insertCell();
+      nameCell.textContent = name;
+      const scoreCell = row.insertCell();
+      scoreCell.textContent = scores[name] || 0;
+      const chancesCell = row.insertCell();
+      chancesCell.textContent = chances[name] || 0;
+    });
+
+    return table;
+  }
+
 // trigger zip download
 window.onload = downloadCSV;
+// show details of all sessions in tabular format
+displayQuizSessions();
 
 </script>
 </head>
 <body>
+<!-- Container for displaying session details -->
+<div id="session-details"></div>
 </body>
 </html>
