@@ -299,6 +299,18 @@ let volume;
 let slider;
 
 
+
+// Function to delete the quiz cookie
+function deleteQuizCookie() {
+    document.cookie = "quizData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
+}
+
+deleteQuizCookie();
+
+
+
+
+
 // function to intialize key quiz variables
 function intializeQuizVariables() {
 
@@ -436,11 +448,6 @@ function retrieveQuizData(key) {
 
 
 
-
-// Function to delete the quiz cookie
-function deleteQuizCookie() {
-    document.cookie = "quizData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
-}
 
 
 
