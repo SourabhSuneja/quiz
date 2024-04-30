@@ -378,8 +378,8 @@ function getParameterByName(name, url) {
   async function initializeQuiz() {
   try {
     // Attempt to retrieve file names from URL parameters
-studentsFileName = getParameterByName('s');
-questionsFileName = getParameterByName('q');
+studentsFileName = retrieveQuizData('studentsFileName') || getParameterByName('s');
+questionsFileName = retrieveQuizData('questionsFileName') || getParameterByName('q');
 
 // If URL parameters are not available, prompt the user for file names
 if (!studentsFileName || !questionsFileName) {
@@ -481,7 +481,8 @@ if(!countdownDuration) {
     }
     const questionText = document.getElementById("questionText");
     const studentName = document.getElementById("studentName");
-    questionText.textContent = window.questions[currentQuestionIndex].trim();
+    const qindex = retrieveQuizData(currentQuestionIndex) || currentQuestionIndex;
+    questionText.textContent = window.questions[qindex].trim();
     let randomStudent; 
     let selectionMode = getParameterByName('m') || 'random';
     if(selectionMode == 'random') {
