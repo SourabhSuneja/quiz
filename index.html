@@ -305,7 +305,7 @@ function deleteQuizCookie() {
     document.cookie = "quizData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
 }
 
-deleteQuizCookie();
+
 
 
 
@@ -617,6 +617,7 @@ if(!countdownDuration) {
     studentName.textContent = "Question for " + randomStudent.trim();
     resetCountdown();
     storeQuizData(randomStudent.trim());
+deleteQuizCookie();
 
     if(!pass) {
     speakUp(questionText.textContent, 0.8);
