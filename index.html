@@ -757,6 +757,10 @@ const currentStudent = text.substring(index + 4);
 
   // Function to display scores
   function displayScores() {
+
+deleteQuizCookie();
+
+
     // cancel any speech synthesis going on
     speechSynthesis.cancel();
     // stop the timer
@@ -1145,10 +1149,6 @@ resetCountdown();
 
   scoresButton.addEventListener('click', function() {
    
-
-alert( document.cookie.split(';').find(cookie => cookie.trim().startsWith('quizData=')) );
-
-
  scoreTableContainer.style.display = 'block';
     populateTable();
   });
