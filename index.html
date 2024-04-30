@@ -471,7 +471,7 @@ else if(getParameterByName('shuffle') == 'za') {
      window.students.sort((a, b) => b.localeCompare(a));
      document.getElementById("footerSpanText").textContent += ' The names have been alphabetically sorted Z-A.';
 }
-    displayQuestion();
+    
     document.getElementById("correctBtn").addEventListener("click", answeredCorrectly);
     document.getElementById("incorrectBtn").addEventListener("click", answeredIncorrectly);
 
@@ -483,6 +483,8 @@ document.getElementById("pauseBtn").addEventListener("click", pauseCountdown);
 document.getElementById("endBtn").addEventListener("click", displayScores);
 
 document.getElementById("quizTitle").textContent = retrieveQuizData('title') || getParameterByName('title') || 'Quiz';
+
+displayQuestion();
 
 // if countdown is not set, do not show the pause countdown button
 if(!countdownDuration) {
