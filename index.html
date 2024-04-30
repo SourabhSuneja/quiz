@@ -296,6 +296,7 @@ let absentStudents;
 let maxChancesInput;
 let currentUtterance;
 let volume;
+let slider;
 
 
 // function to intialize key quiz variables
@@ -353,8 +354,7 @@ currentUtterance; // Variable to store the current speaking utterance
 initialVolume = parseInt(getParameterByName ('volume')) || 50 // Initial volume value
 
 // code to handle the volume slider
-  // Get the slider element
-  var slider = document.getElementById("volumeRange");
+
   slider.value = initialVolume;
 
 // other parameters
@@ -977,7 +977,7 @@ function pauseCountdown() {
 }
 
   
-  
+slider = document.getElementById("volumeRange");
   // Listen for the input event on the slider
 slider.addEventListener("input", function() {
     // If there is an ongoing utterance, update its volume
