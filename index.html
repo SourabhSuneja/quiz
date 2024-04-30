@@ -276,9 +276,97 @@
 
 <script>
 
-
+// global variables
 let studentsFileName;
 let questionsFileName;
+let currentQuestionIndex;
+let scores;
+let chances;
+let countdownParam;
+let countdownDuration;
+let countdown;
+let stopCountDown;
+let countdownPaused = false;
+let maxChances;
+let m;
+let title;
+let shuffle;
+let customselect;
+let absentStudents;
+let maxChancesInput;
+let currentUtterance;
+let volume;
+
+
+// function to intialize key quiz variables
+function intializeQuizVariables() {
+
+ // Array to store absent students
+  absentStudents = [];
+
+  // Index to keep track of current question
+  currentQuestionIndex = parseInt(retrieveQuizData("currentQuestionIndex")) || 0;
+
+// Arrays to store scores & chances
+  scores = retrieveQuizData('scores') || {};
+  chances = retrieveQuizData('chances') || {};
+
+
+// Ask the user for the maximum chances
+maxChancesInput = retrieveQuizData('maxChances') ||  getParameterByName('maxchances') ||  prompt("How many maximum chances do you want to give to each student? (Defaults to 3)");
+// Convert the input to a number
+maxChances = parseInt(maxChancesInput);
+
+// Check if the input is a valid number
+if (isNaN(maxChances) || maxChances <= 0) {
+    // If not a valid number, set default value to 3
+    maxChances = 3;
+}
+
+// Initialize countdown variable based on parameter or user input
+countdownParam = parseInt(retrieveQuizData('countdownDuration')) || parseInt(getParameterByName("countdown"));
+
+  if (typeof countdownParam === 'number' && !isNaN(countdownParam) && countdownParam >= 0) {
+    countdownDuration = countdownParam;
+  } else {
+    var userInput = prompt("Specify the countdown duration in seconds for the quiz. After this duration, another student will be prompted to answer the same question. If you prefer not to have a countdown, simply leave this field blank.");
+    countdownDuration = userInput ? parseInt(userInput) : 0;
+  }
+
+countdown = countdownDuration; // Initial countdown value in seconds
+stopCountDown; // Flag variable to start/stop countdown
+
+if(!countdown) {
+    stopCountDown = true;
+    document.getElementById('timer').style.display = 'none';
+    
+} else {
+    stopCountDown = false;
+}
+
+startCountdown();
+
+
+// code to handle utterances
+
+currentUtterance; // Variable to store the current speaking utterance
+initialVolume = parseInt(getParameterByName ('volume')) || 50 // Initial volume value
+
+// code to handle the volume slider
+  // Get the slider element
+  var slider = document.getElementById("volumeRange");
+  slider.value = initialVolume;
+
+// other parameters
+
+customselect = retrieveQuizData("customselect") || getParameterByName('customselect');
+m = retrieveQuizData("m") || getParameterByName('m');
+title = retrieveQuizData("title") || getParameterByName('title');
+shuffle = retrieveQuizData("shuffle") getParameterByName('shuffle');
+
+
+}
+
 
 
 
@@ -319,10 +407,10 @@ function storeQuizData(currentStudent) {
         currentStudent: currentStudent,
         countdownDuration: countdownDuration,
         maxChances: maxChances,
-        m: getParameterByName('m'),
-        title: getParameterByName('title'),
-        shuffle: getParameterByName('shuffle'),
-        customselect: getParameterByName('customselect')
+        m: m,
+        title: title,
+        shuffle: shuffle,
+        customselect: customselect
     };
 
     // Store data as a cookie
@@ -386,6 +474,10 @@ function getParameterByName(name, url) {
 
     // wait till the presence of cookies is checked
     let useCookie = await checkQuizCookie();
+    
+   // intialize all variables
+   intializeQuizVariables();
+   
 
    // if user wants to pick up from wherethe quiz was left off
     if(useCookie) {
@@ -449,24 +541,24 @@ if (!studentsFileName || !questionsFileName) {
     window.questions = questions;
 
     // create custom select box if custom selection is allowed
-    if(getParameterByName('customselect') == 'y') {
+    if(customselect == 'y') {
          attachCustomSelect();
     }
 
     // change footer text in case of rotational selection
-    if(getParameterByName('m') == 'rotation') {
+    if(m == 'rotation') {
        document.getElementById("footerSpanText").textContent = 'Student selection is done on a rotational basis. Students will get a chance to answer one after another in the pre-decided order.';
     }
     // shuffle student names if shuffle parameter is set to 'y' or sort alphabetically if set to az or za
-if(getParameterByName('shuffle') == 'y') {
+if(shuffle == 'y') {
      window.students = shuffleArray(window.students);
      document.getElementById("footerSpanText").textContent += ' The names have been shuffled using Fisher-Yates algorithm.';
 }
-else if(getParameterByName('shuffle') == 'az') {
+else if(shuffle == 'az') {
      window.students.sort();
      document.getElementById("footerSpanText").textContent += ' The names have been alphabetically sorted A-Z.';
 }
-else if(getParameterByName('shuffle') == 'za') {
+else if(shuffle == 'za') {
      window.students.sort((a, b) => b.localeCompare(a));
      document.getElementById("footerSpanText").textContent += ' The names have been alphabetically sorted Z-A.';
 }
@@ -481,7 +573,7 @@ document.getElementById("pauseBtn").addEventListener("click", pauseCountdown);
 
 document.getElementById("endBtn").addEventListener("click", displayScores);
 
-document.getElementById("quizTitle").textContent = retrieveQuizData('title') || getParameterByName('title') || 'Quiz';
+document.getElementById("quizTitle").textContent = title || 'Quiz';
 
 displayQuestion();
 
@@ -503,7 +595,7 @@ if(!countdownDuration) {
     const studentName = document.getElementById("studentName");
     questionText.textContent = window.questions[currentQuestionIndex].trim();
     let randomStudent; 
-    let selectionMode = getParameterByName('m') || 'random';
+    let selectionMode = m || 'random';
     if(selectionMode == 'random') {
             randomStudent = pickRandomStudent();
    } else if(selectionMode == 'rotation') {
@@ -676,29 +768,8 @@ const currentStudent = text.substring(index + 4);
     container.innerHTML += "<footer id='footerText'>Powered by Sourabh Suneja</footer>";
   }
 
-  // Array to store scores
-  let scores = retrieveQuizData('scores') || {};
-  let chances = retrieveQuizData('chances') || {};
+ 
 
-
-// Ask the user for the maximum chances
-let maxChancesInput = retrieveQuizData('maxChances') ||  getParameterByName('maxchances') ||  prompt("How many maximum chances do you want to give to each student? (Defaults to 3)");
-// Convert the input to a number
-let maxChances = parseInt(maxChancesInput);
-
-// Check if the input is a valid number
-if (isNaN(maxChances) || maxChances <= 0) {
-    // If not a valid number, set default value to 3
-    maxChances = 3;
-}
-
-
-
-  // Array to store absent students
-  let absentStudents = [];
-
-  // Index to keep track of current question
-  let currentQuestionIndex = parseInt(retrieveQuizData("currentQuestionIndex")) || 0;
 
   // Initialize quiz when the page loads
   window.onload = initializeQuiz;
@@ -765,10 +836,7 @@ document.getElementById("downloadBtn").addEventListener("click", downloadCSV);
 
 
 
-// code to handle utterances
 
-let currentUtterance; // Variable to store the current speaking utterance
-let initialVolume = parseInt(getParameterByName ('volume')) || 50 // Initial volume value
 
 function speakUp(text, speed) {
     // Cancel previous speech synthesis if there is an ongoing utterance
@@ -860,26 +928,8 @@ function downloadCSV() {
 
 
 // script to handle countdown if required
-// Initialize countdown variable based on parameter or user input
-  var countdownParam = parseInt(retrieveQuizData('countdownDuration')) || parseInt(getParameterByName("countdown"));
-  let countdownDuration;
-  if (typeof countdownParam === 'number' && !isNaN(countdownParam) && countdownParam >= 0) {
-    countdownDuration = countdownParam;
-  } else {
-    var userInput = prompt("Specify the countdown duration in seconds for the quiz. After this duration, another student will be prompted to answer the same question. If you prefer not to have a countdown, simply leave this field blank.");
-    countdownDuration = userInput ? parseInt(userInput) : 0;
-  }
 
-let countdown = countdownDuration; // Initial countdown value in seconds
-let stopCountDown; // Flag variable to start/stop countdown
 
-if(!countdown) {
-    stopCountDown = true;
-    document.getElementById('timer').style.display = 'none';
-    
-} else {
-    stopCountDown = false;
-}
 
 function startCountdown() {
     let timer = document.getElementById('timer');
@@ -913,13 +963,12 @@ function startCountdown() {
 function stopCountdown() {
     stopCountDown = true;
 }
-startCountdown();
+
 
 function resetCountdown() {
     countdown = countdownDuration;
 }
 
-let countdownPaused = false;
 
 function pauseCountdown() {
   countdownPaused = !countdownPaused;
@@ -927,12 +976,7 @@ function pauseCountdown() {
   button.textContent = countdownPaused ? 'Resume countdown' : 'Pause countdown';
 }
 
-
-
-  // code to handle the volume slider
-  // Get the slider element
-  var slider = document.getElementById("volumeRange");
-  slider.value = initialVolume;
+  
   
   // Listen for the input event on the slider
 slider.addEventListener("input", function() {
