@@ -781,6 +781,10 @@ const currentStudent = text.substring(index + 4);
   // Function to display scores
   function displayScores() {
 
+// store current session data for long term retrieval
+storeQuizSession();
+
+// delete short term cookie so that a new quiz session can start next time
 deleteQuizCookie();
 
 
@@ -1182,6 +1186,58 @@ resetCountdown();
       scoreTableContainer.style.display = 'none';
     }
   });
+
+
+
+
+
+
+// functions to store data of all quiz sessions in cookies for long term retrieval
+
+
+function storeQuizSession() {
+    // Get current date and time
+    const currentDate = new Date();
+    const dateFormatted = currentDate.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+    const timeFormatted = currentDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+    // Create session object
+    const session = {
+      'quizTitle': title,
+      'date': dateFormatted,
+      'time': timeFormatted,
+      'scores': scores,
+      'chances': chances
+    };
+
+    // Get existing allscores cookie or create a new one
+    let allScoresCookie = JSON.parse(getCookie('allscores') || '[]');
+    
+    // Append current session to the array
+    allScoresCookie.push(session);
+
+    // Store updated allscores cookie
+    document.cookie = `allscores=${JSON.stringify(allScoresCookie)}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
+  }
+
+  // Function to get cookie by name
+  function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName.trim() === name) {
+        return decodeURIComponent(cookieValue);
+      }
+    }
+    return null;
+  }
+
+
+
+
+
+
+
 
 
 
