@@ -275,6 +275,51 @@
 
 
 <script>
+
+
+// Function to store key values as cookies so that the quiz can be picked from where we left off in case of unexpected failure
+function storeQuizData() {
+    // Define key values to be stored
+    var dataToStore = {
+        currentQuestionIndex: currentQuestionIndex,
+        scores: scores,
+        chances: chances,
+        studentsFileName: studentsFileName,
+        questionsFileName: questionsFileName,
+        countdownDuration: countdownDuration,
+        maxChances: maxChances,
+        mValue: getParameterByName('m'),
+        titleValue: getParameterByName('title'),
+        shuffleValue: getParameterByName('shuffle'),
+        customselectValue: getParameterByName('customselect')
+    };
+
+    // Store data as a cookie
+    document.cookie = "quizData=" + JSON.stringify(dataToStore);
+}
+
+
+// Function to retrieve a specific value from stored cookie data based on key
+function retrieveQuizData(key) {
+    var cookieData = document.cookie.split(';').find(cookie => cookie.trim().startsWith('quizData='));
+
+    if (cookieData) {
+        // Extract and parse stored data
+        var storedData = JSON.parse(cookieData.split('=')[1]);
+
+        // Return value corresponding to the provided key
+        return storedData[key];
+    } else {
+        // Return null if no stored data found
+        return null;
+    }
+}
+
+
+
+
+
+
   // Function to get URL parameters
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
