@@ -232,7 +232,7 @@
     <p id="studentName"></p>
     <div id="timer">00:00</div>
   </div>
-  <div class="buttons">
+  <div id="buttonContainer" class="buttons">
     <button id="correctBtn">Answered correctly</button>
     <button id="incorrectBtn">Couldn't answer correctly</button>
     <button id="partiallyCorrectBtn">Partially correct</button>
@@ -1282,7 +1282,7 @@ function handleMCQ(question) {
   const correctBtn = document.getElementById('correctBtn');
   const incorrectBtn = document.getElementById('incorrectBtn');
   const partiallyCorrectBtn = document.getElementById('partiallyCorrectBtn');
-  const buttonsDiv = document.getElementById('buttons');
+  const buttonsDiv = document.getElementById('buttonContainer');
 
   // Set inner content of questionText
   questionText.textContent = question.replace(mcqPattern, '').trim();
