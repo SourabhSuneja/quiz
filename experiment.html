@@ -657,9 +657,6 @@ if(!countdownDuration) {
   incorrectBtn.style.display = 'block';
   partiallyCorrectBtn.style.display = 'block';
 
-
-
-
 }
 
 
@@ -737,6 +734,8 @@ function pickRandomStudent() {
 
   // Function to handle correct answer
   function answeredCorrectly() {
+
+    showAnimation(true);
     var text = document.getElementById('studentName').textContent;
 
 var index = text.indexOf('for');
@@ -787,7 +786,7 @@ if (chances[currentStudent] === undefined) {
 
   // Function to handle incorrect answer
   function answeredIncorrectly() {
-
+    showAnimation(false);
     var text = document.getElementById('studentName').textContent;
 
 var index = text.indexOf('for');
