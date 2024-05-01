@@ -1286,7 +1286,7 @@ function handleMCQ(question) {
 
 
  // Extract question without options
-    const questionText = question.replace(mcqPattern, '').trim();
+    const questionText = question.replace(/\(Options.*$/i, '').trim();
 
   // Set inner content of questionText
   questionTextNode.textContent = questionText;
