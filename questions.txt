@@ -1,5 +1,5 @@
 What are the two types of data? 
-Which of these is an example of qualitative data? Age, Height, Beauty or Distance?
+Which of these is an example of qualitative data? (Options: A. Honesty B. Population C. Temperature Correct: Honesty)
 Tanu is writing an application in MS Word. What form of data do you think she is creating?
 The data that be represented by finite numbers is called _______ data. 
 What is the difference between discrete and continuous data?
