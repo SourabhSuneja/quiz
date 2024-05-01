@@ -1,2 +1,2 @@
-What is the capital of India? (Options: A) Tokyo B) London C) Delhi D) New York  Correct: Delhi)
-Who invented aeroplanes? (Options: A) Wright brothers B) Graham Norton C) Alexander D) None of these  Correct: Wright brothers)
+What is the capital of India? (Options: A. Tokyo B. London C. Delhi D. New York  Correct: Delhi)
+Who invented aeroplanes? (Options: A. Wright brothers B. Graham Norton C. Alexander D. None of these  Correct: Wright brothers)
