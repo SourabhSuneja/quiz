@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz | Powered by Sourabh Suneja</title>
+<style>
+  body {
+    background-color: black;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+  }
+  .container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 2px solid white;
+    border-radius: 10px;
+    text-align: center;
+  }
+  h1 {
+    text-align: center;
+    font-size: 24px;
+  }
+  .question {
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
+  .buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  button {
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: #1E90FF; /* Dark blue shade */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 18px;
+  }
+  button:hover {
+    background-color: #4682B4; /* Lighter shade on hover */
+  }
+  footer {
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  .chart-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 12px;
+    border: 2px solid white;
+    border-radius: 10px;
+    box-sizing: border-box;
+  }
+  .bar {
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+  }
+  .bar-text {
+    margin-right: 10px;
+  }
+  .slider {
+    -webkit-appearance: none;
+    width: 80%;
+    max-width: 350px;
+    height: 15px;
+    border-radius: 5px;
+    background: #4e8af1;
+    outline: none;
+    opacity: 1;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4caf50;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4caf50;
+    cursor: pointer;
+  }
+
+  /* CSS for custom dialog box */
+    .custom-dialog {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 9999;
+    }
+
+    .custom-dialog-title {
+        font-size: 20px;
+        margin-bottom: 10px;
+        text-align: center;
+        color: #333333;
+    }
+
+    .custom-dialog-options {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        max-height: 200px; /* Set max height for scrollability */
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+
+    .custom-dialog-option {
+        padding: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        color: #000;
+    }
+
+    .custom-dialog-option:hover {
+        background-color: #5cb85c; /* Beautiful green color */
+        color: #ffffff; /* Change text color on hover */
+    }
+
+    .custom-dialog-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    cursor: pointer;
+    font-size: 22px;
+    color: #777777;
+    }
+
+    /* Mobile styles */
+    @media only screen and (max-width: 600px) {
+        .custom-dialog {
+            width: 80%;
+        }
+    }
+    /* Style for floating button */
+    #scoresButton {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    
+    /* Style for overlay table */
+    #scoreTableContainer {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background-color: #111; /* Change background color to dark */
+      border: 1px solid #666; /* Adjust border color */
+      border-radius: 10px;
+      padding: 20px;
+      z-index: 999;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1); /* Add box shadow effect */
+      max-width: 90%; /* Limit maximum width for small screens */
+      overflow-x: auto; /* Add horizontal scroll for small screens */
+      max-height: 70vh; /* Limit maximum height and enable vertical scrolling */
+      overflow-y: auto; /* Enable vertical scrolling */
+    }
+    
+    /* Style for table */
+    #scoreTable {
+      width: 100%; /* Make the table width 100% */
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    
+    #scoreTable th, #scoreTable td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #666; /* Adjust border color */
+      color: white; /* Change text color to white */
+    }
+    
+    #scoreTable th {
+      background-color: #007bff;
+    }
+    
+    /* Alternate row background color for better readability */
+    #scoreTable tbody tr:nth-child(even) {
+      background-color: #222; /* Darker background for alternate rows */
+    }
+    
+    /* Style for percentage column */
+    .percentage {
+      background-color: #007bff;
+    }
+    
+    /* Media query for small screens */
+    @media (max-width: 600px) {
+      #scoreTableContainer {
+        max-width: 100%; /* Remove max-width for small screens */
+      }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1 id="quizTitle">Quiz</h1>
+  <div class="question">
+    <p id="questionText"></p>
+    <p id="studentName"></p>
+    <div id="timer">00:00</div>
+  </div>
+  <div class="buttons">
+    <button id="correctBtn">Answered correctly</button>
+    <button id="incorrectBtn">Couldn't answer correctly</button>
+    <button id="partiallyCorrectBtn">Partially correct</button>
+    <button id="pickAnotherBtn">Pick another student</button>
+    <button id="pauseBtn">Pause countdown</button>
+    <button id="endBtn">End Quiz</button>
+    <button id="scoresButton">Scores</button>
+
+  </div>
+
+<h4>Volume</h4>
+
+<input type="range" min="1" max="100" class="slider" id="volumeRange">
+
+  <footer id="footerText">Powered by Sourabh Suneja<br><br><span id="footerSpanText" style="font-size: 12px">Student selection is randomised with weighted probability method. The chance of a student getting selected again reduces as they get more and more chances to answer.</span></footer>
+</div>
+
+
+
+
+<div id="scoreTableContainer">
+  <table id="scoreTable">
+    <thead>
+      <tr>
+        <th>Student</th>
+        <th>Score</th>
+        <th>Chances</th>
+        <th>%</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Scores, chances, and percentage will be populated here dynamically using JavaScript -->
+    </tbody>
+  </table>
+</div>
+
+
+
+
+
+
+<script>
+
+// global variables
+let studentsFileName;
+let questionsFileName;
+let currentQuestionIndex;
+let scores;
+let chances;
+let countdownParam;
+let countdownDuration;
+let countdown;
+let stopCountDown;
+let countdownPaused = false;
+let maxChances;
+let m;
+let title;
+let shuffle;
+let customselect;
+let absentStudents;
+let maxChancesInput;
+let currentUtterance;
+let volume;
+let slider;
+let dataPickedFromCookie = false;
+
+
+
+// Function to delete the quiz cookie
+function deleteQuizCookie() {
+    document.cookie = "quizData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
+
+
+
+
+
+// function to intialize key quiz variables
+function intializeQuizVariables() {
+
+ // Array to store absent students
+  absentStudents = [];
+
+  // Index to keep track of current question
+  currentQuestionIndex = parseInt(retrieveQuizData("currentQuestionIndex")) || 0;
+
+// Arrays to store scores & chances
+  scores = retrieveQuizData('scores') || {};
+  chances = retrieveQuizData('chances') || {};
+
+
+// Ask the user for the maximum chances
+maxChancesInput = retrieveQuizData('maxChances') ||  getParameterByName('maxchances') ||  prompt("How many maximum chances do you want to give to each student? (Defaults to 3)");
+// Convert the input to a number
+maxChances = parseInt(maxChancesInput);
+
+// Check if the input is a valid number
+if (isNaN(maxChances) || maxChances <= 0) {
+    // If not a valid number, set default value to 3
+    maxChances = 3;
+}
+
+// Initialize countdown variable based on parameter or user input
+countdownParam = parseInt(retrieveQuizData('countdownDuration')) || parseInt(getParameterByName("countdown"));
+
+  if (typeof countdownParam === 'number' && !isNaN(countdownParam) && countdownParam >= 0) {
+    countdownDuration = countdownParam;
+  } else {
+    var userInput = prompt("Specify the countdown duration in seconds for the quiz. After this duration, another student will be prompted to answer the same question. If you prefer not to have a countdown, simply leave this field blank.");
+    countdownDuration = userInput ? parseInt(userInput) : 0;
+  }
+
+countdown = countdownDuration; // Initial countdown value in seconds
+stopCountDown; // Flag variable to start/stop countdown
+
+if(!countdown) {
+    stopCountDown = true;
+    document.getElementById('timer').style.display = 'none';
+    
+} else {
+    stopCountDown = false;
+}
+
+startCountdown();
+
+
+// code to handle utterances
+
+currentUtterance; // Variable to store the current speaking utterance
+initialVolume = parseInt(getParameterByName ('volume')) || 50 // Initial volume value
+
+// code to handle the volume slider
+
+  slider.value = initialVolume;
+
+// other parameters
+
+customselect = retrieveQuizData("customselect") || getParameterByName('customselect');
+m = retrieveQuizData("m") || getParameterByName('m');
+title = retrieveQuizData("title") || getParameterByName('title');
+shuffle = retrieveQuizData("shuffle") ||  getParameterByName('shuffle');
+
+
+}
+
+
+
+
+// Asynchronous function to check quiz cookie and prompt user
+async function checkQuizCookie() {
+    return new Promise((resolve) => {
+        var cookieData = document.cookie.split(';').find(cookie => cookie.trim().startsWith('quizData='));
+
+        if (cookieData) {
+            // Prompt the user with a dialog box
+            var pickUp = confirm("The previous quiz session didn't complete properly. Do you want to pick up from where you left off?");
+            if(!pickUp) {
+               deleteQuizCookie();
+            } else {
+               dataPickedFromCookie = true;
+            }
+            resolve(pickUp);
+        } else {
+            // If cookie is not present, resolve to false
+            resolve(false);
+        }
+    });
+}
+
+
+
+
+
+
+
+// Function to store key values as cookies so that the quiz can be picked from where we left off in case of unexpected failure
+function storeQuizData(currentStudent) {
+    // Define key values to be stored
+    var dataToStore = {
+        currentQuestionIndex: currentQuestionIndex,
+        scores: scores,
+        chances: chances,
+        studentsFileName: studentsFileName,
+        questionsFileName: questionsFileName,
+        currentStudent: currentStudent,
+        countdownDuration: countdownDuration,
+        maxChances: maxChances,
+        m: m,
+        title: title,
+        shuffle: shuffle,
+        customselect: customselect
+    };
+
+    // Store data as a cookie
+    // Set cookie with expiration date one year from now
+    var expiryDate = new Date();
+    expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+    document.cookie = "quizData=" + JSON.stringify(dataToStore) + "; expires=" + expiryDate.toUTCString() + "; path=/;";
+
+}
+
+
+// Function to retrieve a specific value from stored cookie data based on key
+function retrieveQuizData(key) {
+    var cookieData = document.cookie.split(';').find(cookie => cookie.trim().startsWith('quizData='));
+
+    if (cookieData) {
+        // Extract and parse stored data
+        var storedData = JSON.parse(cookieData.split('=')[1]);
+
+        // Return value corresponding to the provided key
+        return storedData[key];
+    } else {
+        // Return null if no stored data found
+        return null;
+    }
+}
+
+
+
+
+
+
+
+
+
+  // Function to get URL parameters
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+  // Function to shuffle array
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+  // Function to initialize quiz
+  async function initializeQuiz() {
+  try {
+
+
+    // wait till the presence of cookies is checked
+    let useCookie = await checkQuizCookie();
+    
+   
+   
+
+   // if user wants to pick up from wherethe quiz was left off
+    if(useCookie) {
+         studentsFileName = retrieveQuizData('studentsFileName');
+         questionsFileName = retrieveQuizData('questionsFileName');
+    } else {
+         // Attempt to retrieve file names from URL parameters
+studentsFileName = getParameterByName('s');
+questionsFileName =  getParameterByName('q');
+    }
+
+
+
+// If URL parameters are not available, prompt the user for file names
+if (!studentsFileName || !questionsFileName) {
+    studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):").trim();
+    questionsFileName = prompt("Enter the file name for questions data (e.g., questions.txt):").trim();
+}
+    
+    // Add .txt extension if not already provided by the user
+    if (!studentsFileName.endsWith('.txt')) {
+      studentsFileName += '.txt';
+    }
+    if (!questionsFileName.endsWith('.txt')) {
+      questionsFileName += '.txt';
+    }
+
+    if (!studentsFileName || !questionsFileName) {
+      throw new Error("Invalid file names");
+    }
+    const studentsData = await fetchData(studentsFileName);
+    const questionsData = await fetchData(questionsFileName);
+    startQuiz(studentsData, questionsData);
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+  // Function to fetch data from a file using AJAX and return a promise
+  function fetchData(fileName) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            const data = xhr.responseText.split('\n').map(item => item.trim()).filter(item => item !== '');
+            resolve(data);
+          } else {
+            reject(new Error("Failed to load data"));
+          }
+        }
+      };
+      xhr.open("GET", fileName, true);
+      xhr.send();
+    });
+  }
+
+  // Function to start the quiz after questions and students are loaded
+  function startQuiz(students, questions) {
+    window.students = students;
+    window.questions = questions;
+
+    // intialize all quiz variables
+   intializeQuizVariables();
+
+    // create custom select box if custom selection is allowed
+    if(customselect == 'y') {
+         attachCustomSelect();
+    }
+
+    // change footer text in case of rotational selection
+    if(m == 'rotation') {
+       document.getElementById("footerSpanText").textContent = 'Student selection is done on a rotational basis. Students will get a chance to answer one after another in the pre-decided order.';
+    }
+    // shuffle student names if shuffle parameter is set to 'y' or sort alphabetically if set to az or za
+if(shuffle == 'y') {
+     window.students = shuffleArray(window.students);
+     document.getElementById("footerSpanText").textContent += ' The names have been shuffled using Fisher-Yates algorithm.';
+}
+else if(shuffle == 'az') {
+     window.students.sort();
+     document.getElementById("footerSpanText").textContent += ' The names have been alphabetically sorted A-Z.';
+}
+else if(shuffle == 'za') {
+     window.students.sort((a, b) => b.localeCompare(a));
+     document.getElementById("footerSpanText").textContent += ' The names have been alphabetically sorted Z-A.';
+}
+    
+    document.getElementById("correctBtn").addEventListener("click", answeredCorrectly);
+    document.getElementById("incorrectBtn").addEventListener("click", answeredIncorrectly);
+
+document.getElementById("partiallyCorrectBtn").addEventListener("click", answeredPartiallyCorrectly);
+    document.getElementById("pickAnotherBtn").addEventListener("click", pickAnotherStudent);
+
+document.getElementById("pauseBtn").addEventListener("click", pauseCountdown);
+
+document.getElementById("endBtn").addEventListener("click", displayScores);
+
+document.getElementById("quizTitle").textContent = title || 'Quiz';
+
+displayQuestion();
+
+// if countdown is not set, do not show the pause countdown button
+if(!countdownDuration) {
+   document.getElementById("pauseBtn").style.display = 'none';
+}
+
+  }
+
+  
+    // Function to display question and student name
+  function displayQuestion(pass = false) {
+    if (!window.students || !window.questions) {
+      console.log("Students or questions data not loaded.");
+      return;
+    }
+    const questionText = document.getElementById("questionText");
+    const studentName = document.getElementById("studentName");
+    questionText.textContent = window.questions[currentQuestionIndex].trim();
+    let randomStudent; 
+    
+    if(dataPickedFromCookie) {
+    randomStudent = retrieveQuizData('currentStudent');
+    dataPickedFromCookie = false;
+}  else {
+
+let selectionMode = m || 'random';
+    if(selectionMode == 'random') {
+            randomStudent = pickRandomStudent();
+   } else if(selectionMode == 'rotation') {
+            randomStudent = getNextStudent();
+  }
+     else {
+            randomStudent = pickRandomStudent();
+     }
+
+}
+
+
+
+
+    studentName.textContent = "Question for " + randomStudent.trim();
+    resetCountdown();
+    storeQuizData(randomStudent.trim());
+
+    if(!pass) {
+    speakUp(questionText.textContent, 0.8);
+}
+else {
+    speakUp("Question passed", 0.8);
+}
+
+  }
+
+
+  // function to get next student in case of rotational selection
+  let nextIndex = 0;
+function getNextStudent() {
+    const student = window.students[nextIndex]; // get the student at the current index
+    nextIndex = (nextIndex + 1) % window.students.length; // move to the next index, looping back to 0 if end is reached
+    return student; // return the current student
+  }
+
+  
+
+
+// Function to pick a random student with reduced chances as they answer more questions
+function pickRandomStudent() {
+    let weightedStudents = [];
+    
+    // Populate the array with students based on their chances
+    for (let student of window.students) {
+        for (let i = 0; i < maxChances - (chances[student] || 0); i++) {
+            weightedStudents.push(student);
+        }
+    }
+
+    // Select a random student from the weighted array
+    let randomIndex;
+    let randomStudent;
+    do {
+        randomIndex = Math.floor(Math.random() * weightedStudents.length);
+        randomStudent = weightedStudents[randomIndex];
+    } while (absentStudents.includes(randomStudent));
+     
+    return randomStudent || 'no one (all students have exhausted their chances). Click on "End Quiz" to display scores.';
+}
+
+
+  // Function to handle correct answer
+  function answeredCorrectly() {
+    var text = document.getElementById('studentName').textContent;
+
+var index = text.indexOf('for');
+
+const currentStudent = text.substring(index + 4);
+
+
+    if (scores[currentStudent] === undefined) {
+      scores[currentStudent] = 1;
+    } else {
+      scores[currentStudent]++;
+    }
+
+if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
+
+
+    nextQuestion();
+  }
+
+  // Function to handle partially correct answer
+  function answeredPartiallyCorrectly() {
+    var text = document.getElementById('studentName').textContent;
+
+var index = text.indexOf('for');
+
+const currentStudent = text.substring(index + 4);
+
+
+    if (scores[currentStudent] === undefined) {
+      scores[currentStudent] = 0.5;
+    } else {
+      scores[currentStudent] += 0.5;
+    }
+
+if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
+
+
+    nextQuestion();
+  }
+
+  // Function to handle incorrect answer
+  function answeredIncorrectly() {
+
+    var text = document.getElementById('studentName').textContent;
+
+var index = text.indexOf('for');
+
+const currentStudent = text.substring(index + 4);
+
+
+    if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
+    nextQuestion();
+  }
+
+  // Function to pick another student
+  function pickAnotherStudent() {
+   
+var text = document.getElementById('studentName').textContent;
+
+var index = text.indexOf('for');
+
+const currentStudent = text.substring(index + 4);
+
+
+    if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
+
+    displayQuestion(true);
+  }
+
+  // Function to move to the next question
+  function nextQuestion() {
+    currentQuestionIndex++;
+    
+
+
+    if (currentQuestionIndex < window.questions.length) {
+      displayQuestion();
+    } else {
+      displayScores();
+    }
+  }
+
+  // Function to display scores
+  function displayScores() {
+
+// store current session data for long term retrieval
+storeQuizSession();
+
+// delete short term cookie so that a new quiz session can start next time
+deleteQuizCookie();
+
+
+    // cancel any speech synthesis going on
+    speechSynthesis.cancel();
+    // stop the timer
+    stopCountdown();
+    const container = document.querySelector(".container");
+    container.innerHTML = "<h1>Scores</h1>";
+    for (const student in scores) {
+      container.innerHTML += "<p>" + student + ": " + scores[student] + "/" + chances[student] + "</p>";
+    }
+    displayChart();
+    container.innerHTML += "<footer id='footerText'>Powered by Sourabh Suneja</footer>";
+  }
+
+ 
+
+
+  // Initialize quiz when the page loads
+  window.onload = initializeQuiz;
+
+
+
+
+
+// Function to calculate percentage and display chart
+  function displayChart() {
+    var chartContainer = document.createElement('div');
+    chartContainer.classList.add('chart-container');
+
+    var studentData = [];
+
+    // Calculate percentages and store student data
+    for (var student in scores) {
+      var percentage = (scores[student] / chances[student]) * 100;
+      studentData.push({ name: student, percentage: percentage });
+    }
+
+    // Sort students based on their percentages (highest to lowest)
+    studentData.sort(function(a, b) {
+      return b.percentage - a.percentage;
+    });
+
+    // Create bars for each student
+    studentData.forEach(function(student) {
+      var bar = document.createElement('div');
+      var shade = Math.round(205 - (student.percentage * 1.55)); // Calculate shade of green
+      shade = Math.max(shade, 50); // Ensure a minimum value for visibility
+      bar.style.backgroundColor = 'rgb(0,' + '120' + ',0)'; // Set background color
+      bar.classList.add('bar');
+      bar.style.width = student.percentage + '%';
+      
+      // Create span for text and percentage
+      var barText = document.createElement('span');
+      barText.classList.add('bar-text');
+      barText.textContent = student.name + ': ' + student.percentage.toFixed(2) + '%';
+      bar.appendChild(barText);
+      
+      chartContainer.appendChild(bar);
+    });
+
+    document.body.appendChild(chartContainer);
+
+// create download scoresheet button
+// Create a button element
+var button = document.createElement("button");
+// Set button text
+button.innerHTML = "Download Scoresheet";
+// Set button id
+button.id = "downloadBtn";
+// Center align the button
+button.style.display = "block";
+button.style.margin = "auto";
+
+// Append the button to the end of the page body
+document.body.appendChild(button);
+// Attach click event handler to the button
+document.getElementById("downloadBtn").addEventListener("click", downloadCSV);
+
+  }
+
+
+
+
+
+function speakUp(text, speed) {
+    // Cancel previous speech synthesis if there is an ongoing utterance
+    if (currentUtterance) {
+        speechSynthesis.cancel();
+    }
+
+    // Replace underscores with "dash"
+    text = text.replace(/_{2,20}/g, "dash");
+
+    // Create a new SpeechSynthesisUtterance instance
+    var utterance = new SpeechSynthesisUtterance();
+
+    // Set the modified text to be spoken
+    utterance.text = text;
+
+    // Set the Indian English voice
+    utterance.voice = speechSynthesis.getVoices().find(function(voice) {
+        return voice.lang === 'en-IN';
+    });
+
+    // Set the speed of speaking
+    utterance.rate = speed || 1.0; // If speed is not specified, default to 1.0
+
+    // Set the initial volume
+    utterance.volume = initialVolume / 100; // Map slider volume range (1-100) to SpeechSynthesisUtterance volume range (0-1)
+
+    // Speak the text
+    speechSynthesis.speak(utterance);
+
+    // Store the current utterance
+    currentUtterance = utterance;
+}
+
+
+
+
+// Function to create CSV data
+function createCSV(scores, chances) {
+  // Create a CSV header
+  var csv = "Name, Score, Chance, Percentage\n";
+
+  // Iterate through the chances object to ensure all names are included
+  Object.keys(chances).forEach(function(name) {
+    // Get the score for the current name
+    var score = scores[name] !== undefined ? scores[name] : 0;
+    // Get the chance for the current name
+    var chance = chances[name];
+   // Calculate percentage
+    var percentage = (parseFloat(score)/parseInt(chance)) * 100;
+   // Round off percentage to two decimal places
+   percentage = percentage.toFixed(2);
+    // Append data to CSV
+    csv += name + "," + score + "," + chance + "," + percentage + "\n";
+  });
+
+  return csv;
+}
+
+
+
+
+// Function to download CSV file
+function downloadCSV() {
+  // Create CSV data
+  var csvData = createCSV(scores, chances);
+  // Create a Blob object from the CSV data
+  var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+  // Create a temporary URL for the Blob
+  var url = window.URL.createObjectURL(blob);
+  // Create a temporary anchor element
+  var a = document.createElement("a");
+  // Set the href attribute of the anchor to the temporary URL
+  a.href = url;
+  // Set the download attribute to specify the filename
+  a.download = "scoresheet.csv";
+  // Append the anchor to the body
+  document.body.appendChild(a);
+  // Click the anchor to trigger download
+  a.click();
+  // Remove the anchor from the body
+  document.body.removeChild(a);
+  // Revoke the temporary URL to free up memory
+  window.URL.revokeObjectURL(url);
+}
+
+
+
+
+
+// script to handle countdown if required
+
+
+
+function startCountdown() {
+    let timer = document.getElementById('timer');
+
+    let interval = setInterval(function() {
+        if (stopCountDown) {
+            clearInterval(interval);
+            return;
+        }
+
+        let minutes = Math.floor(countdown / 60);
+        let seconds = countdown % 60;
+
+        // Add leading zero if necessary
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        timer.textContent = minutes + ':' + seconds;
+
+        if (countdown === 0 && !countdownPaused) {
+            document.getElementById("pickAnotherBtn").click() // programmatically click the pick another student button to give chance to another student
+            
+        } else {
+            if(!countdownPaused) {
+              countdown--;
+            }
+        }
+    }, 1000);
+}
+
+function stopCountdown() {
+    stopCountDown = true;
+}
+
+
+function resetCountdown() {
+    countdown = countdownDuration;
+}
+
+
+function pauseCountdown() {
+  countdownPaused = !countdownPaused;
+  const button = document.getElementById('pauseBtn');
+  button.textContent = countdownPaused ? 'Resume countdown' : 'Pause countdown';
+}
+
+  
+slider = document.getElementById("volumeRange");
+  // Listen for the input event on the slider
+slider.addEventListener("input", function() {
+    // If there is an ongoing utterance, update its volume
+    if (currentUtterance) {
+        var volume = this.value; // Get the slider value
+        currentUtterance.volume = volume / 100; // Map slider volume range (1-100) to SpeechSynthesisUtterance volume range (0-1)
+       speechSynthesis.speak(currentUtterance); // Speak again to apply the new volume
+
+        initialVolume = volume;
+    }
+});
+
+
+
+
+
+
+// script to handle the custom select box
+function attachCustomSelect() {
+    const pickAnotherBtn = document.getElementById('pickAnotherBtn');
+    const studentName = document.getElementById('studentName');
+    const students = window.students || []; // Get student names from window.students or default to an empty array
+    
+    const longPressDelay = 1200; // Long press delay in milliseconds
+
+    let longPressTimer;
+
+    function showCustomDialog() {
+        // Create custom dialog box
+        const dialogBox = document.createElement('div');
+        dialogBox.classList.add('custom-dialog');
+
+
+        // Dialog box close button
+const closeButton = document.createElement('span');
+closeButton.classList.add('custom-dialog-close');
+closeButton.textContent = '×';
+closeButton.addEventListener('click', function() {
+    document.body.removeChild(dialogBox); // Close dialog box
+});
+dialogBox.appendChild(closeButton);
+
+
+        // Dialog box title
+        const title = document.createElement('div');
+        title.classList.add('custom-dialog-title');
+        title.textContent = "Select a student";
+        dialogBox.appendChild(title);
+
+        // List of options
+        const optionsList = document.createElement('ul');
+        optionsList.classList.add('custom-dialog-options');
+
+        // Populate options from students array
+        students.forEach(function(student) {
+            const option = document.createElement('li');
+            option.textContent = student;
+            option.classList.add('custom-dialog-option');
+            option.addEventListener('click', function() {
+
+
+// testing
+
+var text = studentName.textContent;
+var index = text.indexOf('for');
+
+const currentStudent = text.substring(index + 4);
+
+// upon custom selection, increase the chance manually for the student who has been replaced by the student picked
+
+if(currentStudent != student) {  
+
+
+    if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
+
+}
+
+// testing 
+
+
+                studentName.textContent = "Question for " + student;
+resetCountdown();
+                document.body.removeChild(dialogBox); // Close dialog box
+            });
+            optionsList.appendChild(option);
+        });
+
+        dialogBox.appendChild(optionsList);
+
+        // Append dialog box to body
+        document.body.appendChild(dialogBox);
+    }
+
+    pickAnotherBtn.addEventListener('mousedown', function(event) {
+        longPressTimer = setTimeout(showCustomDialog, longPressDelay); // Start timer for long press
+    });
+
+    pickAnotherBtn.addEventListener('mouseup', function() {
+        clearTimeout(longPressTimer); // Cancel long press timer if button is released before the specified duration
+    });
+
+    pickAnotherBtn.addEventListener('touchstart', function(event) {
+        longPressTimer = setTimeout(showCustomDialog, longPressDelay); // Start timer for long press
+    });
+
+    pickAnotherBtn.addEventListener('touchend', function() {
+        clearTimeout(longPressTimer); // Cancel long press timer if button is released before the specified duration
+    });
+}
+
+
+
+
+
+// show scores button handling here
+   // Function to calculate percentage
+  function calculatePercentage(score, chance) {
+    return ((score / chance) * 100).toFixed(2);
+  }
+
+  // Function to populate table with scores, chances, and percentage
+  function populateTable() {
+    var tableBody = document.querySelector('#scoreTable tbody');
+    tableBody.innerHTML = '';
+
+    // Combine scores and chances objects to get unique student names
+    var students = Array.from(new Set([...Object.keys(scores), ...Object.keys(chances)]));
+
+    // Sort student names in A to Z order
+    students.sort();
+
+    students.forEach(function(student) {
+      var row = document.createElement('tr');
+      var nameCell = document.createElement('td');
+      var scoreCell = document.createElement('td');
+      var chanceCell = document.createElement('td');
+      var percentageCell = document.createElement('td');
+
+      // Check if student is in scores object
+      var score = scores[student] || 0;
+
+      nameCell.textContent = student;
+      scoreCell.textContent = score;
+      chanceCell.textContent = chances[student] || 0;
+      percentageCell.textContent = calculatePercentage(score, chances[student] || 1) + '%';
+
+      row.appendChild(nameCell);
+      row.appendChild(scoreCell);
+      row.appendChild(chanceCell);
+      row.appendChild(percentageCell);
+
+      tableBody.appendChild(row);
+    });
+  }
+
+  // Show table when scores button is clicked
+  var scoresButton = document.getElementById('scoresButton');
+  var scoreTableContainer = document.getElementById('scoreTableContainer');
+
+  scoresButton.addEventListener('click', function() {
+   
+ scoreTableContainer.style.display = 'block';
+    populateTable();
+  });
+
+  // Hide table when clicking anywhere outside the table
+  window.addEventListener('click', function(event) {
+    if (!scoreTableContainer.contains(event.target) && event.target !== scoresButton) {
+      scoreTableContainer.style.display = 'none';
+    }
+  });
+
+
+
+
+
+
+// functions to store data of all quiz sessions in cookies for long term retrieval
+
+
+function storeQuizSession() {
+    // Get current date and time
+    const currentDate = new Date();
+    const dateFormatted = currentDate.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+    const timeFormatted = currentDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+    // Create session object
+    const session = {
+      'quizTitle': title,
+      'date': dateFormatted,
+      'time': timeFormatted,
+      'scores': scores,
+      'chances': chances
+    };
+
+    // Get existing allscores cookie or create a new one
+    let allScoresCookie = JSON.parse(getCookie('allscores') || '[]');
+    
+    // Append current session to the array
+    allScoresCookie.push(session);
+
+    // Store updated allscores cookie
+    document.cookie = `allscores=${JSON.stringify(allScoresCookie)}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
+  }
+
+  // Function to get cookie by name
+  function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName.trim() === name) {
+        return decodeURIComponent(cookieValue);
+      }
+    }
+    return null;
+  }
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+</body>
+</html>
