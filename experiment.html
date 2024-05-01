@@ -1375,9 +1375,43 @@ function handleMCQ(question) {
 
 const animationContainer = document.getElementById('animation-container');
 
+const congratulatoryWords = [
+    "Excellent job!",
+    "Well done!",
+    "Outstanding!",
+    "Brilliant!",
+    "Perfect!",
+    "Bravo!",
+    "You nailed it!",
+    "Superb!",
+    "Impressive!",
+    "Terrific!",
+    "Awesome!",
+    "Great work!",
+    "Phenomenal!",
+    "Remarkable!",
+    "Marvelous!",
+    "Exceptional!",
+    "Top-notch!"
+];
+
+const encouragingWords = [
+    "Nice try! Better luck next time!",
+    "Don't give up!",
+    "Learning is about trying!",
+    "Mistakes help us grow!",
+    "Every mistake is progress!",
+    "Learning from mistakes is key!",
+    "It's okay, keep going!",
+    "You're learning with every try!",
+    "Progress is made step by step!",
+    "You're making strides!",
+    "Learning is a journey!",
+    "Every attempt counts!"
+];
+
+
     function showAnimation(isCorrect) {
-      const congratulatoryWords = ["Well done!", "Correct answer!", "Great job!", "Fantastic!", "Superb!", "You nailed it!"];
-      const encouragingWords = ["Wrong answer. Better luck next time.", "Keep trying!", "Don't worry, you'll get it next time.", "It's okay, mistakes happen!", "You're getting closer!", "Almost there!"];
 
       const randomWord = isCorrect ? congratulatoryWords[Math.floor(Math.random() * congratulatoryWords.length)] : encouragingWords[Math.floor(Math.random() * encouragingWords.length)];
 
