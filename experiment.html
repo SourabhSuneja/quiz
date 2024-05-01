@@ -1285,11 +1285,9 @@ function handleMCQ(question) {
   const buttonsDiv = document.getElementById('buttonContainer');
 
 
- // Extract question without options
-    const questionText = question.replace(/\(Options.*$/i, '').trim();
 
   // Set inner content of questionText
-  questionTextNode.textContent = questionText;
+  questionTextNode.textContent = question.replace(mcqPattern, '').trim();
 
   // Hide the buttons
   correctBtn.style.display = 'none';
