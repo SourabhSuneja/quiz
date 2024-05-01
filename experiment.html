@@ -1278,14 +1278,18 @@ function handleMCQ(question) {
   const options = optionsPart.split(/[\dA-Za-z]\.|\)|\)\s/).filter(Boolean).map(option => option.trim());
 
   // Get required DOM elements
-  const questionText = document.getElementById('questionText');
+  const questionTextNode = document.getElementById('questionText');
   const correctBtn = document.getElementById('correctBtn');
   const incorrectBtn = document.getElementById('incorrectBtn');
   const partiallyCorrectBtn = document.getElementById('partiallyCorrectBtn');
   const buttonsDiv = document.getElementById('buttonContainer');
 
+
+ // Extract question without options
+    const questionText = question.replace(mcqPattern, '').trim();
+
   // Set inner content of questionText
-  questionText.textContent = question.replace(mcqPattern, '').trim();
+  questionTextNode.textContent = questionText;
 
   // Hide the buttons
   correctBtn.style.display = 'none';
