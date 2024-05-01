@@ -827,13 +827,20 @@ const currentStudent = text.substring(index + 4);
   function nextQuestion() {
     currentQuestionIndex++;
     
-
-
+    // delay until the animations complete
+   let timeoutId = setTimeout(function() {
+    
     if (currentQuestionIndex < window.questions.length) {
       displayQuestion();
     } else {
       displayScores();
     }
+
+    clearTimeout(timeoutId);
+}, 3000); 
+
+
+    
   }
 
   // Function to display scores
