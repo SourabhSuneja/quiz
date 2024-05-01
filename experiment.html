@@ -221,6 +221,43 @@
         max-width: 100%; /* Remove max-width for small screens */
       }
     }
+
+    #animation-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      z-index: 9999;
+    }
+
+    @keyframes pop-up {
+      0% {transform: scale(0) translateY(100px);}
+      50% {transform: scale(1.1) translateY(-50px);}
+      100% {transform: scale(1) translateY(0);}
+    }
+
+    .animation {
+      animation: pop-up 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      font-size: 24px;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0px 0px 20px rgba(0,0,0,0.3);
+    }
+
+    .correct {
+      color: green;
+      background-color: rgba(0, 255, 0, 0.2);
+    }
+
+    .wrong {
+      color: red;
+      background-color: rgba(255, 0, 0, 0.2);
+    }
+
+
 </style>
 </head>
 <body>
@@ -270,7 +307,7 @@
 </div>
 
 
-
+<div id="animation-container"></div>
 
 
 
@@ -1258,6 +1295,7 @@ function storeQuizSession() {
 
 
 
+// code to handle MCQ type questions
 
 function handleMCQ(question) {
   // Regex pattern to identify MCQ-type questions
@@ -1331,6 +1369,32 @@ function handleMCQ(question) {
 
 
 
+
+
+
+// code to handle congratulatory or encouraging messages upon answering
+
+const animationContainer = document.getElementById('animation-container');
+
+    function showAnimation(isCorrect) {
+      const congratulatoryWords = ["Well done!", "Correct answer!", "Great job!", "Fantastic!", "Superb!", "You nailed it!"];
+      const encouragingWords = ["Wrong answer. Better luck next time.", "Keep trying!", "Don't worry, you'll get it next time.", "It's okay, mistakes happen!", "You're getting closer!", "Almost there!"];
+
+      const randomWord = isCorrect ? congratulatoryWords[Math.floor(Math.random() * congratulatoryWords.length)] : encouragingWords[Math.floor(Math.random() * encouragingWords.length)];
+
+      const animationDiv = document.createElement('div');
+      animationDiv.textContent = randomWord;
+      animationDiv.classList.add('animation');
+      animationDiv.classList.add(isCorrect ? 'correct' : 'wrong');
+
+      animationContainer.innerHTML = '';
+      animationContainer.appendChild(animationDiv);
+      animationContainer.style.display = 'block';
+
+      setTimeout(() => {
+        animationContainer.style.display = 'none';
+      }, 3000);
+    }
 
 
 
