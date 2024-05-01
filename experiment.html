@@ -1259,73 +1259,70 @@ function storeQuizSession() {
 
 
 
-document.addEventListener('DOMContentLoaded', function() {
-  function handleMCQ(question) {
-    // Regex pattern to identify MCQ-type questions
-    const mcqPattern = /\(Options: (.*) Correct: (.*)\)$/;
+function handleMCQ(question) {
+  // Regex pattern to identify MCQ-type questions
+  const mcqPattern = /\(Options: (.*) Correct: (.*)\)$/;
 
-    // Test if the question matches the MCQ pattern
-    const isMCQ = mcqPattern.test(question);
+  // Test if the question matches the MCQ pattern
+  const isMCQ = mcqPattern.test(question);
 
-    // If not an MCQ-type question, return false and remove all option buttons from the DOM
-    if (!isMCQ) {
-      const optionBtns = document.querySelectorAll('.optionsBtn');
-      optionBtns.forEach(btn => btn.remove());
-      return false;
-    }
-
-    // Extract question, options, and correct answer using regex
-    const [, optionsPart, correctAnswer] = mcqPattern.exec(question);
-    const options = optionsPart.split(/[\dA-Za-z]\.|\)|\)\s/).filter(Boolean).map(option => option.trim());
-
-    // Get required DOM elements
-    const questionText = document.getElementById('questionText');
-    const correctBtn = document.getElementById('correctBtn');
-    const incorrectBtn = document.getElementById('incorrectBtn');
-    const partiallyCorrectBtn = document.getElementById('partiallyCorrectBtn');
-    const buttonsDiv = document.getElementById('buttons');
-
-    // Set inner content of questionText
-    questionText.textContent = question.replace(mcqPattern, '').trim();
-
-    // Hide the buttons
-    correctBtn.style.display = 'none';
-    incorrectBtn.style.display = 'none';
-    partiallyCorrectBtn.style.display = 'none';
-
-    // Remove existing option buttons
-    const existingOptionBtns = document.querySelectorAll('.optionsBtn');
-    existingOptionBtns.forEach(btn => btn.remove());
-
-    // Create and prepend option buttons
-    options.forEach((option, index) => {
-      const btn = document.createElement('button');
-      btn.textContent = option.trim();
-      btn.classList.add('optionsBtn');
-      btn.addEventListener('click', () => {
-        if (option.trim() === correctAnswer.trim()) {
-          handleCorrectChoice();
-        } else {
-          handleIncorrectChoice();
-        }
-      });
-      buttonsDiv.insertBefore(btn, buttonsDiv.firstChild);
-    });
-
-    // Function to handle correct choice
-    function handleCorrectChoice() {
-      // Your logic for handling correct choice
-      console.log('Correct choice');
-    }
-
-    // Function to handle incorrect choice
-    function handleIncorrectChoice() {
-      // Your logic for handling incorrect choice
-      console.log('Incorrect choice');
-    }
+  // If not an MCQ-type question, return false and remove all option buttons from the DOM
+  if (!isMCQ) {
+    const optionBtns = document.querySelectorAll('.optionsBtn');
+    optionBtns.forEach(btn => btn.remove());
+    return false;
   }
 
-});
+  // Extract question, options, and correct answer using regex
+  const [, optionsPart, correctAnswer] = mcqPattern.exec(question);
+  const options = optionsPart.split(/[\dA-Za-z]\.|\)|\)\s/).filter(Boolean).map(option => option.trim());
+
+  // Get required DOM elements
+  const questionText = document.getElementById('questionText');
+  const correctBtn = document.getElementById('correctBtn');
+  const incorrectBtn = document.getElementById('incorrectBtn');
+  const partiallyCorrectBtn = document.getElementById('partiallyCorrectBtn');
+  const buttonsDiv = document.getElementById('buttons');
+
+  // Set inner content of questionText
+  questionText.textContent = question.replace(mcqPattern, '').trim();
+
+  // Hide the buttons
+  correctBtn.style.display = 'none';
+  incorrectBtn.style.display = 'none';
+  partiallyCorrectBtn.style.display = 'none';
+
+  // Remove existing option buttons
+  const existingOptionBtns = document.querySelectorAll('.optionsBtn');
+  existingOptionBtns.forEach(btn => btn.remove());
+
+  // Create and prepend option buttons
+  options.forEach((option, index) => {
+    const btn = document.createElement('button');
+    btn.textContent = option.trim();
+    btn.classList.add('optionsBtn');
+    btn.addEventListener('click', () => {
+      if (option.trim() === correctAnswer.trim()) {
+        handleCorrectChoice();
+      } else {
+        handleIncorrectChoice();
+      }
+    });
+    buttonsDiv.insertBefore(btn, buttonsDiv.firstChild);
+  });
+
+  // Function to handle correct choice
+  function handleCorrectChoice() {
+    // Your logic for handling correct choice
+    console.log('Correct choice');
+  }
+
+  // Function to handle incorrect choice
+  function handleIncorrectChoice() {
+    // Your logic for handling incorrect choice
+    console.log('Incorrect choice');
+  }
+}
 
 
 
