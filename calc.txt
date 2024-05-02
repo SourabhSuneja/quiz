@@ -2,7 +2,7 @@ Combining and summarising data from two or more worksheets into a master workshe
 _________ is an elaborated form of goal seek.
 Explain the use of scenarios.
 What is the difference between Goal Seek and Solver?
-Which dialog box helps you to fix conflict changes in a spreadsheet? (A. Manage changes B. Resolve conflicts C. Correct conflicts D. Fix conflicts)
+Which dialog box helps you to fix conflict changes in a spreadsheet? (Options: A. Manage changes B. Resolve conflicts C. Correct conflicts D. Fix conflicts Correct: Resolve conflicts)
 Why do you use the "Changes" feature of Calc?
 What are comments? How are they useful?
 Why do we compare and merge spreadsheets?
@@ -12,6 +12,6 @@ How can you name a range of cells?
 Goal seek is present in _______ menu.
 What is the need to link data?
 Ritu is working on a budget report in Calc. She wants her office colleagues to be able to work on the same report. Which feature should she use for this?
-The ______ option generates subtotals to summarise the data. (Options: A. Subtotals B. Scenarios C. Solver D. Goal seek)
+The ______ option generates subtotals to summarise the data. (Options: A. Subtotals B. Scenarios C. Solver D. Goal seek Correct: Subtotals)
 What is an absolute hyperlink?
 Changes made in a shared spreadsheet can be accepted or rejected. True or False?
