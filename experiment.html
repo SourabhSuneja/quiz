@@ -832,8 +832,10 @@ const currentStudent = text.substring(index + 4);
     currentQuestionIndex++;
     
     // delay until the animations complete
+   let currentPauseState = countdownPaused;
+   countdownPaused = true;
    let timeoutId = setTimeout(function() {
-    
+    countdownPaused = currentPauseState;
     if (currentQuestionIndex < window.questions.length) {
       displayQuestion(false, false);
     } else {
