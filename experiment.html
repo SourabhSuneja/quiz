@@ -337,6 +337,7 @@ let currentUtterance;
 let volume;
 let slider;
 let dataPickedFromCookie = false;
+let correctAnsAvailable = null;
 
 
 
@@ -1326,9 +1327,10 @@ function handleMCQ(question) {
   if (!isMCQ) {
     const optionBtns = document.querySelectorAll('.optionsBtn');
     optionBtns.forEach(btn => btn.remove());
+    correctAnsAvailable = false;
     return false;
   }
-
+    
   // Extract question, options, and correct answer using regex
   const [, optionsPart, correctAnswer] = mcqPattern.exec(question);
   const options = optionsPart.split(/[\dA-Za-z]\.|\)|\)\s/).filter(Boolean).map(option => option.trim());
@@ -1353,6 +1355,9 @@ function handleMCQ(question) {
   // Remove existing option buttons
   const existingOptionBtns = document.querySelectorAll('.optionsBtn');
   existingOptionBtns.forEach(btn => btn.remove());
+
+  // store correct answer in a global variable
+  correctAnsAvailable = correctAnswer.trim()
 
   // Create and append option buttons
   options.forEach((option, index) => {
@@ -1432,10 +1437,16 @@ const encouragingWords = [
 
     function showAnimation(isCorrect) {
 
+
       const randomWord = isCorrect ? congratulatoryWords[Math.floor(Math.random() * congratulatoryWords.length)] : encouragingWords[Math.floor(Math.random() * encouragingWords.length)];
 
       const animationDiv = document.createElement('div');
+
+      if(correctAnsAvailable && !isCorrect) {
+        animationDiv.textContent = 'No. The correct answer is ' + correctAnsAvailable;
+      } else {
       animationDiv.textContent = randomWord;
+      }
       animationDiv.classList.add('animation');
       animationDiv.classList.add(isCorrect ? 'correct' : 'wrong');
 
