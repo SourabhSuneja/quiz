@@ -355,6 +355,7 @@ let volume;
 let slider;
 let dataPickedFromCookie = false;
 let correctAnsAvailable = null;
+let useteam;
 
 
 
@@ -369,6 +370,9 @@ function deleteQuizCookie() {
 
 // function to intialize key quiz variables
 function intializeQuizVariables() {
+
+ useteam = retrieveQuizData('useteam') ||  getParameterByName('useteam') || 'n';
+
 
  // Array to store absent students
   absentStudents = [];
