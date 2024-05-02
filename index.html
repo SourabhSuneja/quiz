@@ -499,9 +499,7 @@ function storeQuizData(currentStudent) {
         shuffle: shuffle,
         customselect: customselect,
         useteam: useteam,
-        teammap: teammap,
-        teamScores: teamScores,
-        teamChances: teamChances
+        teammap: teammap
     };
 
     // Store data as a cookie
@@ -567,6 +565,55 @@ function consolidateScoresAndChances() {
         teamScores[team] = teamScore;
         teamChances[team] = teamChance;
     }
+}
+
+
+
+
+function displayTeamScoresAndChances() {
+    // First, consolidate the scores and chances
+    consolidateScoresAndChances();
+
+    // Get the container element
+    let container = document.getElementById('scoreTableContainer');
+
+    // Create a heading for the table
+    let heading = document.createElement('h2');
+    heading.textContent = 'Team-wise Scores';
+    heading.style.textAlign = 'center';
+    container.appendChild(heading);
+
+    // Create a table element
+    let table = document.createElement('table');
+
+    // Create table header row
+    let headerRow = table.insertRow();
+    let headers = ['Team', 'Score', 'Chance', 'Percentage'];
+    for (let header of headers) {
+        let th = document.createElement('th');
+        th.textContent = header;
+        headerRow.appendChild(th);
+    }
+
+    // Sort teams by percentage (descending order)
+    let sortedTeams = Object.keys(teamScores).sort((a, b) => {
+        return (teamScores[b] / teamChances[b]) - (teamScores[a] / teamChances[a]);
+    });
+
+    // Create rows for each team
+    sortedTeams.forEach(team => {
+        let row = table.insertRow();
+        let score = teamScores[team];
+        let chance = teamChances[team];
+        let percentage = ((score / chance) * 100).toFixed(2);
+        [team, score, chance, percentage].forEach(value => {
+            let cell = row.insertCell();
+            cell.textContent = value;
+        });
+    });
+
+    // Append the table to the container
+    container.appendChild(table);
 }
 
 
@@ -1328,6 +1375,7 @@ resetCountdown();
    
  scoreTableContainer.style.display = 'block';
     populateTable();
+    displayTeamScoresAndChances();
   });
 
   // Hide table when clicking anywhere outside the table
