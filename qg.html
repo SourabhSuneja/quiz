@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Data Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #4CAF50;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        p.subtitle {
+            color: #777;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        input[type="text"],
+        select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: box-shadow 0.3s ease;
+        }
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            box-shadow: 0 0 10px #4CAF50;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #questionList {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            word-wrap: break-word; /* Added to ensure proper wrapping */
+        }
+        #copyButton {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        #copyButton:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Question Data Generator</h2>
+    <form id="questionForm">
+        <label for="question">Enter Question:</label>
+        <input type="text" id="question" name="question">
+        <label for="option1">Option 1:</label>
+        <input type="text" id="option1">
+        <label for="option2">Option 2:</label>
+        <input type="text" id="option2">
+        <label for="option3">Option 3:</label>
+        <input type="text" id="option3">
+        <label for="option4">Option 4:</label>
+        <input type="text" id="option4">
+        <label for="correctOption">Correct Option:</label>
+        <select id="correctOption" name="correctOption" onfocus="populateCorrectOptionDropdown()"></select>
+        <button type="button" onclick="addQuestion()">Add Question</button>
+    </form>
+    <div id="questionList"></div>
+    <button id="copyButton" onclick="copyQuestions()">Copy Text Data</button>
+</div>
+
+<script>
+    function addQuestion() {
+        const question = document.getElementById('question').value.trim();
+        const option1 = document.getElementById('option1').value.trim();
+        const option2 = document.getElementById('option2').value.trim();
+        const option3 = document.getElementById('option3').value.trim();
+        const option4 = document.getElementById('option4').value.trim();
+        const selectBox = document.getElementById('correctOption');
+        const correctOptionWithChoiceMarker = selectBox.options[selectBox.selectedIndex].text.trim();
+        const correctOption = correctOptionWithChoiceMarker.replace(/^[A-D]\)\s*/, "");
+
+
+        if (question === '') {
+            alert('Please enter a question.');
+            return;
+        }
+
+        let questionText = question;
+        if (option1 !== '' || option2 !== '' || option3 !== '' || option4 !== '') {
+            questionText += ' (Options: ';
+            if (option1 !== '') questionText += `A. ${option1} `;
+            if (option2 !== '') questionText += `B. ${option2} `;
+            if (option3 !== '') questionText += `C. ${option3} `;
+            if (option4 !== '') questionText += `D. ${option4} `;
+            questionText += ` Correct: ${correctOption})`;
+        }
+
+        const questionList = document.getElementById('questionList');
+        questionList.textContent += questionText + '\n';
+
+        // Clear form fields
+        document.getElementById('questionForm').reset();
+    }
+
+    function copyQuestions() {
+        const questionList = document.getElementById('questionList');
+        const text = questionList.textContent.trim();
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Questions copied to clipboard!');
+        }, (err) => {
+            console.error('Failed to copy questions: ', err);
+        });
+    }
+
+    function populateCorrectOptionDropdown() {
+        const correctOptionDropdown = document.getElementById('correctOption');
+        correctOptionDropdown.innerHTML = '<option value="">Select</option>';
+        const option1 = document.getElementById('option1').value.trim();
+        const option2 = document.getElementById('option2').value.trim();
+        const option3 = document.getElementById('option3').value.trim();
+        const option4 = document.getElementById('option4').value.trim();
+        if (option1 !== '') correctOptionDropdown.innerHTML += `<option value="A">A. ${option1}</option>`;
+        if (option2 !== '') correctOptionDropdown.innerHTML += `<option value="B">B. ${option2}</option>`;
+        if (option3 !== '') correctOptionDropdown.innerHTML += `<option value="C">C. ${option3}</option>`;
+        if (option4 !== '') correctOptionDropdown.innerHTML += `<option value="D">D. ${option4}</option>`;
+    }
+</script>
+
+</body>
+</html>
