@@ -204,32 +204,29 @@
     }
     
     /* Style for table */
-    #scoreTable {
+    #scoreTableContainer table {
       width: 100%; /* Make the table width 100% */
       border-collapse: collapse;
       margin-top: 10px;
     }
     
-    #scoreTable th, #scoreTable td {
+    #scoreTableContainer th, #scoreTableContainer td {
       padding: 10px;
       text-align: center;
       border-bottom: 1px solid #666; /* Adjust border color */
       color: white; /* Change text color to white */
     }
     
-    #scoreTable th {
+    #scoreTableContainer th {
       background-color: #007bff;
     }
     
     /* Alternate row background color for better readability */
-    #scoreTable tbody tr:nth-child(even) {
+    #scoreTableContainer tbody tr:nth-child(even) {
       background-color: #222; /* Darker background for alternate rows */
     }
     
-    /* Style for percentage column */
-    .percentage {
-      background-color: #007bff;
-    }
+   
     
     /* Media query for small screens */
     @media (max-width: 600px) {
@@ -571,7 +568,6 @@ function consolidateScoresAndChances() {
 
 
 
-
 function displayTeamScoresAndChances() {
     // First, consolidate the scores and chances
     consolidateScoresAndChances();
@@ -579,30 +575,42 @@ function displayTeamScoresAndChances() {
     // Get the container element
     let container = document.getElementById('scoreTableContainer');
 
+    // Remove any existing heading with the same id
+    let existingHeading = document.getElementById('teamScoresHeading');
+    if (existingHeading) {
+        existingHeading.remove();
+    }
+
+    // Create a heading for the table
+    let heading = document.createElement('h2');
+    heading.textContent = 'Team-wise Scores';
+    heading.id = 'teamScoresHeading'; // Assign unique id to the heading
+    heading.style.textAlign = 'center';
+    container.appendChild(heading);
+
     // Remove any existing table with the same id
     let existingTable = document.getElementById('teamScoresTable');
     if (existingTable) {
         existingTable.remove();
     }
 
-    // Create a heading for the table
-    let heading = document.createElement('h2');
-    heading.textContent = 'Team-wise Scores';
-    heading.style.textAlign = 'center';
-    container.appendChild(heading);
-
     // Create a table element
     let table = document.createElement('table');
     table.id = 'teamScoresTable'; // Assign id to the table
 
-    // Create table header row
-    let headerRow = table.insertRow();
-    let headers = ['Team', 'Score', 'Chance', 'Percentage'];
+    // Create table header
+    let thead = document.createElement('thead');
+    let headerRow = thead.insertRow();
+    let headers = ['Team', 'Score', 'Chances', '%'];
     for (let header of headers) {
         let th = document.createElement('th');
         th.textContent = header;
         headerRow.appendChild(th);
     }
+    table.appendChild(thead);
+
+    // Create table body
+    let tbody = document.createElement('tbody');
 
     // Sort teams by percentage (descending order)
     let sortedTeams = Object.keys(teamScores).sort((a, b) => {
@@ -611,7 +619,7 @@ function displayTeamScoresAndChances() {
 
     // Create rows for each team
     sortedTeams.forEach(team => {
-        let row = table.insertRow();
+        let row = tbody.insertRow();
         let score = teamScores[team];
         let chance = teamChances[team];
         let percentage = ((score / chance) * 100).toFixed(2);
@@ -620,10 +628,12 @@ function displayTeamScoresAndChances() {
             cell.textContent = value;
         });
     });
+    table.appendChild(tbody);
 
     // Append the table to the container
     container.appendChild(table);
 }
+
 
 
 
