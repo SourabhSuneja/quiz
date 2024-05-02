@@ -282,6 +282,7 @@
         const teamName = document.getElementById('teamName').value.trim();
         const selectedStudents = Array.from(document.querySelectorAll('#studentCheckboxes input:checked')).map(checkbox => parseInt(checkbox.value));
         teams[teamName] = selectedStudents;
+        document.getElementById("teamName").value = "";
         closeModal();
         displayTeams();
     }
