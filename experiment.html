@@ -227,7 +227,7 @@
     let students = [];
 
     async function fetchStudents() {
-        const fileName = document.getElementById('studentData').value.trim();
+        let fileName = document.getElementById('studentData').value.trim();
         if (!fileName) return; // Exit if input field is empty
         if (!fileName.endsWith('.txt')) {
             fileName += '.txt';
