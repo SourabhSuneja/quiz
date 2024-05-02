@@ -221,6 +221,43 @@
         max-width: 100%; /* Remove max-width for small screens */
       }
     }
+
+    #animation-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      z-index: 9999;
+    }
+
+    @keyframes pop-up {
+      0% {transform: scale(0) translateY(100px);}
+      50% {transform: scale(1.1) translateY(-50px);}
+      100% {transform: scale(1) translateY(0);}
+    }
+
+    .animation {
+      animation: pop-up 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      font-size: 24px;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0px 0px 20px rgba(0,0,0,0.3);
+    }
+
+    .correct {
+      color: white;
+      background-color: rgba(0, 255, 0, 1);
+    }
+
+    .wrong {
+      color: white;
+      background-color: rgba(255, 0, 0, 1);
+    }
+
+
 </style>
 </head>
 <body>
@@ -232,7 +269,9 @@
     <p id="studentName"></p>
     <div id="timer">00:00</div>
   </div>
-  <div class="buttons">
+  <div id="buttonContainer" class="buttons">
+
+  <div id="optionBtnContainer"></div>
     <button id="correctBtn">Answered correctly</button>
     <button id="incorrectBtn">Couldn't answer correctly</button>
     <button id="partiallyCorrectBtn">Partially correct</button>
@@ -270,7 +309,7 @@
 </div>
 
 
-
+<div id="animation-container"></div>
 
 
 
@@ -298,6 +337,7 @@ let currentUtterance;
 let volume;
 let slider;
 let dataPickedFromCookie = false;
+let correctAnsAvailable = null;
 
 
 
@@ -600,14 +640,31 @@ if(!countdownDuration) {
 
   
     // Function to display question and student name
-  function displayQuestion(pass = false) {
+  function displayQuestion(pass = false, isFirst = true) {
     if (!window.students || !window.questions) {
       console.log("Students or questions data not loaded.");
       return;
     }
     const questionText = document.getElementById("questionText");
     const studentName = document.getElementById("studentName");
-    questionText.textContent = window.questions[currentQuestionIndex].trim();
+
+   if(!handleMCQ(window.questions[currentQuestionIndex].trim())) {
+   questionText.textContent = window.questions[currentQuestionIndex].trim();
+
+  const correctBtn = document.getElementById('correctBtn');
+  const incorrectBtn = document.getElementById('incorrectBtn');
+  const partiallyCorrectBtn = document.getElementById('partiallyCorrectBtn');
+
+// Show the buttons
+  correctBtn.style.display = 'block';
+  incorrectBtn.style.display = 'block';
+  partiallyCorrectBtn.style.display = 'block';
+
+}
+
+
+
+    
     let randomStudent; 
     
     if(dataPickedFromCookie) {
@@ -635,7 +692,11 @@ let selectionMode = m || 'random';
     storeQuizData(randomStudent.trim());
 
     if(!pass) {
-    speakUp(questionText.textContent, 0.8);
+        if(isFirst) {
+          speakUp("Let's start with our first question: " + questionText.textContent, 0.8);
+        } else {
+          speakUp("Next question: " + questionText.textContent, 0.8);
+        } 
 }
 else {
     speakUp("Question passed", 0.8);
@@ -680,6 +741,8 @@ function pickRandomStudent() {
 
   // Function to handle correct answer
   function answeredCorrectly() {
+
+    showAnimation(true);
     var text = document.getElementById('studentName').textContent;
 
 var index = text.indexOf('for');
@@ -730,7 +793,7 @@ if (chances[currentStudent] === undefined) {
 
   // Function to handle incorrect answer
   function answeredIncorrectly() {
-
+    showAnimation(false);
     var text = document.getElementById('studentName').textContent;
 
 var index = text.indexOf('for');
@@ -762,20 +825,30 @@ const currentStudent = text.substring(index + 4);
       chances[currentStudent]++;
     }
 
-    displayQuestion(true);
+    displayQuestion(true, false);
   }
 
   // Function to move to the next question
   function nextQuestion() {
     currentQuestionIndex++;
     
-
-
+    // delay until the animations complete
+   let currentPauseState = countdownPaused;
+   countdownPaused = true;
+   countdown++;
+   let timeoutId = setTimeout(function() {
+    countdownPaused = currentPauseState;
     if (currentQuestionIndex < window.questions.length) {
-      displayQuestion();
+      displayQuestion(false, false);
     } else {
       displayScores();
     }
+
+    clearTimeout(timeoutId);
+}, 3000); 
+
+
+    
   }
 
   // Function to display scores
@@ -1005,6 +1078,9 @@ function resetCountdown() {
 
 function pauseCountdown() {
   countdownPaused = !countdownPaused;
+  if(countdownPaused) {
+    countdown++;
+  }
   const button = document.getElementById('pauseBtn');
   button.textContent = countdownPaused ? 'Resume countdown' : 'Pause countdown';
 }
@@ -1034,7 +1110,7 @@ function attachCustomSelect() {
     const studentName = document.getElementById('studentName');
     const students = window.students || []; // Get student names from window.students or default to an empty array
     
-    const longPressDelay = 1200; // Long press delay in milliseconds
+    const longPressDelay = 1000; // Long press delay in milliseconds
 
     let longPressTimer;
 
@@ -1238,10 +1314,158 @@ function storeQuizSession() {
 
 
 
+// code to handle MCQ type questions
+
+function handleMCQ(question) {
+  // Regex pattern to identify MCQ-type questions
+  const mcqPattern = /\(Options: (.*) Correct: (.*)\)$/i;
+
+  // Test if the question matches the MCQ pattern
+  const isMCQ = mcqPattern.test(question);
+
+  // If not an MCQ-type question, return false and remove all option buttons from the DOM
+  if (!isMCQ) {
+    const optionBtns = document.querySelectorAll('.optionsBtn');
+    optionBtns.forEach(btn => btn.remove());
+    correctAnsAvailable = false;
+    return false;
+  }
+    
+  // Extract question, options, and correct answer using regex
+  const [, optionsPart, correctAnswer] = mcqPattern.exec(question);
+  const options = optionsPart.split(/[\dA-Za-z]\.|\)|\)\s/).filter(Boolean).map(option => option.trim());
+
+  // Get required DOM elements
+  const questionTextNode = document.getElementById('questionText');
+  const correctBtn = document.getElementById('correctBtn');
+  const incorrectBtn = document.getElementById('incorrectBtn');
+  const partiallyCorrectBtn = document.getElementById('partiallyCorrectBtn');
+  const buttonsDiv = document.getElementById('optionBtnContainer');
+
+
+
+  // Set inner content of questionText
+  questionTextNode.textContent = question.replace(mcqPattern, '').trim();
+
+  // Hide the buttons
+  correctBtn.style.display = 'none';
+  incorrectBtn.style.display = 'none';
+  partiallyCorrectBtn.style.display = 'none';
+
+  // Remove existing option buttons
+  const existingOptionBtns = document.querySelectorAll('.optionsBtn');
+  existingOptionBtns.forEach(btn => btn.remove());
+
+  // store correct answer in a global variable
+  correctAnsAvailable = correctAnswer.trim()
+
+  // Create and append option buttons
+  options.forEach((option, index) => {
+    const btn = document.createElement('button');
+    btn.textContent = option.trim();
+    btn.classList.add('optionsBtn');
+    btn.addEventListener('click', () => {
+      if (option.trim() === correctAnswer.trim()) {
+        handleCorrectChoice();
+      } else {
+        handleIncorrectChoice();
+      }
+    });
+    buttonsDiv.append(btn);
+  });
+
+  // Function to handle correct choice
+  function handleCorrectChoice() {
+    correctBtn.click();
+  }
+
+  // Function to handle incorrect choice
+  function handleIncorrectChoice() {
+    incorrectBtn.click();
+  }
+
+// Return true after successful handling of MCQ type question
+    return true;
+
+
+}
+
+
+
+
+
+
+// code to handle congratulatory or encouraging messages upon answering
+
+const animationContainer = document.getElementById('animation-container');
+
+const congratulatoryWords = [
+    "Excellent job!",
+    "Well done!",
+    "Outstanding!",
+    "Brilliant!",
+    "Perfect!",
+    "Bravo!",
+    "You nailed it!",
+    "Superb!",
+    "Impressive!",
+    "Terrific!",
+    "Awesome!",
+    "Great work!",
+    "Phenomenal!",
+    "Remarkable!",
+    "Marvelous!",
+    "Exceptional!",
+    "Top-notch!"
+];
+
+const encouragingWords = [
+    "Nice try! Better luck next time!",
+    "Don't give up!",
+    "Learning is about trying!",
+    "Mistakes help us grow!",
+    "Every mistake is progress!",
+    "Learning from mistakes is key!",
+    "It's okay, keep going!",
+    "You're learning with every try!",
+    "Progress is made step by step!",
+    "You're making strides!",
+    "Learning is a journey!",
+    "Every attempt counts!"
+];
+
+
+    function showAnimation(isCorrect) {
+
+
+      const randomWord = isCorrect ? congratulatoryWords[Math.floor(Math.random() * congratulatoryWords.length)] : encouragingWords[Math.floor(Math.random() * encouragingWords.length)];
+
+      const animationDiv = document.createElement('div');
+
+      if(correctAnsAvailable && !isCorrect) {
+        animationDiv.textContent = 'No. The correct answer is: ' + correctAnsAvailable;
+      } else {
+      animationDiv.textContent = randomWord;
+      }
+      animationDiv.classList.add('animation');
+      animationDiv.classList.add(isCorrect ? 'correct' : 'wrong');
+
+      animationContainer.innerHTML = '';
+      animationContainer.appendChild(animationDiv);
+      animationContainer.style.display = 'block';
+
+      setTimeout(() => {
+        animationContainer.style.display = 'none';
+      }, 3000);
+    }
+
 
 
 
 </script>
+
+
+
 
 
 </body>
