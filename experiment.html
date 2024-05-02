@@ -237,7 +237,7 @@
             const text = await response.text();
             students = text.split('\n').filter(student => student.trim() !== '').sort();
         } catch (error) {
-            console.error('Error fetching file:', error);
+            alert('Error fetching file:', error);
         }
     }
 
