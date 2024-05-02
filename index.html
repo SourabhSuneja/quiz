@@ -570,12 +570,20 @@ function consolidateScoresAndChances() {
 
 
 
+
+
 function displayTeamScoresAndChances() {
     // First, consolidate the scores and chances
     consolidateScoresAndChances();
 
     // Get the container element
     let container = document.getElementById('scoreTableContainer');
+
+    // Remove any existing table with the same id
+    let existingTable = document.getElementById('teamScoresTable');
+    if (existingTable) {
+        existingTable.remove();
+    }
 
     // Create a heading for the table
     let heading = document.createElement('h2');
@@ -585,6 +593,7 @@ function displayTeamScoresAndChances() {
 
     // Create a table element
     let table = document.createElement('table');
+    table.id = 'teamScoresTable'; // Assign id to the table
 
     // Create table header row
     let headerRow = table.insertRow();
@@ -615,6 +624,8 @@ function displayTeamScoresAndChances() {
     // Append the table to the container
     container.appendChild(table);
 }
+
+
 
 
 
