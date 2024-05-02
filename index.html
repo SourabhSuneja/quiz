@@ -393,6 +393,11 @@ teammap = parseTeamMap(teammap);
   chances = retrieveQuizData('chances') || {};
 
 
+teamScores = retrieveQuizData('teamScores') || {};
+teamChances = retrieveQuizData('teamChances') || {};
+
+
+
 // Ask the user for the maximum chances
 maxChancesInput = retrieveQuizData('maxChances') ||  getParameterByName('maxchances') ||  prompt("How many maximum chances do you want to give to each student? (Defaults to 3)");
 // Convert the input to a number
@@ -494,7 +499,9 @@ function storeQuizData(currentStudent) {
         shuffle: shuffle,
         customselect: customselect,
         useteam: useteam,
-        teammap: teammap
+        teammap: teammap,
+        teamScores: teamScores,
+        teamChances: teamChances
     };
 
     // Store data as a cookie
@@ -538,6 +545,30 @@ function parseTeamMap(teammap) {
         return null;
     }
 }
+
+
+
+// function to consolidate scores and chances in case team maps are available
+function consolidateScoresAndChances() {
+    for (let team in teammap) {
+        let teamScore = 0;
+        let teamChance = 0;
+        for (let i = 0; i < teammap[team].length; i++) {
+            let studentIndex = teammap[team][i];
+            let studentName = students[studentIndex];
+            // Check if the student is in scores and chances objects
+            if (scores.hasOwnProperty(studentName)) {
+                teamScore += scores[studentName];
+            }
+            if (chances.hasOwnProperty(studentName)) {
+                teamChance += chances[studentName];
+            }
+        }
+        teamScores[team] = teamScore;
+        teamChances[team] = teamChance;
+    }
+}
+
 
 
 
