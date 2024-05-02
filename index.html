@@ -356,6 +356,7 @@ let slider;
 let dataPickedFromCookie = false;
 let correctAnsAvailable = null;
 let useteam;
+let teammap;
 
 
 
@@ -371,7 +372,13 @@ function deleteQuizCookie() {
 // function to intialize key quiz variables
 function intializeQuizVariables() {
 
+ // parsing and using team map
  useteam = retrieveQuizData('useteam') ||  getParameterByName('useteam') || 'n';
+
+teammap = retrieveQuizData('teammap') ||  getParameterByName('teammap') || null;
+teammap = parseTeamMap(teammap);
+alert(JSON.stringify(teammap));
+
 
 
  // Array to store absent students
@@ -485,7 +492,8 @@ function storeQuizData(currentStudent) {
         title: title,
         shuffle: shuffle,
         customselect: customselect,
-        useteam: useteam
+        useteam: useteam,
+        teammap: teammap
     };
 
     // Store data as a cookie
@@ -516,7 +524,19 @@ function retrieveQuizData(key) {
 
 
 
-
+// function to parse teammap
+function parseTeamMap(teammap) {
+    try {
+        const parsedObject = JSON.parse(teammap);
+        if (parsedObject && typeof parsedObject === 'object' && Object.keys(parsedObject).length > 0) {
+            return parsedObject;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        return null;
+    }
+}
 
 
 
@@ -630,7 +650,7 @@ if(shuffle == 'y') {
      window.students = shuffleArray(window.students);
      document.getElementById("footerSpanText").textContent += ' The names have been shuffled using Fisher-Yates algorithm.';
 }
-else if(shuffle == 'az') {
+else if(shuffle == 'az' || useteam == 'y') {
      window.students.sort();
      document.getElementById("footerSpanText").textContent += ' The names have been alphabetically sorted A-Z.';
 }
