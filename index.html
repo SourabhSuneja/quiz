@@ -722,6 +722,25 @@ document.getElementById("downloadTeamScoreBtn").addEventListener("click",functio
 
 
 
+// function to remove keys like 'no one' or 'nobody' from scores and chances just in case they got inserted
+function removeKeysWithNobodyOrNoOne() {
+    for (let key in scores) {
+        if (key.toLowerCase().includes('nobody') || key.toLowerCase().includes('no one')) {
+            delete scores[key];
+        }
+    }
+    
+    for (let key in chances) {
+        if (key.toLowerCase().includes('nobody') || key.toLowerCase().includes('no one')) {
+            delete chances[key];
+        }
+    }
+}
+
+
+
+
+
 
 
   // Function to get URL parameters
@@ -889,6 +908,7 @@ if(!countdownDuration) {
 
 
 
+
     
     let randomStudent; 
     
@@ -922,8 +942,15 @@ let selectionMode = m || 'random';
     studentName.textContent = "Question for " + randomStudent.trim();
     resetCountdown();
    
+
+
+// remove invalid keys, if any
+removeKeysWithNobodyOrNoOne();
+
 // re-consolidate team scores before creating cookie
-consolidateScoresAndChances(); storeQuizData(randomStudent.trim());
+consolidateScoresAndChances();
+
+ storeQuizData(randomStudent.trim());
 
     if(!pass) {
         if(isFirst) {
@@ -1122,6 +1149,9 @@ const currentStudent = text.substring(index + 4);
 
   // Function to display scores
   function displayScores() {
+
+removeKeysWithNobodyOrNoOne();
+
 
 // store current session data for long term retrieval
 storeQuizSession();
