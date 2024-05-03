@@ -910,7 +910,9 @@ let selectionMode = m || 'random';
 
     studentName.textContent = "Question for " + randomStudent.trim();
     resetCountdown();
-    storeQuizData(randomStudent.trim());
+   
+// re-consolidate team scores before creating cookie
+consolidateScoresAndChances(); storeQuizData(randomStudent.trim());
 
     if(!pass) {
         if(isFirst) {
