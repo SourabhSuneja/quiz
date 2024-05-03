@@ -630,6 +630,7 @@ function displayTeamScoresAndChances() {
         let score = teamScores[team];
         let chance = teamChances[team];
         let percentage = ((score / chance) * 100).toFixed(2);
+        percentage = isNaN(percentage) ? '-' : percentage;
         [team, score, chance, percentage].forEach(value => {
             let cell = row.insertCell();
             cell.textContent = value;
