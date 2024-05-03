@@ -1009,6 +1009,7 @@ function pickRandomStudentFromTeam() {
 
     // Get students for the current team
     const currentTeam = teammap[teams[currentTeamIndex]];
+    const currentTeamName = teams[currentTeamIndex];
 
     // Create weighted array of students based on remaining chances
     let weightedArray = [];
@@ -1024,10 +1025,11 @@ function pickRandomStudentFromTeam() {
     const randomIndex = Math.floor(Math.random() * weightedArray.length);
     const randomStudent = weightedArray[randomIndex];
 
+
     // Update current team index for next call
     currentTeamIndex = (currentTeamIndex + 1) % teams.length;
 
-    return randomStudent || ('no one (all students from the current team [' + teams[currentTeamIndex] + '] have exhausted their chances). Click on "End Quiz" to display scores or pick another student to move to the next team.') ;
+    return randomStudent || ('no one (all students from the current team [' + currentTeamName + '] have exhausted their chances). Click on "End Quiz" to display scores or pick another student to move to the next team.') ;
 }
 
 
