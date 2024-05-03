@@ -392,7 +392,22 @@ if(typeof teammap === 'string') {
  // Array to store absent students
   absentStudents = retrieveQuizData('absent') ||  getParameterByName('absent') || [];
 
+// parse absentStudents into an array if it is a string retrieved from the URL
 
+if (typeof absentStudents === "string") {
+  try {
+    let parsedArray = JSON.parse(absentStudents);
+    if (Array.isArray(parsedArray)) {
+      absentStudents = parsedArray;
+    } else {
+      console.error("The parsed value is not an array.");
+    }
+  } catch (error) {
+    console.error("Error parsing the string:", error);
+  }
+}
+
+alert(absentStudents);
 
   // Index to keep track of current question
   currentQuestionIndex = parseInt(retrieveQuizData("currentQuestionIndex")) || 0;
