@@ -1027,7 +1027,7 @@ function pickRandomStudentFromTeam() {
     // Update current team index for next call
     currentTeamIndex = (currentTeamIndex + 1) % teams.length;
 
-    return randomStudent || 'no one (all students from the current team have exhausted their chances). Click on "End Quiz" to display scores.';
+    return randomStudent || ('no one (all students from the current team [' + teams[currentTeamIndex] + '] have exhausted their chances). Click on "End Quiz" to display scores or pick another student to move to the next team.') ;
 }
 
 
