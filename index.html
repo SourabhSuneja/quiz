@@ -992,10 +992,10 @@ function pickRandomStudent() {
     // Select a random student from the weighted array
     let randomIndex;
     let randomStudent;
-    do {
+   
         randomIndex = Math.floor(Math.random() * weightedStudents.length);
         randomStudent = weightedStudents[randomIndex];
-    } while (absentStudents.includes(randomStudent));
+    
      
     return randomStudent || 'no one (all students have exhausted their chances). Click on "End Quiz" to display scores.';
 }
