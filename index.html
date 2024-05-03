@@ -377,7 +377,10 @@ function intializeQuizVariables() {
  useteam = retrieveQuizData('useteam') ||  getParameterByName('useteam') || 'n';
 
 teammap = retrieveQuizData('teammap') ||  getParameterByName('teammap') || null;
-teammap = parseTeamMap(teammap);
+
+if(typeof teammap === 'string') {
+    teammap = parseTeamMap(teammap);
+}
 
 
 
