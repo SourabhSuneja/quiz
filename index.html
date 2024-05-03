@@ -569,6 +569,11 @@ function consolidateScoresAndChances() {
 
 
 function displayTeamScoresAndChances() {
+
+    // return back if team map is not available
+     if(useteam != 'y' || !teammap) {
+           return;
+     }
     // First, consolidate the scores and chances
     consolidateScoresAndChances();
 
