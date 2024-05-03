@@ -408,6 +408,20 @@ if (typeof absentStudents === "string") {
 }
 
 
+// remove absent students from the students array
+
+if (Array.isArray(absentStudents) && absentStudents.length > 0) {
+    // Sort the absentStudents array in descending order
+    absentStudents.sort((a, b) => b - a);
+
+    // Remove absent students from the students array
+    absentStudents.forEach(index => {
+        students.splice(index, 1);
+    });
+
+}
+
+
 
   // Index to keep track of current question
   currentQuestionIndex = parseInt(retrieveQuizData("currentQuestionIndex")) || 0;
