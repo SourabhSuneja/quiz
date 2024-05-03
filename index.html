@@ -647,6 +647,72 @@ function displayTeamScoresAndChances() {
 
 
 
+// Function to calculate team-wise percentage and display chart
+  function displayTeamChart() {
+
+        // return back if team map is not available
+     if(useteam != 'y' || !teammap) {
+           return;
+     }
+
+    var chartContainer = document.createElement('div');
+    chartContainer.classList.add('chart-container');
+
+    var teamData = [];
+
+    // Calculate percentages and store team data
+    for (var team in teamScores) {
+      var percentage = (teamScores[team] / teamChances[team]) * 100;
+      teamData.push({ name: team, percentage: percentage });
+    }
+
+    // Sort teams based on their percentages (highest to lowest)
+    teamData.sort(function(a, b) {
+      return b.percentage - a.percentage;
+    });
+
+    // Create bars for each team
+    teamData.forEach(function(team) {
+      var bar = document.createElement('div');
+      var shade = Math.round(205 - (team.percentage * 1.55)); // Calculate shade of green
+      shade = Math.max(shade, 50); // Ensure a minimum value for visibility
+      bar.style.backgroundColor = 'rgb(0,' + '120' + ',0)'; // Set background color
+      bar.classList.add('bar');
+      bar.style.width = team.percentage + '%';
+      
+      // Create span for text and percentage
+      var barText = document.createElement('span');
+      barText.classList.add('bar-text');
+      barText.textContent = team.name + ': ' + team.percentage.toFixed(2) + '%';
+      bar.appendChild(barText);
+      
+      chartContainer.appendChild(bar);
+    });
+
+    document.body.appendChild(chartContainer);
+
+// create download teamScoresheet button
+// Create a button element
+var button = document.createElement("button");
+// Set button text
+button.innerHTML = "Download Team Score Sheet";
+// Set button id
+button.id = "downloadTeamScoreBtn";
+// Center align the button
+button.style.display = "block";
+button.style.margin = "auto";
+
+// Append the button to the end of the page body
+document.body.appendChild(button);
+// Attach click event handler to the button
+document.getElementById("downloadTeamScoreBtn").addEventListener("click", downloadCSV);
+
+  }
+
+
+
+
+
 
 
   // Function to get URL parameters
@@ -1118,6 +1184,10 @@ button.style.margin = "auto";
 document.body.appendChild(button);
 // Attach click event handler to the button
 document.getElementById("downloadBtn").addEventListener("click", downloadCSV);
+
+
+displayTeamChart();
+
 
   }
 
