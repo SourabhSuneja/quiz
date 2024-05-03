@@ -390,7 +390,9 @@ if(typeof teammap === 'string') {
 
 
  // Array to store absent students
-  absentStudents = [];
+  absentStudents = retrieveQuizData('absent') ||  getParameterByName('absent') || [];
+
+
 
   // Index to keep track of current question
   currentQuestionIndex = parseInt(retrieveQuizData("currentQuestionIndex")) || 0;
