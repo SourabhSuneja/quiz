@@ -358,6 +358,7 @@ let dataPickedFromCookie = false;
 let correctAnsAvailable = null;
 let useteam;
 let teammap;
+let currentTeamIndex;
 
 
 
@@ -377,6 +378,9 @@ function intializeQuizVariables() {
  useteam = retrieveQuizData('useteam') ||  getParameterByName('useteam') || 'n';
 
 teammap = retrieveQuizData('teammap') ||  getParameterByName('teammap') || null;
+
+// variable to track team turns
+currentTeamIndex = 0;
 
 if(typeof teammap === 'string') {
     teammap = parseTeamMap(teammap);
