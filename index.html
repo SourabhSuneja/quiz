@@ -1114,7 +1114,7 @@ deleteQuizCookie();
     for (const team in teamScores) {
       container.innerHTML += "<p>" + team + ": " + teamScores[team] + "/" + teamChances[team] + "</p>";
     }
-    //displayChart();
+   
     
   }
 
@@ -1185,7 +1185,9 @@ button.style.margin = "auto";
 // Append the button to the end of the page body
 document.body.appendChild(button);
 // Attach click event handler to the button
-document.getElementById("downloadBtn").addEventListener("click", downloadCSV);
+document.getElementById("downloadBtn").addEventListener("click", function() {
+    downloadCSV(false);
+});
 
 
 displayTeamChart();
@@ -1265,7 +1267,7 @@ function downloadCSV(teamCSV = false) {
   if(teamCSV) {
     csvData = createCSV(teamScores, teamChances);
     filename = 'teamscores.csv';
-  } else {
+  } else if(teamCSV == false) {
   csvData = createCSV(scores, chances);
   filename = 'scoresheet.csv';
     }
