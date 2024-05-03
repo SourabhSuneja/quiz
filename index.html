@@ -705,7 +705,9 @@ button.style.margin = "auto";
 // Append the button to the end of the page body
 document.body.appendChild(button);
 // Attach click event handler to the button
-document.getElementById("downloadTeamScoreBtn").addEventListener("click", downloadCSV);
+document.getElementById("downloadTeamScoreBtn").addEventListener("click",function() {
+      downloadCSV(true);
+});
 
   }
 
