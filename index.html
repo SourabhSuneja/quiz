@@ -1483,8 +1483,13 @@ dialogBox.appendChild(closeButton);
         const optionsList = document.createElement('ul');
         optionsList.classList.add('custom-dialog-options');
 
-        // Populate options from students array
-        students.forEach(function(student) {
+        // Include options from students array only if their chances are left
+
+const filteredStudents = students.filter(student => (maxChances - (chances[student] || 0)) > 0 || !(student in chances));
+
+
+
+        filteredStudents.forEach(function(student) {
             const option = document.createElement('li');
             option.textContent = student;
             option.classList.add('custom-dialog-option');
