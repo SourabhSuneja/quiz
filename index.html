@@ -895,7 +895,14 @@ if(!countdownDuration) {
     if(dataPickedFromCookie) {
     randomStudent = retrieveQuizData('currentStudent');
     dataPickedFromCookie = false;
-}  else {
+}  
+
+else if(useteam === 'y' && teammap) {
+              randomStudent  = pickRandomStudentFromTeam();
+     }
+
+
+else {
 
 let selectionMode = m || 'random';
     if(selectionMode == 'random') {
