@@ -1017,11 +1017,42 @@ deleteQuizCookie();
     for (const student in scores) {
       container.innerHTML += "<p>" + student + ": " + scores[student] + "/" + chances[student] + "</p>";
     }
+    displayTeamScores();
     displayChart();
     container.innerHTML += "<footer id='footerText'>Powered by Sourabh Suneja</footer>";
   }
 
  
+
+
+
+
+// Function to display team scores
+  function displayTeamScores() {
+
+   // return back if team map is not available
+     if(useteam != 'y' || !teammap) {
+           return;
+     }
+
+    // First, consolidate the scores and chances consolidateScoresAndChances();
+
+
+    const container = document.querySelector(".container");
+    container.innerHTML += "<h1>Team-wise Scores</h1>";
+    for (const team in teamScores) {
+      container.innerHTML += "<p>" + team + ": " + teamScores[team] + "/" + teamChances[team] + "</p>";
+    }
+    //displayChart();
+    
+  }
+
+
+
+
+
+
+
 
 
   // Initialize quiz when the page loads
