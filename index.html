@@ -1257,9 +1257,16 @@ function createCSV(scores, chances) {
 
 
 // Function to download CSV file
-function downloadCSV() {
+function downloadCSV(teamCSV = false) {
   // Create CSV data
-  var csvData = createCSV(scores, chances);
+  var csvData, filename;
+  if(teamCSV) {
+    csvData = createCSV(teamScores, teamChances);
+    filename = 'teamscores.csv';
+  } else {
+  csvData = createCSV(scores, chances);
+  filename = 'scoresheet.csv';
+    }
   // Create a Blob object from the CSV data
   var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
   // Create a temporary URL for the Blob
@@ -1269,7 +1276,7 @@ function downloadCSV() {
   // Set the href attribute of the anchor to the temporary URL
   a.href = url;
   // Set the download attribute to specify the filename
-  a.download = "scoresheet.csv";
+  a.download = filename;
   // Append the anchor to the body
   document.body.appendChild(a);
   // Click the anchor to trigger download
@@ -1284,9 +1291,9 @@ function downloadCSV() {
 
 
 
+
+
 // script to handle countdown if required
-
-
 
 function startCountdown() {
     let timer = document.getElementById('timer');
