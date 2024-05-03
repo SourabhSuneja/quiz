@@ -966,6 +966,41 @@ function pickRandomStudent() {
 }
 
 
+
+
+function pickRandomStudentFromTeam() {
+    // Initialize team order
+    const teams = Object.keys(teammap);
+
+    // Get students for the current team
+    const currentTeam = teammap[teams[currentTeamIndex]];
+
+    // Create weighted array of students based on remaining chances
+    let weightedArray = [];
+    currentTeam.forEach(studentIndex => {
+        const student = students[studentIndex];
+        const chancesLeft = maxChances - (chances[student] || 0);
+        for (let i = 0; i < chancesLeft; i++) {
+            weightedArray.push(student);
+        }
+    });
+
+    // Pick a random student from the weighted array
+    const randomIndex = Math.floor(Math.random() * weightedArray.length);
+    const randomStudent = weightedArray[randomIndex];
+
+    // Update current team index for next call
+    currentTeamIndex = (currentTeamIndex + 1) % teams.length;
+
+    return randomStudent || 'no one (all students from the current team have exhausted their chances). Click on "End Quiz" to display scores.';
+}
+
+
+
+
+
+
+
   // Function to handle correct answer
   function answeredCorrectly() {
 
