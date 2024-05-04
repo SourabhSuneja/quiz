@@ -217,7 +217,7 @@
 <!-- Create Teams dialog box -->
 <div id="createTeamModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
+        <span class="close" onclick="closeModal('createTeamModal')">&times;</span>
         <label for="teamName">Team Name:</label>
         <input type="text" id="teamName"></input>
         <div id="createTeamModalCheckboxes"></div>
@@ -290,7 +290,8 @@ function showModal(modalId) {
         });
     } else if (modalId === 'createTeamModal') {
 
-        
+        // remove the absentees from students
+        removeAbsentees();
         // Show only students who have not been added to any team
         students.forEach((student, index) => {
             if (!isStudentInTeams(index)) {
@@ -324,8 +325,7 @@ function markAbsent() {
         absentStudents.push(students[parseInt(checkbox.value)]);
     });
 
-         // remove the absentees from students
-        removeAbsentees();
+         
     const absentDiv = document.getElementById('absent');
     absentDiv.innerHTML = '<strong>Absentees: </strong>' + absentStudents.join(', ');
 
@@ -373,6 +373,7 @@ function addTeam() {
 
 // function to remove absent students from students array
 function removeAbsentees() {
+       
        absentIndices = absentStudents.map(student => students.indexOf(student)); // Get indices of absent students
 if (Array.isArray(absentIndices) && absentIndices.length > 0) {
 
