@@ -1,332 +1,1859 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <title>Dynamic Quiz Link Generator</title>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    const useTeamRadioButtons = document.querySelectorAll('input[name="useteam"]');
-    const shuffleSelect = document.getElementById('shuffleMethod');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz | Powered by Sourabh Suneja</title>
+<style>
+  body {
+    background-color: black;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    background-image: url('night.jpg');
+    background-size: contain;
+    background-position: center;
+    background-attachment: fixed;
+  }
 
-    // Hide "Create Teams" button by default
-    const createTeamsButton = document.querySelector('button[type="button"]');
-    createTeamsButton.style.display = 'none';
+  .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: -1;
+}
 
-    // Add event listeners to radio buttons
-    useTeamRadioButtons.forEach(function(radioButton) {
-        radioButton.addEventListener('change', function() {
-            if (this.value === 'y') {
-                createTeamsButton.style.display = 'block';
-                // Force select and disable 'az' option in the shuffle select box
-                shuffleSelect.value = 'az';
-                shuffleSelect.disabled = true;
-            } else {
-                createTeamsButton.style.display = 'none';
-                // Re-enable the shuffle select box
-                shuffleSelect.disabled = false;
-            }
-        });
-    });
-});
-    </script>
-    <style>
-        html, body {
-           -webkit-text-size-adjust: none; /* For Safari, iOS Safari */
-            -moz-text-size-adjust: none; /* For Firefox */
-            -ms-text-size-adjust: none; /* For Internet Explorer */
-            text-size-adjust: none; /* Standard property */
-        }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h2 {
-            color: #4CAF50;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        p.subtitle {
-            color: #777;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-        }
-        input[type="text"],
-        input[type="number"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-            box-sizing: border-box;
-            font-size: 16px;
-            transition: box-shadow 0.3s ease;
-        }
-        input[type="text"]:focus,
-        input[type="number"]:focus {
-            outline: none;
-            box-shadow: 0 0 10px #4CAF50;
-        }
-        input[type="radio"] {
-            margin-right: 5px;
-            vertical-align: middle;
-        }
-        select {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        button {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #quizLink {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            word-wrap: break-word; /* Added to ensure proper wrapping */
-        }
-        #quizLink a {
-            color: #4CAF50;
-            text-decoration: none;
-            font-size: 16px;
-        }
+  .container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 3px solid white;
+    border-radius: 10px;
+    text-align: center;
+    background: black;
+  }
+  h1 {
+    text-align: center;
+    font-size: 24px;
+  }
+  .question {
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
+  .buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  button {
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: #1E90FF; /* Dark blue shade */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 18px;
+  }
+  button:hover {
+    background-color: #4682B4; /* Lighter shade on hover */
+  }
+  footer {
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  .chart-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 12px;
+    border: 3px solid white;
+    border-radius: 10px;
+    box-sizing: border-box;
+    background: black;
+  }
+  .bar {
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+  }
+  .bar-text {
+    margin-right: 10px;
+  }
+  .slider {
+    -webkit-appearance: none;
+    width: 80%;
+    max-width: 350px;
+    height: 15px;
+    border-radius: 5px;
+    background: #4e8af1;
+    outline: none;
+    opacity: 1;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4caf50;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4caf50;
+    cursor: pointer;
+  }
 
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
+  /* CSS for custom dialog box */
+    .custom-dialog {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 9999;
+    }
 
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            font-size: 18px;
-            padding: 35px;
-            border: 1px solid #888;
+    .custom-dialog-title {
+        font-size: 20px;
+        margin-bottom: 10px;
+        text-align: center;
+        color: #333333;
+    }
+
+    .custom-dialog-options {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        max-height: 200px; /* Set max height for scrollability */
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+
+    .custom-dialog-option {
+        padding: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        color: #000;
+    }
+
+    .custom-dialog-option:hover {
+        background-color: #5cb85c; /* Beautiful green color */
+        color: #ffffff; /* Change text color on hover */
+    }
+
+    .custom-dialog-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    cursor: pointer;
+    font-size: 22px;
+    color: #777777;
+    }
+
+    /* Mobile styles */
+    @media only screen and (max-width: 600px) {
+        .custom-dialog {
             width: 80%;
-            border-radius: 5px;
         }
+    }
+    /* Style for floating button */
+    #scoresButton {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    
+    /* Style for overlay table */
+    #scoreTableContainer {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background-color: #111; /* Change background color to dark */
+      border: 1px solid #666; /* Adjust border color */
+      border-radius: 10px;
+      padding: 20px;
+      z-index: 999;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1); /* Add box shadow effect */
+      max-width: 90%; /* Limit maximum width for small screens */
+      overflow-x: auto; /* Add horizontal scroll for small screens */
+      max-height: 70vh; /* Limit maximum height and enable vertical scrolling */
+      overflow-y: auto; /* Enable vertical scrolling */
+    }
+    
+    /* Style for table */
+    #scoreTableContainer table {
+      width: 100%; /* Make the table width 100% */
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    
+    #scoreTableContainer th, #scoreTableContainer td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #666; /* Adjust border color */
+      color: white; /* Change text color to white */
+    }
+    
+    #scoreTableContainer th {
+      background-color: #007bff;
+    }
+    
+    /* Alternate row background color for better readability */
+    #scoreTableContainer tbody tr:nth-child(even) {
+      background-color: #222; /* Darker background for alternate rows */
+    }
+    
+    #teamScoresHeading {
+       font-size: 20px;
+    }
+    
+    /* Media query for small screens */
+    @media (max-width: 600px) {
+      #scoreTableContainer {
+        max-width: 100%; /* Remove max-width for small screens */
+      }
+    }
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
+    #animation-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      z-index: 9999;
+    }
 
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        #teams {
-            padding: 20px;
-        }
-    </style>
+    @keyframes pop-up {
+      0% {transform: scale(0) translateY(100px);}
+      50% {transform: scale(1.1) translateY(-50px);}
+      100% {transform: scale(1) translateY(0);}
+    }
+
+    .animation {
+      animation: pop-up 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      font-size: 24px;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0px 0px 20px rgba(0,0,0,0.3);
+    }
+
+    .correct {
+      color: white;
+      background-color: rgba(0, 255, 0, 1);
+    }
+
+    .wrong {
+      color: white;
+      background-color: rgba(255, 0, 0, 1);
+    }
+
+
+</style>
 </head>
 <body>
+<div class="overlay"></div>
 
 <div class="container">
-    <h2>Dynamic Quiz Link Generator</h2>
-    <p class="subtitle">Powered by Sourabh Suneja</p>
-    <form id="quizForm">
-        <label for="quizTitle">Quiz Title:</label>
-        <input type="text" id="quizTitle" name="title">
-        <label for="studentData">Student Data (s):</label>
-        <input type="text" id="studentData" name="s" onblur="fetchStudents()">
-        <label for="questionData">Question Data (q):</label>
-        <input type="text" id="questionData" name="q">
-        <label>Student Selection Method (m):</label>
-        <label><input type="radio" name="m" value="random" checked> Random</label>
-        <label><input type="radio" name="m" value="rotation"> Rotation</label>
-        <label for="shuffleMethod">Shuffle Method:</label>
-        <select id="shuffleMethod" name="shuffle">
-            <option value="n" selected>No Shuffling</option>
-            <option value="y">Fisher-Yates</option>
-            <option value="az">Sort A-Z</option>
-            <option value="za">Sort Z-A</option>
-        </select>
-        <label for="maxChances">Max Chances:</label>
-        <input type="number" id="maxChances" name="maxchances" value="3">
-        <label for="countdownDuration">Countdown Duration (in seconds):</label>
-        <input type="number" id="countdownDuration" name="countdown" value="0">
-        <label for="initialVolume">Initial Volume:</label>
-        <input type="number" id="initialVolume" name="volume" value="100">
-        <label>Custom Student Selection:</label>
-        <label><input type="radio" name="customselect" value="n"> No</label>
-        <label><input type="radio" name="customselect" value="y" checked> Yes</label>
-        <label>Create and use team map:</label>
-        <label><input type="radio" name="useteam" value="n" checked> No</label>
-        <label><input type="radio" name="useteam" value="y"> Yes</label>
-        <button type="button" onclick="createTeams()">Create Teams</button>
-        <br>
-        <button type="button" onclick="generateLink()">Generate Link</button>
-    </form>
-    <div id="quizLink"></div>
-    <div id="teams"></div>
+  <h1 id="quizTitle">Quiz</h1>
+  <div class="question">
+    <p id="questionText"></p>
+    <p id="studentName"></p>
+    <div id="timer">00:00</div>
+  </div>
+  <div id="buttonContainer" class="buttons">
+
+  <div id="optionBtnContainer"></div>
+    <button id="correctBtn">Answered correctly</button>
+    <button id="incorrectBtn">Couldn't answer correctly</button>
+    <button id="partiallyCorrectBtn">Partially correct</button>
+    <button id="pickAnotherBtn">Pick another student</button>
+    <button id="pauseBtn">Pause countdown</button>
+    <button id="endBtn">End Quiz</button>
+    <button id="scoresButton">Scores</button>
+
+  </div>
+
+<h4>Volume</h4>
+
+<input type="range" min="1" max="100" class="slider" id="volumeRange">
+
+  <footer id="footerText">Powered by Sourabh Suneja<br><br><span id="footerSpanText" style="font-size: 12px">Student selection is randomised with weighted probability method. The chance of a student getting selected again reduces as they get more and more chances to answer.</span></footer>
 </div>
 
-<!-- Create Teams dialog box -->
-<div id="createTeamModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <label for="teamName">Team Name:</label>
-        <input type="text" id="teamName"></input>
-        <div id="studentCheckboxes"></div>
-        <button onclick="addTeam()">Create</button>
-    </div>
+
+
+
+<div id="scoreTableContainer">
+  <table id="scoreTable">
+    <thead>
+      <tr>
+        <th>Student</th>
+        <th>Score</th>
+        <th>Chances</th>
+        <th>%</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Scores, chances, and percentage will be populated here dynamically using JavaScript -->
+    </tbody>
+  </table>
 </div>
+
+
+<div id="animation-container"></div>
+
+
 
 <script>
-    // Fetch students from file
-    let students = [];
 
-    async function fetchStudents() {
-        let fileName = document.getElementById('studentData').value.trim();
-        if (!fileName) return; // Exit if input field is empty
-        if (!fileName.endsWith('.txt')) {
-            fileName += '.txt';
+// global variables
+let studentsFileName;
+let questionsFileName;
+let currentQuestionIndex;
+let scores;
+let chances;
+let teamScores;
+let teamChances;
+let countdownParam;
+let countdownDuration;
+let countdown;
+let stopCountDown;
+let countdownPaused = false;
+let maxChances;
+let m;
+let title;
+let shuffle;
+let customselect;
+let absentStudents;
+let maxChancesInput;
+let currentUtterance;
+let volume;
+let slider;
+let dataPickedFromCookie = false;
+let correctAnsAvailable = null;
+let useteam;
+let teammap;
+let currentTeamIndex;
+
+
+
+// Function to delete the quiz cookie
+function deleteQuizCookie() {
+    document.cookie = "quizData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
+
+
+
+
+
+// function to intialize key quiz variables
+function intializeQuizVariables() {
+
+ // parsing and using team map
+ useteam = retrieveQuizData('useteam') ||  getParameterByName('useteam') || 'n';
+
+teammap = retrieveQuizData('teammap') ||  getParameterByName('teammap') || null;
+
+// variable to track team turns
+currentTeamIndex = 0;
+
+if(typeof teammap === 'string') {
+    teammap = parseTeamMap(teammap);
+}
+
+
+
+ // Array to store absent students
+  absentStudents = retrieveQuizData('absent') ||  getParameterByName('absent') || [];
+
+// parse absentStudents into an array if it is a string retrieved from the URL
+
+if (typeof absentStudents === "string") {
+  try {
+    let parsedArray = JSON.parse(absentStudents);
+    if (Array.isArray(parsedArray)) {
+      absentStudents = parsedArray;
+    } else {
+      console.error("The parsed value is not an array.");
+    }
+  } catch (error) {
+    console.error("Error parsing the string:", error);
+  }
+}
+
+
+// remove absent students from the students array
+
+if (Array.isArray(absentStudents) && absentStudents.length > 0) {
+
+    // sort the students array before removing absentees
+    students.sort();
+
+    // Sort the absentStudents array in descending order
+    absentStudents.sort((a, b) => b - a);
+
+    // Remove absent students from the students array
+    absentStudents.forEach(index => {
+        students.splice(index, 1);
+    });
+
+}
+
+
+
+  // Index to keep track of current question
+  currentQuestionIndex = parseInt(retrieveQuizData("currentQuestionIndex")) || 0;
+
+// Arrays to store scores & chances
+  scores = retrieveQuizData('scores') || {};
+  chances = retrieveQuizData('chances') || {};
+
+
+teamScores = retrieveQuizData('teamScores') || {};
+teamChances = retrieveQuizData('teamChances') || {};
+
+
+
+// Ask the user for the maximum chances
+maxChancesInput = retrieveQuizData('maxChances') ||  getParameterByName('maxchances') ||  prompt("How many maximum chances do you want to give to each student? (Defaults to 3)");
+// Convert the input to a number
+maxChances = parseInt(maxChancesInput);
+
+// Check if the input is a valid number
+if (isNaN(maxChances) || maxChances <= 0) {
+    // If not a valid number, set default value to 3
+    maxChances = 3;
+}
+
+// Initialize countdown variable based on parameter or user input
+countdownParam = parseInt(retrieveQuizData('countdownDuration')) || parseInt(getParameterByName("countdown"));
+
+  if (typeof countdownParam === 'number' && !isNaN(countdownParam) && countdownParam >= 0) {
+    countdownDuration = countdownParam;
+  } else {
+    var userInput = prompt("Specify the countdown duration in seconds for the quiz. After this duration, another student will be prompted to answer the same question. If you prefer not to have a countdown, simply leave this field blank.");
+    countdownDuration = userInput ? parseInt(userInput) : 0;
+  }
+
+countdown = countdownDuration; // Initial countdown value in seconds
+stopCountDown; // Flag variable to start/stop countdown
+
+if(!countdown) {
+    stopCountDown = true;
+    document.getElementById('timer').style.display = 'none';
+    
+} else {
+    stopCountDown = false;
+}
+
+startCountdown();
+
+
+// code to handle utterances
+
+currentUtterance; // Variable to store the current speaking utterance
+initialVolume = parseInt(getParameterByName ('volume')) || 50 // Initial volume value
+
+// code to handle the volume slider
+
+  slider.value = initialVolume;
+
+// other parameters
+
+customselect = retrieveQuizData("customselect") || getParameterByName('customselect');
+m = retrieveQuizData("m") || getParameterByName('m');
+title = retrieveQuizData("title") || getParameterByName('title');
+shuffle = retrieveQuizData("shuffle") ||  getParameterByName('shuffle');
+
+
+}
+
+
+
+
+// Asynchronous function to check quiz cookie and prompt user
+async function checkQuizCookie() {
+    return new Promise((resolve) => {
+        var cookieData = document.cookie.split(';').find(cookie => cookie.trim().startsWith('quizData='));
+
+        if (cookieData) {
+            // Prompt the user with a dialog box
+            var pickUp = confirm("The previous quiz session didn't complete properly. Do you want to pick up from where you left off?");
+            if(!pickUp) {
+               deleteQuizCookie();
+            } else {
+               dataPickedFromCookie = true;
+            }
+            resolve(pickUp);
+        } else {
+            // If cookie is not present, resolve to false
+            resolve(false);
         }
-        try {
-            const response = await fetch(fileName);
-            const text = await response.text();
-            students = text.split('\n').filter(student => student.trim() !== '').sort();
-        } catch (error) {
-            console.log('Error fetching file:', error);
+    });
+}
+
+
+
+
+
+
+
+// Function to store key values as cookies so that the quiz can be picked from where we left off in case of unexpected failure
+function storeQuizData(currentStudent) {
+    // Define key values to be stored
+    var dataToStore = {
+        currentQuestionIndex: currentQuestionIndex,
+        scores: scores,
+        chances: chances,
+        studentsFileName: studentsFileName,
+        questionsFileName: questionsFileName,
+        currentStudent: currentStudent,
+        countdownDuration: countdownDuration,
+        maxChances: maxChances,
+        m: m,
+        title: title,
+        shuffle: shuffle,
+        customselect: customselect,
+        useteam: useteam,
+        teammap: teammap
+    };
+
+    // Store data as a cookie
+    // Set cookie with expiration date one year from now
+    var expiryDate = new Date();
+    expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+    document.cookie = "quizData=" + JSON.stringify(dataToStore) + "; expires=" + expiryDate.toUTCString() + "; path=/;";
+
+}
+
+
+// Function to retrieve a specific value from stored cookie data based on key
+function retrieveQuizData(key) {
+    var cookieData = document.cookie.split(';').find(cookie => cookie.trim().startsWith('quizData='));
+
+    if (cookieData) {
+        // Extract and parse stored data
+        var storedData = JSON.parse(cookieData.split('=')[1]);
+
+        // Return value corresponding to the provided key
+        return storedData[key];
+    } else {
+        // Return null if no stored data found
+        return null;
+    }
+}
+
+
+
+
+// function to parse teammap
+function parseTeamMap(teammap) {
+    try {
+        const parsedObject = JSON.parse(teammap);
+        if (parsedObject && typeof parsedObject === 'object' && Object.keys(parsedObject).length > 0) {
+            return parsedObject;
+        } else {
+            return null;
         }
+    } catch (error) {
+        return null;
+    }
+}
+
+
+
+// function to consolidate scores and chances in case team maps are available
+function consolidateScoresAndChances() {
+    for (let team in teammap) {
+        let teamScore = 0;
+        let teamChance = 0;
+        for (let i = 0; i < teammap[team].length; i++) {
+            let studentIndex = teammap[team][i];
+            let studentName = students[studentIndex];
+            // Check if the student is in scores and chances objects
+            if (scores.hasOwnProperty(studentName)) {
+                teamScore += scores[studentName];
+            }
+            if (chances.hasOwnProperty(studentName)) {
+                teamChance += chances[studentName];
+            }
+        }
+        teamScores[team] = teamScore;
+        teamChances[team] = teamChance;
+    }
+}
+
+
+
+
+
+function displayTeamScoresAndChances() {
+
+    // return back if team map is not available
+     if(useteam != 'y' || !teammap) {
+           return;
+     }
+    // First, consolidate the scores and chances
+    consolidateScoresAndChances();
+
+    // Get the container element
+    let container = document.getElementById('scoreTableContainer');
+
+    // Remove any existing heading with the same id
+    let existingHeading = document.getElementById('teamScoresHeading');
+    if (existingHeading) {
+        existingHeading.remove();
     }
 
-    // Create Teams functionality
-    let teams = {};
+    // Create a heading for the table
+    let heading = document.createElement('h2');
+    heading.textContent = 'Team-wise Scores';
+    heading.id = 'teamScoresHeading'; // Assign unique id to the heading
+    heading.style.textAlign = 'center';
+    container.appendChild(heading);
 
-    function createTeams() {
-        fetchStudents().then(() => {
-            showModal();
+    // Remove any existing table with the same id
+    let existingTable = document.getElementById('teamScoresTable');
+    if (existingTable) {
+        existingTable.remove();
+    }
+
+    // Create a table element
+    let table = document.createElement('table');
+    table.id = 'teamScoresTable'; // Assign id to the table
+
+    // Create table header
+    let thead = document.createElement('thead');
+    let headerRow = thead.insertRow();
+    let headers = ['Team', 'Score', 'Chances', '%'];
+    for (let header of headers) {
+        let th = document.createElement('th');
+        th.textContent = header;
+        headerRow.appendChild(th);
+    }
+    table.appendChild(thead);
+
+    // Create table body
+    let tbody = document.createElement('tbody');
+
+    // Sort teams by percentage (descending order)
+    let sortedTeams = Object.keys(teamScores).sort((a, b) => {
+        return (teamScores[b] / teamChances[b]) - (teamScores[a] / teamChances[a]);
+    });
+
+    // Create rows for each team
+    sortedTeams.forEach(team => {
+        let row = tbody.insertRow();
+        let score = teamScores[team];
+        let chance = teamChances[team];
+        let percentage = ((score / chance) * 100).toFixed(2);
+        percentage = isNaN(percentage) ? '-' : percentage;
+        [team, score, chance, percentage].forEach(value => {
+            let cell = row.insertCell();
+            cell.textContent = value;
         });
+    });
+    table.appendChild(tbody);
+
+    // Append the table to the container
+    container.appendChild(table);
+}
+
+
+
+
+
+
+// Function to calculate team-wise percentage and display chart
+  function displayTeamChart() {
+
+        // return back if team map is not available
+     if(useteam != 'y' || !teammap) {
+           return;
+     }
+
+    var chartContainer = document.createElement('div');
+    chartContainer.classList.add('chart-container');
+
+    var teamData = [];
+
+    // Calculate percentages and store team data
+    for (var team in teamScores) {
+      var percentage = (teamScores[team] / teamChances[team]) * 100;
+      teamData.push({ name: team, percentage: percentage });
     }
 
-    function showModal() {
-    const modal = document.getElementById('createTeamModal');
-    const studentCheckboxes = document.getElementById('studentCheckboxes');
-    studentCheckboxes.innerHTML = '';
+    // Sort teams based on their percentages (highest to lowest)
+    teamData.sort(function(a, b) {
+      return b.percentage - a.percentage;
+    });
 
-    students.forEach((student, index) => {
-        if (!isStudentInTeams(index)) {
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.value = index;
+    // Create bars for each team
+    teamData.forEach(function(team) {
+      var bar = document.createElement('div');
+      var shade = Math.round(205 - (team.percentage * 1.55)); // Calculate shade of green
+      shade = Math.max(shade, 50); // Ensure a minimum value for visibility
+      bar.style.backgroundColor = 'rgb(0,' + '120' + ',0)'; // Set background color
+      bar.classList.add('bar');
+      bar.style.width = team.percentage + '%';
+      
+      // Create span for text and percentage
+      var barText = document.createElement('span');
+      barText.classList.add('bar-text');
+      barText.textContent = team.name + ': ' + team.percentage.toFixed(2) + '%';
+      bar.appendChild(barText);
+      
+      chartContainer.appendChild(bar);
+    });
 
-            const label = document.createElement('label');
-            label.appendChild(checkbox);
-            label.appendChild(document.createTextNode("  " + student));
-            label.appendChild(document.createElement('br'));
+    document.body.appendChild(chartContainer);
 
-            studentCheckboxes.appendChild(label);
+// create download teamScoresheet button
+// Create a button element
+var button = document.createElement("button");
+// Set button text
+button.innerHTML = "Download Team Score Sheet";
+// Set button id
+button.id = "downloadTeamScoreBtn";
+// Center align the button
+button.style.display = "block";
+button.style.margin = "auto";
+
+// Append the button to the end of the page body
+document.body.appendChild(button);
+// Attach click event handler to the button
+document.getElementById("downloadTeamScoreBtn").addEventListener("click",function() {
+      downloadCSV(true);
+});
+
+  }
+
+
+
+
+
+// function to remove keys like 'no one' or 'nobody' from scores and chances just in case they got inserted
+function removeKeysWithNobodyOrNoOne() {
+    for (let key in scores) {
+        if (key.toLowerCase().includes('nobody') || key.toLowerCase().includes('no one')) {
+            delete scores[key];
+        }
+    }
+    
+    for (let key in chances) {
+        if (key.toLowerCase().includes('nobody') || key.toLowerCase().includes('no one')) {
+            delete chances[key];
+        }
+    }
+}
+
+
+
+
+
+
+
+  // Function to get URL parameters
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+  // Function to shuffle array
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+  // Function to initialize quiz
+  async function initializeQuiz() {
+  try {
+
+
+    // wait till the presence of cookies is checked
+    let useCookie = await checkQuizCookie();
+    
+   
+   
+
+   // if user wants to pick up from wherethe quiz was left off
+    if(useCookie) {
+         studentsFileName = retrieveQuizData('studentsFileName');
+         questionsFileName = retrieveQuizData('questionsFileName');
+    } else {
+         // Attempt to retrieve file names from URL parameters
+studentsFileName = getParameterByName('s');
+questionsFileName =  getParameterByName('q');
+    }
+
+
+
+// If URL parameters are not available, prompt the user for file names
+if (!studentsFileName || !questionsFileName) {
+    studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):").trim();
+    questionsFileName = prompt("Enter the file name for questions data (e.g., questions.txt):").trim();
+}
+    
+    // Add .txt extension if not already provided by the user
+    if (!studentsFileName.endsWith('.txt')) {
+      studentsFileName += '.txt';
+    }
+    if (!questionsFileName.endsWith('.txt')) {
+      questionsFileName += '.txt';
+    }
+
+    if (!studentsFileName || !questionsFileName) {
+      throw new Error("Invalid file names");
+    }
+    const studentsData = await fetchData(studentsFileName);
+    const questionsData = await fetchData(questionsFileName);
+    startQuiz(studentsData, questionsData);
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+  // Function to fetch data from a file using AJAX and return a promise
+  function fetchData(fileName) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            const data = xhr.responseText.split('\n').map(item => item.trim()).filter(item => item !== '');
+            resolve(data);
+          } else {
+            reject(new Error("Failed to load data"));
+          }
+        }
+      };
+      xhr.open("GET", fileName, true);
+      xhr.send();
+    });
+  }
+
+  // Function to start the quiz after questions and students are loaded
+  function startQuiz(students, questions) {
+    window.students = students;
+    window.questions = questions;
+
+    // intialize all quiz variables
+   intializeQuizVariables();
+
+    // create custom select box if custom selection is allowed
+    if(customselect == 'y') {
+         attachCustomSelect();
+    }
+
+    // change footer text in case of rotational selection
+    if(m == 'rotation') {
+       document.getElementById("footerSpanText").textContent = 'Student selection is done on a rotational basis. Students will get a chance to answer one after another in the pre-decided order.';
+    }
+    // shuffle student names if shuffle parameter is set to 'y' or sort alphabetically if set to az or za
+if(shuffle == 'y') {
+     window.students = shuffleArray(window.students);
+     document.getElementById("footerSpanText").textContent += ' The names have been shuffled using Fisher-Yates algorithm.';
+}
+else if(shuffle == 'az' || useteam == 'y') {
+     window.students.sort();
+     document.getElementById("footerSpanText").textContent += ' The names have been alphabetically sorted A-Z.';
+}
+else if(shuffle == 'za') {
+     window.students.sort((a, b) => b.localeCompare(a));
+     document.getElementById("footerSpanText").textContent += ' The names have been alphabetically sorted Z-A.';
+}
+    
+    document.getElementById("correctBtn").addEventListener("click", answeredCorrectly);
+    document.getElementById("incorrectBtn").addEventListener("click", answeredIncorrectly);
+
+document.getElementById("partiallyCorrectBtn").addEventListener("click", answeredPartiallyCorrectly);
+    document.getElementById("pickAnotherBtn").addEventListener("click", pickAnotherStudent);
+
+document.getElementById("pauseBtn").addEventListener("click", pauseCountdown);
+
+document.getElementById("endBtn").addEventListener("click", displayScores);
+
+document.getElementById("quizTitle").textContent = title || 'Quiz';
+
+displayQuestion();
+
+// if countdown is not set, do not show the pause countdown button
+if(!countdownDuration) {
+   document.getElementById("pauseBtn").style.display = 'none';
+}
+
+  }
+
+  
+    // Function to display question and student name
+  function displayQuestion(pass = false, isFirst = true) {
+    if (!window.students || !window.questions) {
+      console.log("Students or questions data not loaded.");
+      return;
+    }
+    const questionText = document.getElementById("questionText");
+    const studentName = document.getElementById("studentName");
+
+   if(!handleMCQ(window.questions[currentQuestionIndex].trim())) {
+   questionText.textContent = window.questions[currentQuestionIndex].trim();
+
+  const correctBtn = document.getElementById('correctBtn');
+  const incorrectBtn = document.getElementById('incorrectBtn');
+  const partiallyCorrectBtn = document.getElementById('partiallyCorrectBtn');
+
+// Show the buttons
+  correctBtn.style.display = 'block';
+  incorrectBtn.style.display = 'block';
+  partiallyCorrectBtn.style.display = 'block';
+
+}
+
+
+
+
+    
+    let randomStudent; 
+    
+    if(dataPickedFromCookie) {
+    randomStudent = retrieveQuizData('currentStudent');
+    dataPickedFromCookie = false;
+}  
+
+else if(useteam === 'y' && teammap) {
+              randomStudent  = pickRandomStudentFromTeam();
+     }
+
+
+else {
+
+let selectionMode = m || 'random';
+    if(selectionMode == 'random') {
+            randomStudent = pickRandomStudent();
+   } else if(selectionMode == 'rotation') {
+            randomStudent = getNextStudent();
+  }
+     else {
+            randomStudent = pickRandomStudent();
+     }
+
+}
+
+
+
+
+    studentName.textContent = "Question for " + randomStudent.trim();
+    resetCountdown();
+   
+
+
+// remove invalid keys, if any
+removeKeysWithNobodyOrNoOne();
+
+// re-consolidate team scores before creating cookie
+consolidateScoresAndChances();
+
+ storeQuizData(randomStudent.trim());
+
+    if(!pass) {
+        if(isFirst) {
+          speakUp("Let's start with our first question: " + questionText.textContent, 0.8);
+        } else {
+          speakUp("Next question: " + questionText.textContent, 0.8);
+        } 
+}
+else {
+    speakUp("Question passed", 0.8);
+}
+
+  }
+
+
+  // function to get next student in case of rotational selection
+  let nextIndex = 0;
+function getNextStudent() {
+    const student = window.students[nextIndex]; // get the student at the current index
+    nextIndex = (nextIndex + 1) % window.students.length; // move to the next index, looping back to 0 if end is reached
+    return student; // return the current student
+  }
+
+  
+
+
+// Function to pick a random student with reduced chances as they answer more questions
+function pickRandomStudent() {
+    let weightedStudents = [];
+    
+    // Populate the array with students based on their chances
+    for (let student of window.students) {
+        for (let i = 0; i < maxChances - (chances[student] || 0); i++) {
+            weightedStudents.push(student);
+        }
+    }
+
+    // Select a random student from the weighted array
+    let randomIndex;
+    let randomStudent;
+   
+        randomIndex = Math.floor(Math.random() * weightedStudents.length);
+        randomStudent = weightedStudents[randomIndex];
+    
+     
+    return randomStudent || 'no one (all students have exhausted their chances). Click on "End Quiz" to display scores.';
+}
+
+
+
+
+function pickRandomStudentFromTeam() {
+    // Initialize team order
+    const teams = Object.keys(teammap);
+
+    // Get students for the current team
+    const currentTeam = teammap[teams[currentTeamIndex]];
+    const currentTeamName = teams[currentTeamIndex];
+
+    // Create weighted array of students based on remaining chances
+    let weightedArray = [];
+    currentTeam.forEach(studentIndex => {
+        const student = students[studentIndex];
+        const chancesLeft = maxChances - (chances[student] || 0);
+        for (let i = 0; i < chancesLeft; i++) {
+            weightedArray.push(student);
         }
     });
 
-    modal.style.display = 'block';
+    // Pick a random student from the weighted array
+    const randomIndex = Math.floor(Math.random() * weightedArray.length);
+    const randomStudent = weightedArray[randomIndex];
+
+
+    // Update current team index for next call
+    currentTeamIndex = (currentTeamIndex + 1) % teams.length;
+
+    return randomStudent || ('no one (all students from the current team [' + currentTeamName + '] have exhausted their chances). Click on "End Quiz" to display scores or pick another student to move to the next team.') ;
 }
 
-    function closeModal() {
-        const modal = document.getElementById('createTeamModal');
-        modal.style.display = 'none';
+
+
+
+
+
+
+  // Function to handle correct answer
+  function answeredCorrectly() {
+
+    showAnimation(true);
+    var text = document.getElementById('studentName').textContent;
+
+var index = text.indexOf('for');
+
+const currentStudent = text.substring(index + 4);
+
+
+    if (scores[currentStudent] === undefined) {
+      scores[currentStudent] = 1;
+    } else {
+      scores[currentStudent]++;
     }
 
-    function addTeam() {
-        const teamName = document.getElementById('teamName').value.trim();
-        const selectedStudents = Array.from(document.querySelectorAll('#studentCheckboxes input:checked')).map(checkbox => parseInt(checkbox.value));
-        teams[teamName] = selectedStudents;
-        document.getElementById("teamName").value = "";
-        closeModal();
-        displayTeams();
+if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
     }
 
-    function isStudentInTeams(index) {
-        for (const team in teams) {
-            if (teams[team].includes(index)) {
-                return true;
+
+    nextQuestion();
+  }
+
+  // Function to handle partially correct answer
+  function answeredPartiallyCorrectly() {
+    var text = document.getElementById('studentName').textContent;
+
+var index = text.indexOf('for');
+
+const currentStudent = text.substring(index + 4);
+
+
+    if (scores[currentStudent] === undefined) {
+      scores[currentStudent] = 0.5;
+    } else {
+      scores[currentStudent] += 0.5;
+    }
+
+if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
+
+
+    nextQuestion();
+  }
+
+  // Function to handle incorrect answer
+  function answeredIncorrectly() {
+    showAnimation(false);
+    var text = document.getElementById('studentName').textContent;
+
+var index = text.indexOf('for');
+
+const currentStudent = text.substring(index + 4);
+
+
+    if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
+    nextQuestion();
+  }
+
+  // Function to pick another student
+  function pickAnotherStudent() {
+   
+var text = document.getElementById('studentName').textContent;
+
+var index = text.indexOf('for');
+
+const currentStudent = text.substring(index + 4);
+
+
+    if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
+
+    displayQuestion(true, false);
+  }
+
+  // Function to move to the next question
+  function nextQuestion() {
+    currentQuestionIndex++;
+    
+    // delay until the animations complete
+   let currentPauseState = countdownPaused;
+   countdownPaused = true;
+   countdown++;
+   let timeoutId = setTimeout(function() {
+    countdownPaused = currentPauseState;
+    if (currentQuestionIndex < window.questions.length) {
+      displayQuestion(false, false);
+    } else {
+      displayScores();
+    }
+
+    clearTimeout(timeoutId);
+}, 3000); 
+
+
+    
+  }
+
+  // Function to display scores
+  function displayScores() {
+
+removeKeysWithNobodyOrNoOne();
+
+
+// store current session data for long term retrieval
+storeQuizSession();
+
+// delete short term cookie so that a new quiz session can start next time
+deleteQuizCookie();
+
+
+    // cancel any speech synthesis going on
+    speechSynthesis.cancel();
+    // stop the timer
+    stopCountdown();
+    const container = document.querySelector(".container");
+    container.innerHTML = "<h1>Scores</h1>";
+    for (const student in scores) {
+      container.innerHTML += "<p>" + student + ": " + scores[student] + "/" + chances[student] + "</p>";
+    }
+    displayTeamScores();
+    displayChart();
+    container.innerHTML += "<footer id='footerText'>Powered by Sourabh Suneja</footer>";
+  }
+
+ 
+
+
+
+
+// Function to display team scores
+  function displayTeamScores() {
+
+   // return back if team map is not available
+     if(useteam != 'y' || !teammap) {
+           return;
+     }
+
+    // First, consolidate the scores and chances consolidateScoresAndChances();
+
+
+    const container = document.querySelector(".container");
+    container.innerHTML += "<h1>Team-wise Scores</h1>";
+    for (const team in teamScores) {
+      container.innerHTML += "<p>" + team + ": " + teamScores[team] + "/" + teamChances[team] + "</p>";
+    }
+   
+    
+  }
+
+
+
+
+
+
+
+
+
+  // Initialize quiz when the page loads
+  window.onload = initializeQuiz;
+
+
+
+
+
+// Function to calculate percentage and display chart
+  function displayChart() {
+    var chartContainer = document.createElement('div');
+    chartContainer.classList.add('chart-container');
+
+    var studentData = [];
+
+    // Calculate percentages and store student data
+    for (var student in scores) {
+      var percentage = (scores[student] / chances[student]) * 100;
+      studentData.push({ name: student, percentage: percentage });
+    }
+
+    // Sort students based on their percentages (highest to lowest)
+    studentData.sort(function(a, b) {
+      return b.percentage - a.percentage;
+    });
+
+    // Create bars for each student
+    studentData.forEach(function(student) {
+      var bar = document.createElement('div');
+      var shade = Math.round(205 - (student.percentage * 1.55)); // Calculate shade of green
+      shade = Math.max(shade, 50); // Ensure a minimum value for visibility
+      bar.style.backgroundColor = 'rgb(0,' + '120' + ',0)'; // Set background color
+      bar.classList.add('bar');
+      bar.style.width = student.percentage + '%';
+      
+      // Create span for text and percentage
+      var barText = document.createElement('span');
+      barText.classList.add('bar-text');
+      barText.textContent = student.name + ': ' + student.percentage.toFixed(2) + '%';
+      bar.appendChild(barText);
+      
+      chartContainer.appendChild(bar);
+    });
+
+    document.body.appendChild(chartContainer);
+
+// create download scoresheet button
+// Create a button element
+var button = document.createElement("button");
+// Set button text
+button.innerHTML = "Download Scoresheet";
+// Set button id
+button.id = "downloadBtn";
+// Center align the button
+button.style.display = "block";
+button.style.margin = "auto";
+
+// Append the button to the end of the page body
+document.body.appendChild(button);
+// Attach click event handler to the button
+document.getElementById("downloadBtn").addEventListener("click", function() {
+    downloadCSV(false);
+});
+
+
+displayTeamChart();
+
+
+  }
+
+
+
+
+
+function speakUp(text, speed) {
+    // Cancel previous speech synthesis if there is an ongoing utterance
+    if (currentUtterance) {
+        speechSynthesis.cancel();
+    }
+
+    // Replace underscores with "dash"
+    text = text.replace(/_{2,20}/g, "dash");
+
+    // Create a new SpeechSynthesisUtterance instance
+    var utterance = new SpeechSynthesisUtterance();
+
+    // Set the modified text to be spoken
+    utterance.text = text;
+
+    // Set the Indian English voice
+    utterance.voice = speechSynthesis.getVoices().find(function(voice) {
+        return voice.lang === 'en-IN';
+    });
+
+    // Set the speed of speaking
+    utterance.rate = speed || 1.0; // If speed is not specified, default to 1.0
+
+    // Set the initial volume
+    utterance.volume = initialVolume / 100; // Map slider volume range (1-100) to SpeechSynthesisUtterance volume range (0-1)
+
+    // Speak the text
+    speechSynthesis.speak(utterance);
+
+    // Store the current utterance
+    currentUtterance = utterance;
+}
+
+
+
+
+// Function to create CSV data
+function createCSV(scores, chances) {
+  // Create a CSV header
+  var csv = "Name, Score, Chance, Percentage\n";
+
+  // Iterate through the chances object to ensure all names are included
+  Object.keys(chances).forEach(function(name) {
+    // Get the score for the current name
+    var score = scores[name] !== undefined ? scores[name] : 0;
+    // Get the chance for the current name
+    var chance = chances[name];
+   // Calculate percentage
+    var percentage = (parseFloat(score)/parseInt(chance)) * 100;
+   // Round off percentage to two decimal places
+   percentage = percentage.toFixed(2);
+    // Append data to CSV
+    csv += name + "," + score + "," + chance + "," + percentage + "\n";
+  });
+
+  return csv;
+}
+
+
+
+
+// Function to download CSV file
+function downloadCSV(teamCSV = false) {
+  // Create CSV data
+  var csvData, filename;
+  if(teamCSV) {
+    csvData = createCSV(teamScores, teamChances);
+    filename = 'teamscores.csv';
+  } else if(teamCSV == false) {
+  csvData = createCSV(scores, chances);
+  filename = 'scoresheet.csv';
+    }
+  // Create a Blob object from the CSV data
+  var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+  // Create a temporary URL for the Blob
+  var url = window.URL.createObjectURL(blob);
+  // Create a temporary anchor element
+  var a = document.createElement("a");
+  // Set the href attribute of the anchor to the temporary URL
+  a.href = url;
+  // Set the download attribute to specify the filename
+  a.download = filename;
+  // Append the anchor to the body
+  document.body.appendChild(a);
+  // Click the anchor to trigger download
+  a.click();
+  // Remove the anchor from the body
+  document.body.removeChild(a);
+  // Revoke the temporary URL to free up memory
+  window.URL.revokeObjectURL(url);
+}
+
+
+
+
+
+
+
+// script to handle countdown if required
+
+function startCountdown() {
+    let timer = document.getElementById('timer');
+
+    let interval = setInterval(function() {
+        if (stopCountDown) {
+            clearInterval(interval);
+            return;
+        }
+
+        let minutes = Math.floor(countdown / 60);
+        let seconds = countdown % 60;
+
+        // Add leading zero if necessary
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        timer.textContent = minutes + ':' + seconds;
+
+        if (countdown === 0 && !countdownPaused) {
+            document.getElementById("pickAnotherBtn").click() // programmatically click the pick another student button to give chance to another student
+            
+        } else {
+            if(!countdownPaused) {
+              countdown--;
             }
         }
-        return false;
-    }
-
-    // Generate Link with Team Map
-    function generateLink() {
-        const form = document.getElementById('quizForm');
-        const formData = new FormData(form);
-        let trimmedFormData = {};
-        for (const [key, value] of formData.entries()) {
-            trimmedFormData[key] = typeof value === 'string' ? value.trim() : value;
-        }
-        trimmedFormData['teammap'] = JSON.stringify(teams); // Add team map to form data
-        let queryString = new URLSearchParams(trimmedFormData).toString();
-        const link = document.createElement('a');
-        link.href = `https://sourabhsuneja.github.io/quiz/?${queryString}`;
-        link.textContent = link.href;
-        document.getElementById('quizLink').innerHTML = '';
-        document.getElementById('quizLink').appendChild(link); 
-    }
-
-    function displayTeams() {
-    const teamsDiv = document.getElementById('teams');
-    teamsDiv.innerHTML = ''; // Clear previous content
-    
-    for (const teamName in teams) {
-        const teamMembers = teams[teamName].map(index => students[index]).join(', ');
-        
-        const teamElement = document.createElement('div');
-        teamElement.innerHTML = `<strong>Team ${teamName}:</strong> ${teamMembers}`;
-        
-        teamsDiv.appendChild(teamElement);
-    }
+    }, 1000);
 }
+
+function stopCountdown() {
+    stopCountDown = true;
+}
+
+
+function resetCountdown() {
+    countdown = countdownDuration;
+}
+
+
+function pauseCountdown() {
+  countdownPaused = !countdownPaused;
+  if(countdownPaused) {
+    countdown++;
+  }
+  const button = document.getElementById('pauseBtn');
+  button.textContent = countdownPaused ? 'Resume countdown' : 'Pause countdown';
+}
+
+  
+slider = document.getElementById("volumeRange");
+  // Listen for the input event on the slider
+slider.addEventListener("input", function() {
+    // If there is an ongoing utterance, update its volume
+    if (currentUtterance) {
+        var volume = this.value; // Get the slider value
+        currentUtterance.volume = volume / 100; // Map slider volume range (1-100) to SpeechSynthesisUtterance volume range (0-1)
+       speechSynthesis.speak(currentUtterance); // Speak again to apply the new volume
+
+        initialVolume = volume;
+    }
+});
+
+
+
+
+
+
+// script to handle the custom select box
+function attachCustomSelect() {
+    const pickAnotherBtn = document.getElementById('pickAnotherBtn');
+    const studentName = document.getElementById('studentName');
+    const students = window.students || []; // Get student names from window.students or default to an empty array
+    
+    const longPressDelay = 1000; // Long press delay in milliseconds
+
+    let longPressTimer;
+
+    function showCustomDialog() {
+        // Create custom dialog box
+        const dialogBox = document.createElement('div');
+        dialogBox.classList.add('custom-dialog');
+
+
+        // Dialog box close button
+const closeButton = document.createElement('span');
+closeButton.classList.add('custom-dialog-close');
+closeButton.textContent = '×';
+closeButton.addEventListener('click', function() {
+    document.body.removeChild(dialogBox); // Close dialog box
+});
+dialogBox.appendChild(closeButton);
+
+
+        // Dialog box title
+        const title = document.createElement('div');
+        title.classList.add('custom-dialog-title');
+        title.textContent = "Select a student";
+        dialogBox.appendChild(title);
+
+        // List of options
+        const optionsList = document.createElement('ul');
+        optionsList.classList.add('custom-dialog-options');
+
+        // Include options from students array only if their chances are left
+
+const filteredStudents = students.filter(student => (maxChances - (chances[student] || 0)) > 0 || !(student in chances));
+
+
+
+        filteredStudents.forEach(function(student) {
+            const option = document.createElement('li');
+            option.textContent = student;
+            option.classList.add('custom-dialog-option');
+            option.addEventListener('click', function() {
+
+
+// testing
+
+var text = studentName.textContent;
+var index = text.indexOf('for');
+
+const currentStudent = text.substring(index + 4);
+
+// upon custom selection, increase the chance manually for the student who has been replaced by the student picked
+
+if(currentStudent != student) {  
+
+
+    if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
+
+}
+
+// testing 
+
+
+                studentName.textContent = "Question for " + student;
+resetCountdown();
+                document.body.removeChild(dialogBox); // Close dialog box
+            });
+            optionsList.appendChild(option);
+        });
+
+        dialogBox.appendChild(optionsList);
+
+        // Append dialog box to body
+        document.body.appendChild(dialogBox);
+    }
+
+    pickAnotherBtn.addEventListener('mousedown', function(event) {
+        longPressTimer = setTimeout(showCustomDialog, longPressDelay); // Start timer for long press
+    });
+
+    pickAnotherBtn.addEventListener('mouseup', function() {
+        clearTimeout(longPressTimer); // Cancel long press timer if button is released before the specified duration
+    });
+
+    pickAnotherBtn.addEventListener('touchstart', function(event) {
+        longPressTimer = setTimeout(showCustomDialog, longPressDelay); // Start timer for long press
+    });
+
+    pickAnotherBtn.addEventListener('touchend', function() {
+        clearTimeout(longPressTimer); // Cancel long press timer if button is released before the specified duration
+    });
+}
+
+
+
+
+
+// show scores button handling here
+   // Function to calculate percentage
+  function calculatePercentage(score, chance) {
+    return ((score / chance) * 100).toFixed(2);
+  }
+
+  // Function to populate table with scores, chances, and percentage
+  function populateTable() {
+    var tableBody = document.querySelector('#scoreTable tbody');
+    tableBody.innerHTML = '';
+
+    // Combine scores and chances objects to get unique student names
+    var students = Array.from(new Set([...Object.keys(scores), ...Object.keys(chances)]));
+
+    // Sort student names in A to Z order
+    students.sort();
+
+    students.forEach(function(student) {
+      var row = document.createElement('tr');
+      var nameCell = document.createElement('td');
+      var scoreCell = document.createElement('td');
+      var chanceCell = document.createElement('td');
+      var percentageCell = document.createElement('td');
+
+      // Check if student is in scores object
+      var score = scores[student] || 0;
+
+      nameCell.textContent = student;
+      scoreCell.textContent = score;
+      chanceCell.textContent = chances[student] || 0;
+      percentageCell.textContent = calculatePercentage(score, chances[student] || 1) + '%';
+
+      row.appendChild(nameCell);
+      row.appendChild(scoreCell);
+      row.appendChild(chanceCell);
+      row.appendChild(percentageCell);
+
+      tableBody.appendChild(row);
+    });
+  }
+
+  // Show table when scores button is clicked
+  var scoresButton = document.getElementById('scoresButton');
+  var scoreTableContainer = document.getElementById('scoreTableContainer');
+
+  scoresButton.addEventListener('click', function() {
+   
+ scoreTableContainer.style.display = 'block';
+    populateTable();
+    displayTeamScoresAndChances();
+  });
+
+  // Hide table when clicking anywhere outside the table
+  window.addEventListener('click', function(event) {
+    if (!scoreTableContainer.contains(event.target) && event.target !== scoresButton) {
+      scoreTableContainer.style.display = 'none';
+    }
+  });
+
+
+
+
+
+
+// functions to store data of all quiz sessions in cookies for long term retrieval
+
+
+function storeQuizSession() {
+    // Get current date and time
+    const currentDate = new Date();
+    const dateFormatted = currentDate.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+    const timeFormatted = currentDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+    // Create session object
+    const session = {
+      'quizTitle': title,
+      'date': dateFormatted,
+      'time': timeFormatted,
+      'scores': scores,
+      'chances': chances
+    };
+
+    // Get existing allscores cookie or create a new one
+    let allScoresCookie = JSON.parse(getCookie('allscores') || '[]');
+    
+    // Append current session to the array
+    allScoresCookie.push(session);
+
+    // Store updated allscores cookie
+    document.cookie = `allscores=${JSON.stringify(allScoresCookie)}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
+  }
+
+  // Function to get cookie by name
+  function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName.trim() === name) {
+        return decodeURIComponent(cookieValue);
+      }
+    }
+    return null;
+  }
+
+
+
+
+
+
+
+// code to handle MCQ type questions
+
+function handleMCQ(question) {
+  // Regex pattern to identify MCQ-type questions
+  const mcqPattern = /\(Options: (.*) Correct: (.*)\)$/i;
+
+  // Test if the question matches the MCQ pattern
+  const isMCQ = mcqPattern.test(question);
+
+  // If not an MCQ-type question, return false and remove all option buttons from the DOM
+  if (!isMCQ) {
+    const optionBtns = document.querySelectorAll('.optionsBtn');
+    optionBtns.forEach(btn => btn.remove());
+    correctAnsAvailable = false;
+    return false;
+  }
+    
+  // Extract question, options, and correct answer using regex
+  const [, optionsPart, correctAnswer] = mcqPattern.exec(question);
+  const options = optionsPart.split(/Option [A-D]}\s*/).filter(Boolean).map(option => option.trim());
+
+  // Get required DOM elements
+  const questionTextNode = document.getElementById('questionText');
+  const correctBtn = document.getElementById('correctBtn');
+  const incorrectBtn = document.getElementById('incorrectBtn');
+  const partiallyCorrectBtn = document.getElementById('partiallyCorrectBtn');
+  const buttonsDiv = document.getElementById('optionBtnContainer');
+
+
+
+  // Set inner content of questionText
+  questionTextNode.textContent = question.replace(mcqPattern, '').trim();
+
+  // Hide the buttons
+  correctBtn.style.display = 'none';
+  incorrectBtn.style.display = 'none';
+  partiallyCorrectBtn.style.display = 'none';
+
+  // Remove existing option buttons
+  const existingOptionBtns = document.querySelectorAll('.optionsBtn');
+  existingOptionBtns.forEach(btn => btn.remove());
+
+  // store correct answer in a global variable
+  correctAnsAvailable = correctAnswer.trim()
+
+  // Create and append option buttons
+  options.forEach((option, index) => {
+    const btn = document.createElement('button');
+    btn.textContent = option.trim();
+    btn.classList.add('optionsBtn');
+    btn.addEventListener('click', () => {
+      if (option.trim() === correctAnswer.trim()) {
+        handleCorrectChoice();
+      } else {
+        handleIncorrectChoice();
+      }
+    });
+    buttonsDiv.append(btn);
+  });
+
+  // Function to handle correct choice
+  function handleCorrectChoice() {
+    correctBtn.click();
+  }
+
+  // Function to handle incorrect choice
+  function handleIncorrectChoice() {
+    incorrectBtn.click();
+  }
+
+// Return true after successful handling of MCQ type question
+    return true;
+
+
+}
+
+
+
+
+
+
+// code to handle congratulatory or encouraging messages upon answering
+
+const animationContainer = document.getElementById('animation-container');
+
+const congratulatoryWords = [
+    "Excellent job!",
+    "Well done!",
+    "Outstanding!",
+    "Brilliant!",
+    "Perfect!",
+    "Bravo!",
+    "You nailed it!",
+    "Superb!",
+    "Impressive!",
+    "Terrific!",
+    "Awesome!",
+    "Great work!",
+    "Phenomenal!",
+    "Remarkable!",
+    "Marvelous!",
+    "Exceptional!",
+    "Top-notch!"
+];
+
+const encouragingWords = [
+    "Nice try! Better luck next time!",
+    "Don't give up!",
+    "Learning is about trying!",
+    "Mistakes help us grow!",
+    "Every mistake is progress!",
+    "Learning from mistakes is key!",
+    "It's okay, keep going!",
+    "You're learning with every try!",
+    "Progress is made step by step!",
+    "You're making strides!",
+    "Learning is a journey!",
+    "Every attempt counts!"
+];
+
+
+    function showAnimation(isCorrect) {
+
+
+      const randomWord = isCorrect ? congratulatoryWords[Math.floor(Math.random() * congratulatoryWords.length)] : encouragingWords[Math.floor(Math.random() * encouragingWords.length)];
+
+      const animationDiv = document.createElement('div');
+
+      if(correctAnsAvailable && !isCorrect) {
+        animationDiv.textContent = 'No. The correct answer is: ' + correctAnsAvailable;
+      } else {
+      animationDiv.textContent = randomWord;
+      }
+      animationDiv.classList.add('animation');
+      animationDiv.classList.add(isCorrect ? 'correct' : 'wrong');
+
+      animationContainer.innerHTML = '';
+      animationContainer.appendChild(animationDiv);
+      animationContainer.style.display = 'block';
+
+      setTimeout(() => {
+        animationContainer.style.display = 'none';
+      }, 3000);
+    }
+
+
+
+
 </script>
+
+
+
+
 
 </body>
 </html>
