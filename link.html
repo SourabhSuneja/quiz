@@ -237,7 +237,6 @@
 <script>
     // Fetch students from file
 let students = [];
-let filteredStudents = [];
 let absentStudents = [];
 let absentIndices = [];
 async function fetchStudents() {
@@ -291,8 +290,7 @@ function showModal(modalId) {
         });
     } else if (modalId === 'createTeamModal') {
 
-        // first, remove the absentees from students
-        removeAbsentees();
+        
         // Show only students who have not been added to any team
         students.forEach((student, index) => {
             if (!isStudentInTeams(index)) {
@@ -325,6 +323,9 @@ function markAbsent() {
     checkboxes.forEach(checkbox => {
         absentStudents.push(students[parseInt(checkbox.value)]);
     });
+
+         // remove the absentees from students
+        removeAbsentees();
     const absentDiv = document.getElementById('absent');
     absentDiv.innerHTML = '<strong>Absentees: </strong>' + absentStudents.join(', ');
 
