@@ -411,6 +411,10 @@ if (typeof absentStudents === "string") {
 // remove absent students from the students array
 
 if (Array.isArray(absentStudents) && absentStudents.length > 0) {
+
+    // sort the students array before removing absentees
+    students.sort();
+
     // Sort the absentStudents array in descending order
     absentStudents.sort((a, b) => b - a);
 
