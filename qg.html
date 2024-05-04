@@ -116,6 +116,14 @@
 </div>
 
 <script>
+   function removeOptionLetter(optionString) {
+    // Split the option string by the first occurrence of a period and space
+    const splitString = optionString.split('. ');
+    
+    // Return the second part of the split string, which is the option text
+    return splitString[1];
+}
+
     function addQuestion() {
         const question = document.getElementById('question').value.trim();
         const option1 = document.getElementById('option1').value.trim();
@@ -124,9 +132,8 @@
         const option4 = document.getElementById('option4').value.trim();
         const selectBox = document.getElementById('correctOption');
         const correctOptionWithChoiceMarker = selectBox.options[selectBox.selectedIndex].text.trim();
-        const correctOption = correctOptionWithChoiceMarker.replace(/^[A-D]\)\s*/, "");
-
-
+        let correctOption = correctOptionWithChoiceMarker.replace(/^[A-D]\)\s*/, "");
+        correctOption = removeOptionLetter(correctOption);
         if (question === '') {
             alert('Please enter a question.');
             return;
