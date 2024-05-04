@@ -319,7 +319,7 @@ function closeModal(modalId) {
 function markAbsent() {
     const checkboxes = document.querySelectorAll('#absenteesModalCheckboxes input:checked');
     const selectAbsenteesBtn = document.getElementById('selectAbsenteesBtn');
-    absentStudents = [];
+   
     checkboxes.forEach(checkbox => {
         absentStudents.push(students[parseInt(checkbox.value)]);
     });
