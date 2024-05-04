@@ -1,21 +1,21 @@
-A _____ is a set of instructions that tells a computer what to do. (Options: A. Assembler B. Program C. AI D. None of these  Correct: B. Program)
-Which language uses mnemonic codes? (Options: A. Machine Language B. High Level Languages C. Assembly Language D. AI Languages  Correct: C. Assembly Language)
-An example of Advanced High-Level Languages is ________. (Options: A. Mercury B. C++ C. Java D. Ruby  Correct: D. Ruby)
+A _____ is a set of instructions that tells a computer what to do. (Options: A. Assembler B. Program C. AI D. None of these  Correct: Program)
+Which language uses mnemonic codes? (Options: A. Machine Language B. High Level Languages C. Assembly Language D. AI Languages  Correct: Assembly Language)
+An example of Advanced High-Level Languages is ________. (Options: A. Mercury B. C++ C. Java D. Ruby  Correct: Ruby)
 Give any two examples of AI Languages.
 What is an assembler?
-The execution speed of _____ is faster. (Options: A. Interpreter B. Compiler C. Assembler D. Both option (1) and (2)  Correct: B. Compiler)
+The execution speed of _____ is faster. (Options: A. Interpreter B. Compiler C. Assembler D. Both option (1) and (2)  Correct: Compiler)
 The _______ languages are machine-independent and user-friendly.
 AI Languages allow computers to solve problems without direct programming. True or False?
 Differentiate between an interpreter and a compiler.
 What are the features of high-level languages?
 How is assembly language different from machine language?
 What is the full form of ARPANET?
-Which of these is a popular video conferencing app? (Options: A. Skype B. Microsoft Teams C. Google Meet D. All of these  Correct: D. All of these)
+Which of these is a popular video conferencing app? (Options: A. Skype B. Microsoft Teams C. Google Meet D. All of these  Correct: All of these)
 Name any two instant messaging apps.
 What is e-learning?
 What is the full form of OTP?
 What are hyperlinks?
 What is internet radio?
-Who was the founder of World Wide Web? (Options: A. Bill Gates B. Tim Berners-Lee C. Mark Zuckerburg D. Steve Jobs  Correct: B. Tim Berners-Lee)
+Who was the founder of World Wide Web? (Options: A. Bill Gates B. Tim Berners-Lee C. Mark Zuckerburg D. Steve Jobs  Correct: Tim Berners-Lee)
 Define internet TV.
 Name any two e-commerce apps.
