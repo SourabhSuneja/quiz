@@ -118,11 +118,11 @@
 
 <script>
    function removeOptionLetter(optionString) {
-    // Split the option string by the first occurrence of a period and space
-    const splitString = optionString.split('. ');
+    // Regular expression to match the option letter followed by a period and space at the start of the string
+    const regex = /^(A\.|B\.|C\.|D\.) /;
     
-    // Return the second part of the split string, which is the option text
-    return splitString[1].trim();
+    // Replace the matched part with an empty string
+    return (optionString.replace(regex, '')).trim();
 }
 
     function addQuestion() {
