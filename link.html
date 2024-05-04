@@ -205,7 +205,7 @@
         <label><input type="radio" name="useteam" value="y"> Yes</label>
         <button type="button" onclick="createTeams()">Create Teams</button>
         <br>
-        <button type="button" onclick="selectAbsentees()">Select Absentees</button>
+        <button id="selectAbsenteesBtn" type="button" onclick="selectAbsentees()">Select Absentees</button>
         <br>
         <button type="button" onclick="generateLink()">Generate Link</button>
     </form>
@@ -237,8 +237,9 @@
 <script>
     // Fetch students from file
 let students = [];
+let filteredStudents = [];
 let absentStudents = [];
-
+let absentIndices = [];
 async function fetchStudents() {
     let fileName = document.getElementById('studentData').value.trim();
     if (!fileName) return; // Exit if input field is empty
@@ -289,6 +290,9 @@ function showModal(modalId) {
             studentCheckboxes.appendChild(label);
         });
     } else if (modalId === 'createTeamModal') {
+
+        // first, remove the absentees from students
+        removeAbsentees();
         // Show only students who have not been added to any team
         students.forEach((student, index) => {
             if (!isStudentInTeams(index)) {
@@ -316,13 +320,22 @@ function closeModal(modalId) {
 
 function markAbsent() {
     const checkboxes = document.querySelectorAll('#absenteesModalCheckboxes input:checked');
+    const selectAbsenteesBtn = document.getElementById('selectAbsenteesBtn');
     absentStudents = [];
     checkboxes.forEach(checkbox => {
         absentStudents.push(students[parseInt(checkbox.value)]);
     });
     const absentDiv = document.getElementById('absent');
     absentDiv.innerHTML = '<strong>Absentees: </strong>' + absentStudents.join(', ');
-    closeModal('absenteesModal');
+
+
+// hide the select absentees button once the absentees have been marked
+
+if(absentStudents.length > 0) {
+selectAbsenteesBtn.style.display = 'none';
+}
+
+ closeModal('absenteesModal');
 }
 
 function displayTeams() {
@@ -357,6 +370,24 @@ function addTeam() {
     displayTeams();
 }
 
+// function to remove absent students from students array
+function removeAbsentees() {
+       absentIndices = absentStudents.map(student => students.indexOf(student)); // Get indices of absent students
+if (Array.isArray(absentIndices) && absentIndices.length > 0) {
+
+    // Sort the absentIndices array in descending order
+    absentIndices.sort((a, b) => b - a);
+
+    // Remove absent students from the students array
+    absentIndices.forEach(index => {
+        students.splice(index, 1);
+    });
+
+}
+
+}
+
+
 // Generate Dynamic Link
 function generateLink() {
     const form = document.getElementById('quizForm');
@@ -366,7 +397,6 @@ function generateLink() {
         trimmedFormData[key] = typeof value === 'string' ? value.trim() : value;
     }
     trimmedFormData['teammap'] = JSON.stringify(teams); // Add team map to form data
-    const absentIndices = absentStudents.map(student => students.indexOf(student)); // Get indices of absent students
     trimmedFormData['absent'] = JSON.stringify(absentIndices); // Add absent student indices to form data
     let queryString = new URLSearchParams(trimmedFormData).toString();
     const link = document.createElement('a');
