@@ -1013,8 +1013,20 @@ else {
 function getNextStudent() {
     const student = window.students[nextIndex]; // get the student at the current index
     nextIndex = (nextIndex + 1) % window.students.length; // move to the next index, looping back to 0 if end is reached
-    return student; // return the current student
-  }
+
+    // if selected student has no chances left, keep looping forward until you find a student with chamces left or reach the end
+    if(maxChances - (chances[student] || 0) > 0) {
+    	return student; // return the current student
+    } else {
+    	let start = nextIndex;
+    	for(let i = start; i<students.length; i++) {
+    		if(maxChances - (chances[students[i]] || 0) > 0) {
+    			return students[i]
+    		}
+    	}
+    	return 'no one (all students have exhausted their chances). Click on "End Quiz" to display scores.';
+    }  
+}
 
   
 
