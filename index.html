@@ -1720,7 +1720,7 @@ function handleMCQ(question) {
     
   // Extract question, options, and correct answer using regex
   const [, optionsPart, correctAnswer] = mcqPattern.exec(question);
-  const options = optionsPart.split(/[\dA-Za-z]\.|\)|\)\s/).filter(Boolean).map(option => option.trim());
+  const options = optionsPart.split(/Option [A-D]}\s*/).filter(Boolean).map(option => option.trim());
 
   // Get required DOM elements
   const questionTextNode = document.getElementById('questionText');
@@ -1745,11 +1745,12 @@ function handleMCQ(question) {
 
   // store correct answer in a global variable
   correctAnsAvailable = correctAnswer.trim()
-
+ 
+  
   // Create and append option buttons
   options.forEach((option, index) => {
     const btn = document.createElement('button');
-    btn.textContent = option.trim();
+    btn.textContent = String.fromCharCode(65+index) + ') ' + ' ' + option.trim();
     btn.classList.add('optionsBtn');
     btn.addEventListener('click', () => {
       if (option.trim() === correctAnswer.trim()) {
