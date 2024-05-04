@@ -325,6 +325,8 @@ function markAbsent() {
         absentStudents.push(students[parseInt(checkbox.value)]);
     });
 
+    // update absentIndices
+    absentIndices = absentStudents.map(student => students.indexOf(student)); 
          
     const absentDiv = document.getElementById('absent');
     absentDiv.innerHTML = '<strong>Absentees: </strong>' + absentStudents.join(', ');
