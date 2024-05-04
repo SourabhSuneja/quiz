@@ -879,10 +879,16 @@ if (!studentsFileName || !questionsFileName) {
          attachCustomSelect();
     }
 
-    // change footer text in case of rotational selection
-    if(m == 'rotation') {
+    // change footer text in case of rotational selection and when teaming is not done
+    if(m == 'rotation' && useteam != 'y') {
        document.getElementById("footerSpanText").textContent = 'Student selection is done on a rotational basis. Students will get a chance to answer one after another in the pre-decided order.';
     }
+    
+    if(m == 'rotation' && useteam == 'y') {
+       document.getElementById("footerSpanText").textContent += "Although you've selected the rotation method, random selection is still enforced for team plays.";
+    }
+
+
     // shuffle student names if shuffle parameter is set to 'y' or sort alphabetically if set to az or za
 if(shuffle == 'y') {
      window.students = shuffleArray(window.students);
