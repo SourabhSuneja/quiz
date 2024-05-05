@@ -354,6 +354,7 @@ let maxChances;
 let m;
 let title;
 let shuffle;
+let qshuffle;
 let customselect;
 let absentStudents;
 let maxChancesInput;
@@ -497,7 +498,9 @@ customselect = retrieveQuizData("customselect") || getParameterByName('customsel
 m = retrieveQuizData("m") || getParameterByName('m');
 title = retrieveQuizData("title") || getParameterByName('title');
 shuffle = retrieveQuizData("shuffle") ||  getParameterByName('shuffle');
-
+qshuffle = retrieveQuizData("qshuffle") ||  getParameterByName('qshuffle') || 'n';
+studentShuffleMap = retrieveQuizData("studentShuffleMap") || null;
+questionShuffleMap = retrieveQuizData("questionShuffleMap") || null;
 
 }
 
@@ -546,6 +549,7 @@ function storeQuizData(currentStudent) {
         m: m,
         title: title,
         shuffle: shuffle,
+        qshuffle: qshuffle,
         customselect: customselect,
         useteam: useteam,
         teammap: teammap,
@@ -799,14 +803,47 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-  // Function to shuffle array
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+  // Function to shuffle array on the basis of provided shuffle map or with Fisher-Yates method
+  function shuffleWithMap(originalArray, providedShuffleMap = null) {
+    // Create a copy of the original array to avoid modifying the original array
+    const array = originalArray.slice();
+    
+    // Initialize shuffle map array
+    let shuffleMap = [];
+    
+    if (providedShuffleMap) {
+        // Use the provided shuffle map to shuffle elements
+        shuffleMap = providedShuffleMap.slice();
+        const shuffledArray = [];
+        for (let i = 0; i < array.length; i++) {
+            shuffledArray[shuffleMap[i]] = array[i];
+        }
+        return {
+            shuffledArray: shuffledArray,
+            shuffleMap: shuffleMap
+        };
+    } else {
+        // Fisher-Yates shuffle algorithm
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+
+            // Store the new index of the original element in the shuffle map
+            shuffleMap.push(j);
+        }
+
+        // Add the last element's index to the shuffle map
+        shuffleMap.push(0);
+
+        return {
+            shuffledArray: array,
+            shuffleMap: shuffleMap
+        };
     }
-    return array;
 }
+
+
+
 
   // Function to initialize quiz
   async function initializeQuiz() {
@@ -894,14 +931,18 @@ if (!studentsFileName || !questionsFileName) {
     }
     
     if(m == 'rotation' && useteam == 'y') {
-       document.getElementById("footerSpanText").textContent += " Although you've selected the rotation method, random selection is still enforced for team plays.";
+       document.getElementById("footerSpanText").textContent += " Although you've selected the rotation method, random selection is still enforced when picking students from each team. However, all teams get their turns on a rotational basis.";
     }
 
 
     // shuffle student names if shuffle parameter is set to 'y' or sort alphabetically if set to az or za
 if(shuffle == 'y') {
-     window.students = shuffleArray(window.students);
-     document.getElementById("footerSpanText").textContent += ' The names have been shuffled using Fisher-Yates algorithm.';
+	
+const obj = shuffleWithMap(window.students, studentShuffleMap)
+     window.students = obj['shuffledArray'];
+     studentShuffleMap = obj['shuffleMap']
+ document.getElementById("footerSpanText").textContent += ' The names have been shuffled using Fisher-Yates algorithm.';
+ 
 }
 else if(shuffle == 'az' || useteam == 'y') {
      window.students.sort();
@@ -910,6 +951,17 @@ else if(shuffle == 'az' || useteam == 'y') {
 else if(shuffle == 'za') {
      window.students.sort((a, b) => b.localeCompare(a));
      document.getElementById("footerSpanText").textContent += ' The names have been alphabetically sorted Z-A.';
+}
+
+
+// shuffle questions if qshuffle parameter is set to 'y'
+if(qshuffle == 'y') {
+	
+const obj = shuffleWithMap(window.questions, questionShuffleMap)
+     window.questions = obj['shuffledArray'];
+     questionShuffleMap = obj['shuffleMap']
+ document.getElementById("footerSpanText").textContent += ' The questions have been shuffled using Fisher-Yates algorithm.';
+ 
 }
     
     document.getElementById("correctBtn").addEventListener("click", answeredCorrectly);
