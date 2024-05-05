@@ -273,6 +273,11 @@
       background-color: rgba(255, 0, 0, 1);
     }
 
+    .half-correct {
+      color: white;
+      background-color: orange;
+    }
+
 
 </style>
 </head>
@@ -1128,6 +1133,8 @@ if (chances[currentStudent] === undefined) {
 
   // Function to handle partially correct answer
   function answeredPartiallyCorrectly() {
+
+    showAnimation(0.5);
     var text = document.getElementById('studentName').textContent;
 
 var index = text.indexOf('for');
@@ -1847,12 +1854,27 @@ const encouragingWords = [
     "Learning is a journey!",
     "Every attempt counts!"
 ];
+const partiallyCorrectWords = [
+    "Close, keep going!",
+    "Almost there!",
+    "You're halfway there!",
+    "You're making progress!",
+    "You're getting closer!",
+    "Not quite, but you're close!",
+    "Getting closer, keep trying!"
+];
 
 
     function showAnimation(isCorrect) {
 
 
-      const randomWord = isCorrect ? congratulatoryWords[Math.floor(Math.random() * congratulatoryWords.length)] : encouragingWords[Math.floor(Math.random() * encouragingWords.length)];
+      let randomWord = isCorrect ? congratulatoryWords[Math.floor(Math.random() * congratulatoryWords.length)] : encouragingWords[Math.floor(Math.random() * encouragingWords.length)];
+
+// in case of partially correct answers
+if (isCorrect === 0.5) {
+    randomWord = partiallyCorrectWords[Math.floor(Math.random() * partiallyCorrectWords.length)];
+}
+
 
       const animationDiv = document.createElement('div');
 
@@ -1862,7 +1884,11 @@ const encouragingWords = [
       animationDiv.textContent = randomWord;
       }
       animationDiv.classList.add('animation');
-      animationDiv.classList.add(isCorrect ? 'correct' : 'wrong');
+      if (isCorrect === 0.5) {
+    animationDiv.classList.add('half-correct');
+} else {
+    animationDiv.classList.add(isCorrect ? 'correct' : 'wrong');
+}
 
       animationContainer.innerHTML = '';
       animationContainer.appendChild(animationDiv);
