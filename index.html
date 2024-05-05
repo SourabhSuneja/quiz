@@ -806,14 +806,18 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+
+
+
+
   // Function to shuffle array on the basis of provided shuffle map or with Fisher-Yates method
   function shuffleWithMap(originalArray, providedShuffleMap = null) {
     // Create a copy of the original array to avoid modifying the original array
     const array = originalArray.slice();
-    
+
     // Initialize shuffle map array
     let shuffleMap = [];
-    
+
     if (providedShuffleMap) {
         // Use the provided shuffle map to shuffle elements
         shuffleMap = providedShuffleMap.slice();
@@ -821,8 +825,6 @@ function getParameterByName(name, url) {
         for (let i = 0; i < array.length; i++) {
             shuffledArray[shuffleMap[i]] = array[i];
         }
-
-alert(shuffleMap);
 
         return {
             shuffledArray: shuffledArray,
@@ -834,14 +836,11 @@ alert(shuffleMap);
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]]; // Swap elements
 
-            // Store the new index of the original element in the shuffle map
-            shuffleMap.push(j);
         }
-
-        // Add the last element's index to the shuffle map
-        shuffleMap.push(0);
-
-alert(shuffleMap);
+        // create shuffle map
+        originalArray.forEach(function (item) {
+        	shuffleMap.push(array.indexOf(item));
+        });
 
         return {
             shuffledArray: array,
@@ -849,6 +848,10 @@ alert(shuffleMap);
         };
     }
 }
+
+
+
+
 
 
 
