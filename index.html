@@ -341,6 +341,7 @@
 let studentsFileName;
 let questionsFileName;
 let currentQuestionIndex;
+let currentStudentIndex;
 let scores;
 let chances;
 let teamScores;
@@ -501,6 +502,7 @@ shuffle = retrieveQuizData("shuffle") ||  getParameterByName('shuffle');
 qshuffle = retrieveQuizData("qshuffle") ||  getParameterByName('qshuffle') || 'n';
 studentShuffleMap = retrieveQuizData("studentShuffleMap") || null;
 questionShuffleMap = retrieveQuizData("questionShuffleMap") || null;
+currentStudentIndex = retrieveQuizData("currentStudentIndex") || 0;
 
 }
 
@@ -544,6 +546,7 @@ function storeQuizData(currentStudent) {
         studentsFileName: studentsFileName,
         questionsFileName: questionsFileName,
         currentStudent: currentStudent,
+        currentStudentIndex: currentStudentIndex,
         countdownDuration: countdownDuration,
         maxChances: maxChances,
         m: m,
@@ -1070,24 +1073,24 @@ else {
 
 
   // function to get next student in case of rotational selection
-  let nextIndex = 0;
+  
 function getNextStudent() {
-    const student = window.students[nextIndex]; // get the student at the current index
-    nextIndex = (nextIndex + 1) % window.students.length; // move to the next index, looping back to 0 if end is reached
+    const student = window.students[currentStudentIndex]; // get the student at the current index
+    currentStudentIndex = (currentStudentIndex + 1) % window.students.length; // move to the next index, looping back to 0 if end is reached
 
     // if selected student has no chances left, keep looping forward until you find a student with chamces left or reach the end
    
     if(maxChances - (chances[student] || 0) > 0) {
     	return student; // return the current student
     } else {
-    	let start = nextIndex;
+    	let start = currentStudentIndex;
     	for(let i = start; i<students.length; i++) {
     		if(maxChances - (chances[students[i]] || 0) > 0) {
     			return students[i]
     		}
     	}
     	// if end has been reached, start over from index 0 and continue until just the previous student
-    	for(let i = 0; i<(nextIndex-1); i++) {
+    	for(let i = 0; i<(currentStudentIndex-1); i++) {
     		if(maxChances - (chances[students[i]] || 0) > 0) {
     			return students[i]
     		}
