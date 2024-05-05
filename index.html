@@ -365,6 +365,8 @@ let correctAnsAvailable = null;
 let useteam;
 let teammap;
 let currentTeamIndex;
+let studentShuffleMap = null;
+let questionShuffleMap = null;
 
 
 
@@ -546,7 +548,9 @@ function storeQuizData(currentStudent) {
         shuffle: shuffle,
         customselect: customselect,
         useteam: useteam,
-        teammap: teammap
+        teammap: teammap,
+        studentShuffleMap: studentShuffleMap,
+        questionShuffleMap: questionShuffleMap
     };
 
     // Store data as a cookie
