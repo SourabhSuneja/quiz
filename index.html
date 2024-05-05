@@ -923,10 +923,7 @@ if (!studentsFileName || !questionsFileName) {
     // intialize all quiz variables
    intializeQuizVariables();
 
-    // create custom select box if custom selection is allowed
-    if(customselect == 'y') {
-         attachCustomSelect();
-    }
+    
 
     // change footer text in case of rotational selection and when teaming is not done
     if(m == 'rotation' && useteam != 'y') {
@@ -978,6 +975,11 @@ document.getElementById("pauseBtn").addEventListener("click", pauseCountdown);
 document.getElementById("endBtn").addEventListener("click", displayScores);
 
 document.getElementById("quizTitle").textContent = title || 'Quiz';
+
+// create custom select box if custom selection is allowed
+    if(customselect == 'y') {
+         attachCustomSelect();
+    }
 
 displayQuestion();
 
