@@ -821,6 +821,9 @@ function getParameterByName(name, url) {
         for (let i = 0; i < array.length; i++) {
             shuffledArray[shuffleMap[i]] = array[i];
         }
+
+alert(shuffleMap);
+
         return {
             shuffledArray: shuffledArray,
             shuffleMap: shuffleMap
@@ -837,6 +840,8 @@ function getParameterByName(name, url) {
 
         // Add the last element's index to the shuffle map
         shuffleMap.push(0);
+
+alert(shuffleMap);
 
         return {
             shuffledArray: array,
