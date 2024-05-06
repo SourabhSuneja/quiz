@@ -168,6 +168,12 @@
         #teams, #absent {
             padding: 20px;
         }
+        #markAbsentBtn {
+            background-color: darkred;
+        }
+        #markAbsentBtn:hover {
+            background-color: #6f0505;
+        }
     </style>
 </head>
 <body>
@@ -234,7 +240,7 @@
     <div class="modal-content">
         <span class="close" onclick="closeModal('absenteesModal')">&times;</span>
         <div id="absenteesModalCheckboxes"></div>
-        <button onclick="markAbsent()">Mark as Absent</button>
+        <button onclick="markAbsent()" id="markAbsentBtn">Mark as Absent</button>
     </div>
 </div>
 
