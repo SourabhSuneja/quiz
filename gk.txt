@@ -1,3 +1,5 @@
+Which famous personality is the subject of discussion in the audio clip?(Options: Option A} Ishwar Chandra Vidyasagar Option B} Vinoba Bhave Option C} Jyotiba Phule Option D} Raja Ram Mohan Roy Correct: Raja Ram Mohan Roy)JSONParams:{"weightage":1, "mediaEmbedded": "audio", "mediaLink": "https://youtu.be/5HTK6XnX-ns?si=edgAQJLfhr9c4Gws", "startTime": 286, "endTime": 303}
+Identify the movie from the dialogues in the audio clip.(Options: Option A} Dangal Option B} Mary Kom Option C} Chak De! India Option D} Bhaag Milkha Bhaag Correct: Mary Kom)JSONParams:{"weightage":1, "mediaEmbedded": "audio", "mediaLink": "https://youtu.be/858lvkopFOw?si=YePlHVn68vLk1l08", "startTime": 6, "endTime": 18}
 What is the capital of India? (Options: Option A} London Option B} Delhi Option C} New York Option D} Beijing Correct: Delhi)
 Which is the longest river in India? (Options: Option A} Ganges Option B} Brahmaputra Option C} Yamuna Option D} Godavari Correct: Ganges)
 The Indian national flower is: (Options: Option A} Rose Option B} Lotus Option C} Jasmine Option D} Marigold Correct: Lotus)
