@@ -278,6 +278,44 @@
       background-color: orange;
     }
 
+    #mediaContainer {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+  }
+  #player {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 24px;
+  }
+  #audioText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    display: none;
+  }
+  #playClipBtn {
+    display: none;
+  }
+
 
 </style>
 </head>
@@ -288,6 +326,9 @@
   <h1 id="quizTitle">Quiz</h1>
   <div class="question">
     <p id="questionText"></p>
+    <div>
+         <button id="playClipBtn">Play Clip</button>
+    </div>
     <p id="studentName"></p>
     <div id="timer">00:00</div>
   </div>
@@ -335,6 +376,15 @@
 
 
 
+<div id="mediaContainer">
+  <div id="player"></div>
+  <div class="closeButton" onclick="hideMediaContainer()">✖</div>
+  <div id="audioText">Audio playing..</div>
+</div>
+
+
+
+
 <script>
 
 // global variables
@@ -351,6 +401,7 @@ let countdownDuration;
 let countdown;
 let stopCountDown;
 let countdownPaused = false;
+let countdownPauseStateBeforeMedia = countdownPaused;
 let maxChances;
 let m;
 let title;
@@ -369,7 +420,8 @@ let teammap;
 let currentTeamIndex;
 let studentShuffleMap = null;
 let questionShuffleMap = null;
-
+let player;
+let timesMediaPlayed = [];
 
 
 // Function to delete the quiz cookie
@@ -1008,8 +1060,15 @@ if(!countdownDuration) {
     const questionText = document.getElementById("questionText");
     const studentName = document.getElementById("studentName");
 
-   if(!handleMCQ(window.questions[currentQuestionIndex].trim())) {
-   questionText.textContent = window.questions[currentQuestionIndex].trim();
+    const playClipBtn = document.getElementById("playClipBtn");
+
+    const buttonsDiv = document.getElementById('optionBtnContainer');
+    
+    const question = extractStringBeforeJSON(window.questions[currentQuestionIndex].trim());
+    const params = extractJSONFromString(window.questions[currentQuestionIndex].trim()); 
+
+   if(!handleMCQ(question)) {
+   questionText.textContent = question;
 
   const correctBtn = document.getElementById('correctBtn');
   const incorrectBtn = document.getElementById('incorrectBtn');
@@ -1022,10 +1081,54 @@ if(!countdownDuration) {
 
 }
 
+if(!pass) {
+timesMediaPlayed[currentQuestionIndex] = 0;
+}
 
+// if params available
 
+if(params) {
+
+// if JSON params contain embedded media
+if(params['mediaEmbedded'] == 'audio' || params['mediaEmbedded'] == 'video' || params['mediaEmbedded'] == 'image') {
+    playClipBtn.style.display = "inline-block";
+    buttonsDiv.style.display = 'none';
+    playClipBtn.onclick = function() {
+ playMedia(params['mediaEmbedded'], params['mediaLink'], params['startTime'], params['endTime']);
+   };
+
+} else {
+   playClipBtn.style.display = "none";
+   buttonsDiv.style.display = "block";
+}
+
+// if audio
+if(params['mediaEmbedded'] == 'audio') {
+    playClipBtn.innerText = "Play audio";
+}
+// else if video
+else if(params['mediaEmbedded'] == 'video') {
+    playClipBtn.innerText = "Play video";
+}
 
     
+} else {
+// if params not available or invalid JSON
+    playClipBtn.style.display = "none";
+    buttonsDiv.style.display = "block";
+}
+
+
+// if question is a passed one, and the media has been played at least once, do not hide the options in case of media based questions 
+
+if(pass && timesMediaPlayed[currentQuestionIndex] >= 1) {
+   buttonsDiv.style.display = "block";
+}
+
+
+
+// student selection starts
+
     let randomStudent; 
     
     if(dataPickedFromCookie) {
@@ -1561,6 +1664,7 @@ function resetCountdown() {
 
 function pauseCountdown() {
   countdownPaused = !countdownPaused;
+  countdownPauseStateBeforeMedia = countdownPaused;
   if(countdownPaused) {
     countdown++;
   }
@@ -1971,11 +2075,138 @@ if (isCorrect === 0.5) {
 
 
 
+
+
+// script to handle additionally embedded JSON parameters and media-based operations
+
+function playMedia(mediaType, link, startTime = 0, endTime = 0) {
+    var container = document.getElementById('mediaContainer');
+    container.style.display = 'block';
+    // pause countdown
+    countdownPaused = true;
+
+   // increase number of times played
+ timesMediaPlayed[currentQuestionIndex]++;
+
+    if (player) {
+      player.destroy();
+    }
+
+    if (mediaType === 'video') {
+      player = new YT.Player('player', {
+        height: '100%',
+        width: '100%',
+        videoId: getVideoId(link),
+        playerVars: {
+          'autoplay': 1,
+          'start': startTime,
+          'end': endTime,
+          'controls': 0,
+          'fs': 1
+        },
+        events: {
+          'onReady': function(event) {
+            event.target.playVideo();
+            document.getElementById('audioText').style.display = 'none';
+          },
+          'onStateChange': function(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+              hideMediaContainer();
+            }
+          }
+        }
+      });
+    } else if (mediaType === 'audio') {
+      player = new YT.Player('player', {
+        height: '0',
+        width: '0',
+        videoId: getVideoId(link),
+        playerVars: {
+          'autoplay': 1,
+          'start': startTime,
+          'end': endTime,
+          'controls': 0,
+          'fs': 1
+        },
+        events: {
+          'onReady': function(event) {
+            event.target.playVideo();
+            document.getElementById('audioText').style.display = 'block';
+          },
+          'onStateChange': function(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+              hideMediaContainer();
+            }
+          }
+        }
+      });
+    }
+  }
+
+  function hideMediaContainer() {
+    const container = document.getElementById('mediaContainer');
+    const buttonsDiv = document.getElementById('optionBtnContainer');
+    container.style.display = 'none';
+    buttonsDiv.style.display = 'block';
+    document.getElementById('audioText').style.display = 'none';
+    if (player) {
+      player.destroy();
+    }
+    // resume countdown
+    countdownPaused = countdownPauseStateBeforeMedia;
+  }
+
+  function getVideoId(link) {
+    var regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    var match = link.match(regExp);
+    if (match && match[1].length === 11) {
+      return match[1];
+    } else {
+      console.error('Invalid YouTube URL');
+    }
+  }
+
+// function to extract the JSON parameters from question string
+function extractJSONFromString(inputString) {
+    const jsonStartIndex = inputString.indexOf('JSONParams:');
+    if (jsonStartIndex === -1) {
+        return null; // JSON part not found in the string
+    }
+
+    const jsonString = inputString.substring(jsonStartIndex + 'JSONParams:'.length);
+    const trimmedJsonString = jsonString.trim();
+    const firstCurlyBraceIndex = trimmedJsonString.indexOf('{');
+    const lastCurlyBraceIndex = trimmedJsonString.lastIndexOf('}');
+    if (firstCurlyBraceIndex === -1 || lastCurlyBraceIndex === -1) {
+        console.error('Error: Invalid JSON structure');
+        return null;
+    }
+
+    const jsonSubstring = trimmedJsonString.substring(firstCurlyBraceIndex, lastCurlyBraceIndex + 1);
+    try {
+        const jsonObject = JSON.parse(jsonSubstring);
+        return jsonObject;
+    } catch (error) {
+        console.error('Error parsing JSON:', error);
+        return null;
+    }
+}
+
+// function to extract the question string before the JSONParams part
+function extractStringBeforeJSON(inputString) {
+    const jsonStartIndex = inputString.indexOf('JSONParams:');
+    if (jsonStartIndex === -1) {
+        return inputString; 
+    }
+    
+    return inputString.substring(0, jsonStartIndex);
+}
+
+
 </script>
 
-
-
-
+<!-- Include the YouTube iframe API -->
+<script src="https://www.youtube.com/iframe_api"></script>
 
 </body>
 </html>
