@@ -157,6 +157,7 @@ function parseJSONData() {
     var weightageInput = document.getElementById("points").value;
     var startTimeInput = document.getElementById("start-time").value;
     var endTimeInput = document.getElementById("end-time").value;
+    
 
     var weightage = (weightageInput !== "") ? parseFloat(weightageInput) : 1;
     var startTime = (startTimeInput !== "") ? parseInt(startTimeInput) : 0;
@@ -181,6 +182,7 @@ function parseJSONData() {
         const option3 = document.getElementById('option3').value.trim();
         const option4 = document.getElementById('option4').value.trim();
         const selectBox = document.getElementById('correctOption');
+        var correctOption;
         
         if (question === '') {
             alert('Please enter a question.');
@@ -192,7 +194,7 @@ function parseJSONData() {
 
            try {
              const correctOptionWithChoiceMarker = selectBox.options[selectBox.selectedIndex].text.trim();
-             let correctOption = correctOptionWithChoiceMarker.replace(/^[A-D]\)\s*/, "");
+             correctOption = correctOptionWithChoiceMarker.replace(/^[A-D]\)\s*/, "");
              correctOption = removeOptionLetter(correctOption);
           } catch (error) {
              alert("Please provide the correct answer for this question.");
