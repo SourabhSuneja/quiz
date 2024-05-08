@@ -348,6 +348,7 @@
   <h1 id="quizTitle">Quiz</h1>
   <div class="question">
     <p id="questionText"></p>
+    <p id="teamText"></p>
     <div>
          <button class="nonOptBtn" id="playClipBtn">Play Clip</button>
     </div>
@@ -1268,12 +1269,19 @@ function pickRandomStudent() {
 
 
 function pickRandomStudentFromTeam() {
+
+    // container for showing the currently chosen team name
+    const teamName = document.getElementById('teamText');
+
     // Initialize team order
     const teams = Object.keys(teammap);
 
     // Get students for the current team
     const currentTeam = teammap[teams[currentTeamIndex]];
     const currentTeamName = teams[currentTeamIndex];
+
+   // set current team name
+       teamName.innerText = '(Team: ' + currentTeamName + ')';
 
     // Create weighted array of students based on remaining chances
     let weightedArray = [];
