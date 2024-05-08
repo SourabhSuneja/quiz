@@ -348,6 +348,7 @@
   <h1 id="quizTitle">Quiz</h1>
   <div class="question">
     <p id="questionText"></p>
+    <p><i id="weightageText"></i></p>
     <div>
          <button class="nonOptBtn" id="playClipBtn">Play Clip</button>
     </div>
@@ -414,6 +415,7 @@
 let studentsFileName;
 let questionsFileName;
 let currentQuestionIndex;
+let weightage = 1;
 let currentStudentIndex;
 let scores;
 let chances;
@@ -1090,6 +1092,9 @@ if(!countdownDuration) {
     const question = extractStringBeforeJSON(window.questions[currentQuestionIndex].trim());
     const params = extractJSONFromString(window.questions[currentQuestionIndex].trim()); 
 
+  // reset question weightage to 1
+    weightage = 1;
+    
    if(!handleMCQ(question)) {
    questionText.textContent = question;
 
@@ -1111,6 +1116,9 @@ timesMediaPlayed[currentQuestionIndex] = 0;
 // if params available
 
 if(params) {
+
+// set question weightage
+weightage = params['weightage'];
 
 // if JSON params contain embedded media
 if(params['mediaEmbedded'] == 'audio' || params['mediaEmbedded'] == 'video' || params['mediaEmbedded'] == 'image') {
@@ -1152,6 +1160,9 @@ if(pass && timesMediaPlayed[currentQuestionIndex] >= 1) {
    buttonsDiv.style.display = "block";
 }
 
+
+// display question weightage
+document.getElementById('weightageText').innerText = '(question carries ' + weightage + (weightage > 1 ? ' points' : ' point') + ')';
 
 
 // student selection starts
@@ -1322,9 +1333,9 @@ const currentStudent = text.substring(index + 4);
 
 
     if (scores[currentStudent] === undefined) {
-      scores[currentStudent] = 1;
+      scores[currentStudent] = weightage;
     } else {
-      scores[currentStudent]++;
+      scores[currentStudent] += weightage;
     }
 
 if (chances[currentStudent] === undefined) {
