@@ -149,6 +149,28 @@
     return (optionString.replace(regex, '')).trim();
 }
 
+
+function parseJSONData() {
+    var weightageInput = document.getElementById("points").value;
+    var startTimeInput = document.getElementById("start-time").value;
+    var endTimeInput = document.getElementById("end-time").value;
+
+    var weightage = (weightageInput !== "") ? parseFloat(weightageInput) : 1;
+    var startTime = (startTimeInput !== "") ? parseInt(startTimeInput) : 0;
+    var endTime = (endTimeInput !== "") ? parseInt(endTimeInput) : 0;
+
+    var formData = {
+        "weightage": weightage,
+        "mediaEmbedded": document.getElementById("media-type").value,
+        "mediaLink": document.getElementById("media-url").value,
+        "startTime": startTime,
+        "endTime": endTime
+    };
+
+    return JSON.stringify(formData);
+}
+
+
     function addQuestion() {
         const question = document.getElementById('question').value.trim();
         const option1 = document.getElementById('option1').value.trim();
@@ -175,7 +197,7 @@
         }
 
         const questionList = document.getElementById('questionList');
-        questionList.textContent += questionText + '\n';
+        questionList.textContent += questionText + 'JSONParams:' + parseJSONData() + '\n';
 
         // Clear form fields
         document.getElementById('questionForm').reset();
