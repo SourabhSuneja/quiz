@@ -196,6 +196,7 @@ function parseJSONData() {
              correctOption = removeOptionLetter(correctOption);
           } catch (error) {
              alert("Please provide the correct answer for this question.");
+             return;
           }
 
             questionText += ' (Options: ';
