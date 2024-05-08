@@ -314,7 +314,29 @@
   }
   #playClipBtn {
     display: none;
+    background: darkcyan;
   }
+
+  #playClipBtn:hover {
+    background: #086767;
+  }
+
+
+.loading-animation {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#mediaContainer img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    max-height: 100%;
+}
 
 
 </style>
@@ -327,20 +349,20 @@
   <div class="question">
     <p id="questionText"></p>
     <div>
-         <button id="playClipBtn">Play Clip</button>
+         <button class="nonOptBtn" id="playClipBtn">Play Clip</button>
     </div>
     <p id="studentName"></p>
     <div id="timer">00:00</div>
   </div>
   <div id="buttonContainer" class="buttons">
 
-  <div id="optionBtnContainer"></div>
-    <button id="correctBtn">Answered correctly</button>
-    <button id="incorrectBtn">Couldn't answer correctly</button>
-    <button id="partiallyCorrectBtn">Partially correct</button>
-    <button id="pickAnotherBtn">Pick another student</button>
-    <button id="pauseBtn">Pause countdown</button>
-    <button id="endBtn">End Quiz</button>
+  <div class="nonOptBtn" id="optionBtnContainer"></div>
+    <button class="nonOptBtn" id="correctBtn">Answered correctly</button>
+    <button class="nonOptBtn" id="incorrectBtn">Couldn't answer correctly</button>
+    <button class="nonOptBtn" id="partiallyCorrectBtn">Partially correct</button>
+    <button class="nonOptBtn" id="pickAnotherBtn">Pick another student</button>
+    <button class="nonOptBtn" id="pauseBtn">Pause countdown</button>
+    <button class="nonOptBtn" id="endBtn">End Quiz</button>
     <button id="scoresButton">Scores</button>
 
   </div>
@@ -1109,6 +1131,10 @@ if(params['mediaEmbedded'] == 'audio') {
 // else if video
 else if(params['mediaEmbedded'] == 'video') {
     playClipBtn.innerText = "Play video";
+}
+// else if image
+else if(params['mediaEmbedded'] == 'image') {
+    playClipBtn.innerText = "Show image";
 }
 
     
@@ -2092,7 +2118,11 @@ function playMedia(mediaType, link, startTime = 0, endTime = 0) {
       player.destroy();
     }
 
-    if (mediaType === 'video') {
+    if(mediaType === 'image') {
+      showMediaImage(link);
+    }
+
+    else if (mediaType === 'video') {
       player = new YT.Player('player', {
         height: '100%',
         width: '100%',
@@ -2152,9 +2182,21 @@ function playMedia(mediaType, link, startTime = 0, endTime = 0) {
     if (player) {
       player.destroy();
     }
+
+    var image = container.querySelector('img');
+    if (image) {
+        container.removeChild(image);
+    }
+    var loadingAnimation = container.querySelector('.loading-animation');
+    if (loadingAnimation) {
+        container.removeChild(loadingAnimation);
+    }
+
     // resume countdown
     countdownPaused = countdownPauseStateBeforeMedia;
   }
+
+
 
   function getVideoId(link) {
     var regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -2201,6 +2243,56 @@ function extractStringBeforeJSON(inputString) {
     
     return inputString.substring(0, jsonStartIndex);
 }
+
+
+function showMediaImage(imageUrl) {
+    var container = document.getElementById('mediaContainer');
+
+    // Create and append the loading animation
+    var loadingAnimation = document.createElement('div');
+    loadingAnimation.className = 'loading-animation';
+    container.appendChild(loadingAnimation);
+
+    // Create and append the image
+    var image = new Image();
+    image.src = imageUrl;
+    image.onload = function() {
+        // Remove loading animation
+        container.removeChild(loadingAnimation);
+
+        // Calculate the maximum width and height
+        var maxWidth = container.offsetWidth;
+        var maxHeight = container.offsetHeight;
+
+        // Set image width and height to its original dimensions or the container's maximum dimensions, whichever is smaller
+        if (image.width > maxWidth || image.height > maxHeight) {
+            var widthRatio = maxWidth / image.width;
+            var heightRatio = maxHeight / image.height;
+            var ratio = Math.min(widthRatio, heightRatio);
+            image.width = image.width * ratio;
+            image.height = image.height * ratio;
+        }
+
+        // Set image position to the middle of the container
+        image.style.top = '50%';
+        image.style.left = '50%';
+        image.style.transform = 'translate(-50%, -50%)';
+
+        // Append the image
+        container.appendChild(image);
+       // Set timeout to close the media container after 5 seconds
+      setTimeout(hideMediaContainer, 5000);
+    };
+
+    image.onerror = function() {
+        // Remove loading animation
+        container.removeChild(loadingAnimation);
+
+        // Display "Failed to load image"
+        alert('Failed to load image');
+    };
+}
+
 
 
 </script>
