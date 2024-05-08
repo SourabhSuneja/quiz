@@ -110,6 +110,30 @@
         <input type="text" id="option4">
         <label for="correctOption">Correct Option:</label>
         <select id="correctOption" name="correctOption" onfocus="populateCorrectOptionDropdown()"></select>
+
+
+<label for="points">Points for this question:</label>
+    <input type="number" id="points" name="points" value="1">
+
+    <label for="media-type">Media Type:</label>
+    <select id="media-type" name="media-type">
+        <option value="none" selected>None</option>
+        <option value="image">Image</option>
+        <option value="audio">Audio</option>
+        <option value="video">Video</option>
+    </select>
+
+    <label for="media-url">Media URL (link to a YouTube video or image available online):</label>
+    <input type="text" id="media-url" name="media-url">
+
+    <label for="start-time">Start time for audio/video (in seconds):</label>
+    <input type="number" id="start-time" name="start-time" value="0">
+
+    <label for="end-time">End time for audio/video (in seconds):</label>
+    <input type="number" id="end-time" name="end-time" value="0">
+
+
+
         <button type="button" onclick="addQuestion()">Add Question</button>
     </form>
     <div id="questionList"></div>
