@@ -181,9 +181,7 @@ function parseJSONData() {
         const option3 = document.getElementById('option3').value.trim();
         const option4 = document.getElementById('option4').value.trim();
         const selectBox = document.getElementById('correctOption');
-        const correctOptionWithChoiceMarker = selectBox.options[selectBox.selectedIndex].text.trim();
-        let correctOption = correctOptionWithChoiceMarker.replace(/^[A-D]\)\s*/, "");
-        correctOption = removeOptionLetter(correctOption);
+        
         if (question === '') {
             alert('Please enter a question.');
             return;
@@ -191,6 +189,15 @@ function parseJSONData() {
 
         let questionText = question;
         if (option1 !== '' || option2 !== '' || option3 !== '' || option4 !== '') {
+
+           try {
+             const correctOptionWithChoiceMarker = selectBox.options[selectBox.selectedIndex].text.trim();
+             let correctOption = correctOptionWithChoiceMarker.replace(/^[A-D]\)\s*/, "");
+             correctOption = removeOptionLetter(correctOption);
+          } catch (error) {
+             alert("Please provide the correct answer for this question.");
+          }
+
             questionText += ' (Options: ';
             if (option1 !== '') questionText += `Option A} ${option1} `;
             if (option2 !== '') questionText += `Option B} ${option2} `;
