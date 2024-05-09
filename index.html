@@ -447,6 +447,44 @@ let studentShuffleMap = null;
 let questionShuffleMap = null;
 let player;
 let timesMediaPlayed = [];
+let playFunction;
+
+
+
+// function to preload audio files
+function preloadAudio() {
+    const audio = new Audio();
+    const video = new Audio();
+    const image = new Audio();
+    
+    audio.src = 'before-audio.mp3';
+    video.src = 'before-video.mp3';
+    image.src = 'before-image.mp3';
+
+    // Preload the audio files
+    audio.load();
+    video.load();
+    image.load();
+
+    function playAudio(type) {
+        switch (type) {
+            case "audio":
+                audio.play();
+                break;
+            case "video":
+                video.play();
+                break;
+            case "image":
+                image.play();
+                break;
+            default:
+                console.error("Invalid type provided.");
+        }
+    }
+
+    return playAudio;
+}
+
 
 
 // Function to delete the quiz cookie
@@ -460,6 +498,9 @@ function deleteQuizCookie() {
 
 // function to intialize key quiz variables
 function intializeQuizVariables() {
+
+
+playFunction = preloadAudio();
 
  // parsing and using team map
  useteam = retrieveQuizData('useteam') ||  getParameterByName('useteam') || 'n';
@@ -1125,7 +1166,21 @@ if(params['mediaEmbedded'] == 'audio' || params['mediaEmbedded'] == 'video' || p
     playClipBtn.style.display = "inline-block";
     buttonsDiv.style.display = 'none';
     playClipBtn.onclick = function() {
- playMedia(params['mediaEmbedded'], params['mediaLink'], params['startTime'], params['endTime']);
+
+// Cancel previous speech synthesis if there is an ongoing utterance
+    if (currentUtterance) {
+        speechSynthesis.cancel();
+    }
+
+playFunction(params['mediaEmbedded']);
+
+
+ setTimeout(function() {
+    playMedia(params['mediaEmbedded'], params['mediaLink'], params['startTime'], params['endTime']);
+}, 4000);
+
+
+
    };
 
 } else {
