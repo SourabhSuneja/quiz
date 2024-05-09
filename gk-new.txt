@@ -9,7 +9,6 @@ Which movie is this scene/dialogue associated with? (Options: Option A} Veer Zar
 Which of the following is not a classical dance form of India? (Options: Option A} Bharatanatyam Option B} Kathakali Option C} Salsa Option D} Kathak Correct: Salsa)
 The first Indian to go into space was: (Options: Option A} Kalpana Chawla Option B} Rakesh Sharma Option C} Sunita Williams Option D} Ravish Malhotra Correct: Rakesh Sharma)
 Identify the bird shown in the picture. (Options: Option A} Flamingo Option B} Swan Option C} Spoonbill Option D} Crane  Correct: Flamingo)JSONParams:{"weightage":1,"mediaEmbedded":"image","mediaLink":"https://images.pexels.com/photos/19958792/pexels-photo-19958792/free-photo-of-white-baby-flamingo-in-water.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2","startTime":0,"endTime":0}
-The Indian state with the longest coastline is: (Options: Option A} Gujarat Option B} Maharashtra Option C} Tamil Nadu Option D} Andhra Pradesh Correct: Gujarat)
 The deepest lake in the world is: (Options: Option A} Lake Superior Option B} Lake Baikal Option C} Lake Victoria Option D} Lake Tanganyika Correct: Lake Baikal)
 The longest river in Asia is: (Options: Option A} Ganges Option B} Yangtze Option C} Mekong Option D} Yellow Correct: Yangtze)
 The currency of Brazil is: (Options: Option A} Peso Option B} Real Option C} Lira Option D} Baht Correct: Real)
