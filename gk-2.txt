@@ -14,6 +14,7 @@ The first Indian to win an individual Olympic gold medal was: (Options: Option A
 The largest river island in India is located in which state? (Options: Option A} Assam Option B} West Bengal Option C} Uttar Pradesh Option D} Bihar Correct: Assam)
 The Indian political party founded by A.O. Hume in 1885 is: (Options: Option A} Indian National Congress Option B} Bharatiya Janata Party Option C} Communist Party of India Option D} Aam Aadmi Party Correct: Indian National Congress)
 The Indian city known as the "City of Joy" is: (Options: Option A} Kolkata Option B} Mumbai Option C} Delhi Option D} Bangalore Correct: Kolkata)
+This logo belongs to which brand? (Options: Option A} Starbucks Option B} KFC Option C} Burger King Option D} Subway  Correct: Starbucks)JSONParams:{"weightage":1,"mediaEmbedded":"image","mediaLink":"https://images.pexels.com/photos/1437318/pexels-photo-1437318.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2","startTime":0,"endTime":0}
 The Indian tennis player who won Wimbledon singles title in 1996 is: (Options: Option A} Leander Paes Option B} Sania Mirza Option C} Mahesh Bhupathi Option D} Vijay Amritraj Correct: Leander Paes)
 The northeastern state of India known as the "Land of the Rising Sun" is: (Options: Option A} Assam Option B} Manipur Option C} Arunachal Pradesh Option D} Meghalaya Correct: Arunachal Pradesh)
 The Indian hockey player known as "The Wizard" is: (Options: Option A} Manpreet Singh Option B} Balbir Singh Sr. Option C} Dhanraj Pillay Option D} Major Dhyan Chand Correct: Major Dhyan Chand)
