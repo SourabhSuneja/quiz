@@ -420,6 +420,7 @@ let studentsFileName;
 let questionsFileName;
 let quizType;
 let maxIndividualChances;
+let forcedSelectionMethod;
 let currentQuestionIndex;
 let weightage = 1;
 let currentStudentIndex;
@@ -635,7 +636,7 @@ initialVolume = parseInt(getParameterByName ('volume')) || 50 // Initial volume 
 // other parameters
 
 customselect = retrieveQuizData("customselect") || getParameterByName('customselect');
-m = retrieveQuizData("m") || getParameterByName('m');
+m = forcedSelectionMethod || retrieveQuizData("m") || getParameterByName('m');
 title = retrieveQuizData("title") || getParameterByName('title');
 shuffle = retrieveQuizData("shuffle") ||  getParameterByName('shuffle');
 qshuffle = retrieveQuizData("qshuffle") ||  getParameterByName('qshuffle') || 'n';
@@ -1050,10 +1051,15 @@ if (!questionsFileName) {
          studentsData = await fetchData(studentsFileName);
     }
     else {
-         studentsData = [studentsFileName]
-         maxIndividualChances = questionsData.length;
-         document.getElementById('pickAnotherBtn').style.display = 'none';
+    if (studentsFileName.includes(',')) {
+        studentsData = studentsFileName.split(',').map(item => item.trim());
+    } else {
+        studentsData = [studentsFileName];
+        document.getElementById('pickAnotherBtn').style.display = 'none';
     }
+    maxIndividualChances = questionsData.length;
+    forcedSelectionMethod = 'rotation';
+}
     // capitalize first letter of each student name
     studentsData = studentsData.map(capitalizeEachWord);
     startQuiz(studentsData, questionsData);
