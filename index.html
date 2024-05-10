@@ -414,6 +414,8 @@
 // global variables
 let studentsFileName;
 let questionsFileName;
+let quizType;
+let maxIndividualChances;
 let currentQuestionIndex;
 let weightage = 1;
 let currentStudentIndex;
@@ -448,6 +450,21 @@ let questionShuffleMap = null;
 let player;
 let timesMediaPlayed = [];
 let playFunction;
+
+
+
+// function to capitalise first letter of each word
+function capitalizeEachWord(str) {
+    // Convert the string to lowercase
+    let lowercaseStr = str.toLowerCase();
+
+    // Use a regular expression to match the first letter of each word and capitalize it
+    let capitalizedStr = lowercaseStr.replace(/\b\w/g, function(char) {
+        return char.toUpperCase();
+    });
+
+    return capitalizedStr;
+}
 
 
 
@@ -568,7 +585,7 @@ teamChances = retrieveQuizData('teamChances') || {};
 
 
 // Ask the user for the maximum chances
-maxChancesInput = retrieveQuizData('maxChances') ||  getParameterByName('maxchances') ||  prompt("How many maximum chances do you want to give to each student? (Defaults to 3)");
+maxChancesInput = maxIndividualChances || retrieveQuizData('maxChances') ||  getParameterByName('maxchances') ||  prompt("How many maximum chances do you want to give to each student? (Defaults to 3)");
 // Convert the input to a number
 maxChances = parseInt(maxChancesInput);
 
@@ -675,7 +692,8 @@ function storeQuizData(currentStudent) {
         useteam: useteam,
         teammap: teammap,
         studentShuffleMap: studentShuffleMap,
-        questionShuffleMap: questionShuffleMap
+        questionShuffleMap: questionShuffleMap,
+        quizType: quizType
     };
 
     // Store data as a cookie
@@ -971,21 +989,20 @@ function getParameterByName(name, url) {
 
 
 
-
-
-
-  // Function to initialize quiz
+ // Function to initialize quiz
   async function initializeQuiz() {
   try {
 
+     let studentsData;
 
     // wait till the presence of cookies is checked
     let useCookie = await checkQuizCookie();
     
-   
+  // determine quiz type
+   quizType = retrieveQuizData("quizType") || getParameterByName('quizType') || 'group';
    
 
-   // if user wants to pick up from wherethe quiz was left off
+   // if user wants to pick up from where the quiz was left off
     if(useCookie) {
          studentsFileName = retrieveQuizData('studentsFileName');
          questionsFileName = retrieveQuizData('questionsFileName');
@@ -998,13 +1015,23 @@ questionsFileName =  getParameterByName('q');
 
 
 // If URL parameters are not available, prompt the user for file names
-if (!studentsFileName || !questionsFileName) {
-    studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):").trim();
+if (!studentsFileName) {
+
+   if(quizType == "group") {
+       studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):").trim();
+   } else {
+       studentsFileName = prompt("Enter your name to start the quiz:").trim();
+   }
+
+}
+
+
+if (!questionsFileName) {
     questionsFileName = prompt("Enter the file name for questions data (e.g., questions.txt):").trim();
 }
     
     // Add .txt extension if not already provided by the user
-    if (!studentsFileName.endsWith('.txt')) {
+    if (!studentsFileName.endsWith('.txt') && quizType == "group") {
       studentsFileName += '.txt';
     }
     if (!questionsFileName.endsWith('.txt')) {
@@ -1014,13 +1041,28 @@ if (!studentsFileName || !questionsFileName) {
     if (!studentsFileName || !questionsFileName) {
       throw new Error("Invalid file names");
     }
-    const studentsData = await fetchData(studentsFileName);
     const questionsData = await fetchData(questionsFileName);
+    if(quizType == 'group') {
+         studentsData = await fetchData(studentsFileName);
+    }
+    else {
+         studentsData = [studentsFileName]
+         maxIndividualChances = questionsData.length;
+         document.getElementById('pickAnotherBtn').style.display = 'none';
+    }
+    // capitalize first letter of each student name
+    studentsData = studentsData.map(capitalizeEachWord);
     startQuiz(studentsData, questionsData);
   } catch (error) {
     console.error(error.message);
   }
+
 }
+
+
+  
+
+
 
   // Function to fetch data from a file using AJAX and return a promise
   function fetchData(fileName) {
@@ -1166,6 +1208,9 @@ if(params['mediaEmbedded'] == 'audio' || params['mediaEmbedded'] == 'video' || p
     playClipBtn.style.display = "inline-block";
     buttonsDiv.style.display = 'none';
     playClipBtn.onclick = function() {
+
+// pause countdown
+    countdownPaused = true;
 
 // Cancel previous speech synthesis if there is an ongoing utterance
     if (currentUtterance) {
@@ -1742,7 +1787,26 @@ function startCountdown() {
         timer.textContent = minutes + ':' + seconds;
 
         if (countdown === 0 && !countdownPaused) {
-            document.getElementById("pickAnotherBtn").click() // programmatically click the pick another student button to give chance to another student
+            if(quizType == 'group') {
+    // programmatically click the pick another student button to give chance to another student in case of group quiz
+    document.getElementById("pickAnotherBtn").click();
+} else {
+    // move to next question in case of individual quiz
+    let text = document.getElementById('studentName').textContent;
+
+    let index = text.indexOf('for');
+
+    const currentStudent = text.substring(index + 4);
+
+
+    if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
+    nextQuestion();
+}
+
             
         } else {
             if(!countdownPaused) {
@@ -2182,8 +2246,7 @@ if (isCorrect === 0.5) {
 function playMedia(mediaType, link, startTime = 0, endTime = 0) {
     var container = document.getElementById('mediaContainer');
     container.style.display = 'block';
-    // pause countdown
-    countdownPaused = true;
+    
 
    // increase number of times played
  timesMediaPlayed[currentQuestionIndex]++;
