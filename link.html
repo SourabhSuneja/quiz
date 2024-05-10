@@ -183,6 +183,13 @@ function capitalizeEachWord(str) {
         #markAbsentBtn:hover, #selectAbsenteesBtn:hover {
             background-color: #6f0505;
         }
+
+        button:disabled {
+            background-color: #ddd; 
+            color: #666; 
+            cursor: not-allowed; 
+}
+
     </style>
 </head>
 <body>
@@ -227,7 +234,7 @@ function capitalizeEachWord(str) {
 </label>
         <label><input type="radio" name="useteam" value="n" checked> No</label>
         <label><input type="radio" name="useteam" value="y"> Yes</label>
-        <button type="button" onclick="createTeams()">Create Teams</button>
+        <button id="createTeamsBtn" type="button" onclick="createTeams()">Create Teams</button>
         <br>
         <button id="selectAbsenteesBtn" type="button" onclick="selectAbsentees()">Select Absentees</button>
         <br>
@@ -438,11 +445,20 @@ function generateLink() {
 function updateStudentDataLabel() {
     var radioButton = document.getElementsByName("quizType");
     var label = document.getElementById("studentDataLabel");
+
+    var selectAbsenteesBtn = document.getElementById("selectAbsenteesBtn");
+
     
     if (radioButton[0].checked) {
         label.innerText = "Student Data (s):";
+        selectAbsenteesBtn.style.display = "block";
+        document.querySelectorAll('input[name="useteam"]').forEach(radio => radio.disabled = false);
+        document.getElementById('createTeamsBtn').disabled = false;
     } else {
         label.innerText = "Individual Participant Name:";
+        selectAbsenteesBtn.style.display = "none";
+        document.querySelectorAll('input[name="useteam"]').forEach(radio => radio.disabled = true);
+        document.getElementById('createTeamsBtn').disabled = true;
     }
 }
 
