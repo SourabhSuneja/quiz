@@ -1775,11 +1775,7 @@ function startCountdown() {
     document.getElementById("pickAnotherBtn").click();
 } else {
     // move to next question in case of individual quiz
-    if (chances[currentStudent] === undefined) {
-      chances[currentStudent] = 1;
-    } else {
-      chances[currentStudent]++;
-    }
+    
     nextQuestion();
 }
 
