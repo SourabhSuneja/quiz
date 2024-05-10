@@ -453,6 +453,21 @@ let playFunction;
 
 
 
+// function to capitalise first letter of each word
+function capitalizeEachWord(str) {
+    // Convert the string to lowercase
+    let lowercaseStr = str.toLowerCase();
+
+    // Use a regular expression to match the first letter of each word and capitalize it
+    let capitalizedStr = lowercaseStr.replace(/\b\w/g, function(char) {
+        return char.toUpperCase();
+    });
+
+    return capitalizedStr;
+}
+
+
+
 // function to preload audio files
 function preloadAudio() {
     const audio = new Audio();
@@ -1035,6 +1050,8 @@ if (!questionsFileName) {
          maxIndividualChances = questionsData.length;
          document.getElementById('pickAnotherBtn').style.display = 'none';
     }
+    // capitalize first letter of each student name
+    studentsData = studentsData.map(capitalizeEachWord);
     startQuiz(studentsData, questionsData);
   } catch (error) {
     console.error(error.message);
