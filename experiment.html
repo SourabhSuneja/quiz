@@ -1775,7 +1775,18 @@ function startCountdown() {
     document.getElementById("pickAnotherBtn").click();
 } else {
     // move to next question in case of individual quiz
-    
+    let text = document.getElementById('studentName').textContent;
+
+    let index = text.indexOf('for');
+
+    const currentStudent = text.substring(index + 4);
+
+
+    if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
     nextQuestion();
 }
 
