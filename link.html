@@ -29,6 +29,15 @@
         });
     });
 });
+
+// function to capitalise first letter of each student name
+function capitalizeEachWord(str) {
+    let lowercaseStr = str.toLowerCase();
+    let capitalizedStr = lowercaseStr.replace(/\b\w/g, function(char) {
+        return char.toUpperCase();
+    });
+    return capitalizedStr;
+}
     </script>
     <style>
         html, body {
@@ -184,7 +193,10 @@
     <form id="quizForm">
         <label for="quizTitle">Quiz Title:</label>
         <input type="text" id="quizTitle" name="title">
-        <label for="studentData">Student Data (s):</label>
+        <label>Quiz Type:</label>
+        <label><input type="radio" name="quizType" onchange="updateStudentDataLabel()" value="group" checked> Group</label>
+        <label><input type="radio" name="quizType" onchange="updateStudentDataLabel()" value="individual"> Individual</label>
+        <label id="studentDataLabel" for="studentData">Student Data (s):</label>
         <input type="text" id="studentData" name="s" onblur="fetchStudents()">
         <label for="questionData">Question Data (q):</label>
         <input type="text" id="questionData" name="q">
@@ -260,7 +272,7 @@ async function fetchStudents() {
     try {
         const response = await fetch(fileName);
         const text = await response.text();
-        students = text.split('\n').filter(student => student.trim() !== '').sort();
+        students = text.split('\n').filter(student => student.trim() !== '').map(capitalizeEachWord).sort();
     } catch (error) {
         console.log('Error fetching file:', error);
     }
@@ -421,6 +433,20 @@ function generateLink() {
     document.getElementById('quizLink').innerHTML = '';
     document.getElementById('quizLink').appendChild(link); 
 }
+
+
+function updateStudentDataLabel() {
+    var radioButton = document.getElementsByName("quizType");
+    var label = document.getElementById("studentDataLabel");
+    
+    if (radioButton[0].checked) {
+        label.innerText = "Student Data (s):";
+    } else {
+        label.innerText = "Individual Participant Name:";
+    }
+}
+
+
 </script>
 
 </body>
