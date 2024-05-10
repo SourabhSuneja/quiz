@@ -1033,6 +1033,7 @@ if (!questionsFileName) {
     else {
          studentsData = [studentsFileName]
          maxIndividualChances = questionsData.length;
+         document.getElementById('pickAnotherBtn').style.display = 'none';
     }
     startQuiz(studentsData, questionsData);
   } catch (error) {
@@ -1769,7 +1770,14 @@ function startCountdown() {
         timer.textContent = minutes + ':' + seconds;
 
         if (countdown === 0 && !countdownPaused) {
-            document.getElementById("pickAnotherBtn").click() // programmatically click the pick another student button to give chance to another student
+            if(quizType == 'group') {
+    // programmatically click the pick another student button to give chance to another student in case of group quiz
+    document.getElementById("pickAnotherBtn").click();
+} else {
+    // move to next question in case of individual quiz
+    nextQuestion();
+}
+
             
         } else {
             if(!countdownPaused) {
