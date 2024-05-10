@@ -1,5 +1,5 @@
 The highest mountain peak in India is: (Options: Option A} Mount Everest Option B} Kanchenjunga Option C} Nanda Devi Option D} Annapurna Correct: Kanchenjunga)
-Which popular brand does this radio ad belong to? (Options: Option A} Reid & Taylor Option B} Cadbury Option C} Amul Option D} Nestle  Correct: Cadbury)JSONParams:{"weightage":1,"mediaEmbedded":"video","mediaLink":"https://youtu.be/K5UNz3GVlcE?si=PcYbDvfzGHevYUhs","startTime":0,"endTime":42}
+Which popular brand does this radio ad belong to? (Options: Option A} Reid & Taylor Option B} Cadbury Option C} Amul Option D} Nestle  Correct: Cadbury)JSONParams:{"weightage":1,"mediaEmbedded":"audio","mediaLink":"https://youtu.be/K5UNz3GVlcE?si=PcYbDvfzGHevYUhs","startTime":0,"endTime":42}
 The Indian state with the largest area is: (Options: Option A} Rajasthan Option B} Madhya Pradesh Option C} Maharashtra Option D} Uttar Pradesh Correct: Rajasthan)
 The Indian athlete known as the "Flying Sikh" is: (Options: Option A} Milkha Singh Option B} P.T. Usha Option C} Sardar Singh Option D} Dhanraj Pillay Correct: Milkha Singh)
 The Indian state with the lowest population density is: (Options: Option A} Arunachal Pradesh Option B} Mizoram Option C} Sikkim Option D} Nagaland Correct: Arunachal Pradesh)
@@ -12,7 +12,7 @@ The Indian political party founded by A.O. Hume in 1885 is: (Options: Option A} 
 The Indian city known as the "City of Joy" is: (Options: Option A} Kolkata Option B} Mumbai Option C} Delhi Option D} Bangalore Correct: Kolkata)
 The Indian tennis player who won Wimbledon singles title in 1996 is: (Options: Option A} Leander Paes Option B} Sania Mirza Option C} Mahesh Bhupathi Option D} Vijay Amritraj Correct: Leander Paes)
 The northeastern state of India known as the "Land of the Rising Sun" is: (Options: Option A} Assam Option B} Manipur Option C} Arunachal Pradesh Option D} Meghalaya Correct: Arunachal Pradesh)
-The Indian hockey player known as "The Wizard" is: (Options: Option A} Dhyan Chand Option B} Balbir Singh Sr. Option C} Dhanraj Pillay Option D} Major Dhyan Chand Correct: Major Dhyan Chand)
+The Indian hockey player known as "The Wizard" is: (Options: Option A} Manpreet Singh Option B} Balbir Singh Sr. Option C} Dhanraj Pillay Option D} Major Dhyan Chand Correct: Major Dhyan Chand)
 The Indian state with the largest forest cover is: (Options: Option A} Madhya Pradesh Option B} Arunachal Pradesh Option C} Maharashtra Option D} Kerala Correct: Madhya Pradesh)
 The Indian chess player who became the World Chess Champion in 2000 is: (Options: Option A} Viswanathan Anand Option B} Pentala Harikrishna Option C} Koneru Humpy Option D} Dronavalli Harika Correct: Viswanathan Anand)
 The Indian athlete who won a gold medal in the javelin throw at the 2020 Tokyo Olympics is: (Options: Option A} Neeraj Chopra Option B} Hima Das Option C} Dutee Chand Option D} Swapna Barman Correct: Neeraj Chopra)
