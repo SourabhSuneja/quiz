@@ -27,7 +27,7 @@
 }
 
   .container {
-    max-width: 600px;
+    max-width: 700px;
     margin: 50px auto;
     padding: 20px;
     border: 3px solid white;
@@ -63,8 +63,8 @@
     background-color: #4682B4; /* Lighter shade on hover */
   }
   footer {
-    margin-top: 20px;
-    font-size: 14px;
+    margin-top: 24px;
+    font-size: 18px;
   }
   .chart-container {
     width: 100%;
@@ -273,6 +273,71 @@
       background-color: rgba(255, 0, 0, 1);
     }
 
+    .half-correct {
+      color: white;
+      background-color: orange;
+    }
+
+    #mediaContainer {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+  }
+  #player {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 24px;
+  }
+  #audioText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    display: none;
+  }
+  #playClipBtn {
+    display: none;
+    background: darkcyan;
+  }
+
+  #playClipBtn:hover {
+    background: #086767;
+  }
+
+
+.loading-animation {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#mediaContainer img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    max-height: 100%;
+}
+
 
 </style>
 </head>
@@ -283,18 +348,23 @@
   <h1 id="quizTitle">Quiz</h1>
   <div class="question">
     <p id="questionText"></p>
+    <p><i id="weightageText"></i></p>
+    <div>
+         <button class="nonOptBtn" id="playClipBtn">Play Clip</button>
+    </div>
     <p id="studentName"></p>
+    <p id="teamText"></p>
     <div id="timer">00:00</div>
   </div>
   <div id="buttonContainer" class="buttons">
 
-  <div id="optionBtnContainer"></div>
-    <button id="correctBtn">Answered correctly</button>
-    <button id="incorrectBtn">Couldn't answer correctly</button>
-    <button id="partiallyCorrectBtn">Partially correct</button>
-    <button id="pickAnotherBtn">Pick another student</button>
-    <button id="pauseBtn">Pause countdown</button>
-    <button id="endBtn">End Quiz</button>
+  <div class="nonOptBtn" id="optionBtnContainer"></div>
+    <button class="nonOptBtn" id="correctBtn">Answered correctly</button>
+    <button class="nonOptBtn" id="incorrectBtn">Couldn't answer correctly</button>
+    <button class="nonOptBtn" id="partiallyCorrectBtn">Partially correct</button>
+    <button class="nonOptBtn" id="pickAnotherBtn">Pick another student</button>
+    <button class="nonOptBtn" id="pauseBtn">Pause countdown</button>
+    <button class="nonOptBtn" id="endBtn">End Quiz</button>
     <button id="scoresButton">Scores</button>
 
   </div>
@@ -330,12 +400,25 @@
 
 
 
+<div id="mediaContainer">
+  <div id="player"></div>
+  <div class="closeButton" onclick="hideMediaContainer()">✖</div>
+  <div id="audioText">Audio playing..</div>
+</div>
+
+
+
+
 <script>
 
 // global variables
 let studentsFileName;
 let questionsFileName;
+let quizType;
+let maxIndividualChances;
 let currentQuestionIndex;
+let weightage = 1;
+let currentStudentIndex;
 let scores;
 let chances;
 let teamScores;
@@ -345,10 +428,12 @@ let countdownDuration;
 let countdown;
 let stopCountDown;
 let countdownPaused = false;
+let countdownPauseStateBeforeMedia = countdownPaused;
 let maxChances;
 let m;
 let title;
 let shuffle;
+let qshuffle;
 let customselect;
 let absentStudents;
 let maxChancesInput;
@@ -360,6 +445,47 @@ let correctAnsAvailable = null;
 let useteam;
 let teammap;
 let currentTeamIndex;
+let studentShuffleMap = null;
+let questionShuffleMap = null;
+let player;
+let timesMediaPlayed = [];
+let playFunction;
+
+
+
+// function to preload audio files
+function preloadAudio() {
+    const audio = new Audio();
+    const video = new Audio();
+    const image = new Audio();
+    
+    audio.src = 'before-audio.mp3';
+    video.src = 'before-video.mp3';
+    image.src = 'before-image.mp3';
+
+    // Preload the audio files
+    audio.load();
+    video.load();
+    image.load();
+
+    function playAudio(type) {
+        switch (type) {
+            case "audio":
+                audio.play();
+                break;
+            case "video":
+                video.play();
+                break;
+            case "image":
+                image.play();
+                break;
+            default:
+                console.error("Invalid type provided.");
+        }
+    }
+
+    return playAudio;
+}
 
 
 
@@ -374,6 +500,9 @@ function deleteQuizCookie() {
 
 // function to intialize key quiz variables
 function intializeQuizVariables() {
+
+
+playFunction = preloadAudio();
 
  // parsing and using team map
  useteam = retrieveQuizData('useteam') ||  getParameterByName('useteam') || 'n';
@@ -441,7 +570,7 @@ teamChances = retrieveQuizData('teamChances') || {};
 
 
 // Ask the user for the maximum chances
-maxChancesInput = retrieveQuizData('maxChances') ||  getParameterByName('maxchances') ||  prompt("How many maximum chances do you want to give to each student? (Defaults to 3)");
+maxChancesInput = maxIndividualChances || retrieveQuizData('maxChances') ||  getParameterByName('maxchances') ||  prompt("How many maximum chances do you want to give to each student? (Defaults to 3)");
 // Convert the input to a number
 maxChances = parseInt(maxChancesInput);
 
@@ -490,7 +619,10 @@ customselect = retrieveQuizData("customselect") || getParameterByName('customsel
 m = retrieveQuizData("m") || getParameterByName('m');
 title = retrieveQuizData("title") || getParameterByName('title');
 shuffle = retrieveQuizData("shuffle") ||  getParameterByName('shuffle');
-
+qshuffle = retrieveQuizData("qshuffle") ||  getParameterByName('qshuffle') || 'n';
+studentShuffleMap = retrieveQuizData("studentShuffleMap") || null;
+questionShuffleMap = retrieveQuizData("questionShuffleMap") || null;
+currentStudentIndex = retrieveQuizData("currentStudentIndex") || 0;
 
 }
 
@@ -534,14 +666,19 @@ function storeQuizData(currentStudent) {
         studentsFileName: studentsFileName,
         questionsFileName: questionsFileName,
         currentStudent: currentStudent,
+        currentStudentIndex: currentStudentIndex,
         countdownDuration: countdownDuration,
         maxChances: maxChances,
         m: m,
         title: title,
         shuffle: shuffle,
+        qshuffle: qshuffle,
         customselect: customselect,
         useteam: useteam,
-        teammap: teammap
+        teammap: teammap,
+        studentShuffleMap: studentShuffleMap,
+        questionShuffleMap: questionShuffleMap,
+        quizType: quizType
     };
 
     // Store data as a cookie
@@ -790,27 +927,67 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-  // Function to shuffle array
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+
+
+
+
+  // Function to shuffle array on the basis of provided shuffle map or with Fisher-Yates method
+  function shuffleWithMap(originalArray, providedShuffleMap = null) {
+    // Create a copy of the original array to avoid modifying the original array
+    const array = originalArray.slice();
+
+    // Initialize shuffle map array
+    let shuffleMap = [];
+
+    if (providedShuffleMap) {
+        // Use the provided shuffle map to shuffle elements
+        shuffleMap = providedShuffleMap.slice();
+        const shuffledArray = [];
+        for (let i = 0; i < array.length; i++) {
+            shuffledArray[shuffleMap[i]] = array[i];
+        }
+
+        return {
+            shuffledArray: shuffledArray,
+            shuffleMap: shuffleMap
+        };
+    } else {
+        // Fisher-Yates shuffle algorithm
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+
+        }
+        // create shuffle map
+        originalArray.forEach(function (item) {
+        	shuffleMap.push(array.indexOf(item));
+        });
+
+        return {
+            shuffledArray: array,
+            shuffleMap: shuffleMap
+        };
     }
-    return array;
 }
 
-  // Function to initialize quiz
+
+
+
+
+ // Function to initialize quiz
   async function initializeQuiz() {
   try {
 
+     let studentsData;
 
     // wait till the presence of cookies is checked
     let useCookie = await checkQuizCookie();
     
-   
+  // determine quiz type
+   quizType = retrieveQuizData("quizType") || getParameterByName('quizType') || 'group';
    
 
-   // if user wants to pick up from wherethe quiz was left off
+   // if user wants to pick up from where the quiz was left off
     if(useCookie) {
          studentsFileName = retrieveQuizData('studentsFileName');
          questionsFileName = retrieveQuizData('questionsFileName');
@@ -823,13 +1000,23 @@ questionsFileName =  getParameterByName('q');
 
 
 // If URL parameters are not available, prompt the user for file names
-if (!studentsFileName || !questionsFileName) {
-    studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):").trim();
+if (!studentsFileName) {
+
+   if(quizType == "group") {
+       studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):").trim();
+   } else {
+       studentsFileName = prompt("Enter your name to start the quiz:").trim();
+   }
+
+}
+
+
+if (!questionsFileName) {
     questionsFileName = prompt("Enter the file name for questions data (e.g., questions.txt):").trim();
 }
     
     // Add .txt extension if not already provided by the user
-    if (!studentsFileName.endsWith('.txt')) {
+    if (!studentsFileName.endsWith('.txt') && quizType == "group") {
       studentsFileName += '.txt';
     }
     if (!questionsFileName.endsWith('.txt')) {
@@ -839,13 +1026,25 @@ if (!studentsFileName || !questionsFileName) {
     if (!studentsFileName || !questionsFileName) {
       throw new Error("Invalid file names");
     }
-    const studentsData = await fetchData(studentsFileName);
     const questionsData = await fetchData(questionsFileName);
+    if(quizType == 'group') {
+         studentsData = await fetchData(studentsFileName);
+    }
+    else {
+         studentsData = [studentsFileName]
+         maxIndividualChances = questionsData.length;
+    }
     startQuiz(studentsData, questionsData);
   } catch (error) {
     console.error(error.message);
   }
+
 }
+
+
+  
+
+
 
   // Function to fetch data from a file using AJAX and return a promise
   function fetchData(fileName) {
@@ -874,19 +1073,26 @@ if (!studentsFileName || !questionsFileName) {
     // intialize all quiz variables
    intializeQuizVariables();
 
-    // create custom select box if custom selection is allowed
-    if(customselect == 'y') {
-         attachCustomSelect();
-    }
+    
 
-    // change footer text in case of rotational selection
-    if(m == 'rotation') {
+    // change footer text in case of rotational selection and when teaming is not done
+    if(m == 'rotation' && useteam != 'y') {
        document.getElementById("footerSpanText").textContent = 'Student selection is done on a rotational basis. Students will get a chance to answer one after another in the pre-decided order.';
     }
+    
+    if(m == 'rotation' && useteam == 'y') {
+       document.getElementById("footerSpanText").textContent += " Although you've selected the rotation method, random selection is still enforced when picking students from each team. However, all teams get their turns on a rotational basis.";
+    }
+
+
     // shuffle student names if shuffle parameter is set to 'y' or sort alphabetically if set to az or za
 if(shuffle == 'y') {
-     window.students = shuffleArray(window.students);
-     document.getElementById("footerSpanText").textContent += ' The names have been shuffled using Fisher-Yates algorithm.';
+	
+const obj = shuffleWithMap(window.students, studentShuffleMap)
+     window.students = obj['shuffledArray'];
+     studentShuffleMap = obj['shuffleMap']
+ document.getElementById("footerSpanText").textContent += ' The names have been shuffled using Fisher-Yates algorithm.';
+ 
 }
 else if(shuffle == 'az' || useteam == 'y') {
      window.students.sort();
@@ -895,6 +1101,17 @@ else if(shuffle == 'az' || useteam == 'y') {
 else if(shuffle == 'za') {
      window.students.sort((a, b) => b.localeCompare(a));
      document.getElementById("footerSpanText").textContent += ' The names have been alphabetically sorted Z-A.';
+}
+
+
+// shuffle questions if qshuffle parameter is set to 'y'
+if(qshuffle == 'y') {
+	
+const obj = shuffleWithMap(window.questions, questionShuffleMap)
+     window.questions = obj['shuffledArray'];
+     questionShuffleMap = obj['shuffleMap']
+ document.getElementById("footerSpanText").textContent += ' The questions have been shuffled using Fisher-Yates algorithm.';
+ 
 }
     
     document.getElementById("correctBtn").addEventListener("click", answeredCorrectly);
@@ -908,6 +1125,11 @@ document.getElementById("pauseBtn").addEventListener("click", pauseCountdown);
 document.getElementById("endBtn").addEventListener("click", displayScores);
 
 document.getElementById("quizTitle").textContent = title || 'Quiz';
+
+// create custom select box if custom selection is allowed
+    if(customselect == 'y') {
+         attachCustomSelect();
+    }
 
 displayQuestion();
 
@@ -928,8 +1150,18 @@ if(!countdownDuration) {
     const questionText = document.getElementById("questionText");
     const studentName = document.getElementById("studentName");
 
-   if(!handleMCQ(window.questions[currentQuestionIndex].trim())) {
-   questionText.textContent = window.questions[currentQuestionIndex].trim();
+    const playClipBtn = document.getElementById("playClipBtn");
+
+    const buttonsDiv = document.getElementById('optionBtnContainer');
+    
+    const question = extractStringBeforeJSON(window.questions[currentQuestionIndex].trim());
+    const params = extractJSONFromString(window.questions[currentQuestionIndex].trim()); 
+
+  // reset question weightage to 1
+    weightage = 1;
+    
+   if(!handleMCQ(question)) {
+   questionText.textContent = question;
 
   const correctBtn = document.getElementById('correctBtn');
   const incorrectBtn = document.getElementById('incorrectBtn');
@@ -942,10 +1174,81 @@ if(!countdownDuration) {
 
 }
 
+if(!pass) {
+timesMediaPlayed[currentQuestionIndex] = 0;
+}
+
+// if params available
+
+if(params) {
+
+// set question weightage
+weightage = params['weightage'];
+
+// if JSON params contain embedded media
+if(params['mediaEmbedded'] == 'audio' || params['mediaEmbedded'] == 'video' || params['mediaEmbedded'] == 'image') {
+    playClipBtn.style.display = "inline-block";
+    buttonsDiv.style.display = 'none';
+    playClipBtn.onclick = function() {
+
+// pause countdown
+    countdownPaused = true;
+
+// Cancel previous speech synthesis if there is an ongoing utterance
+    if (currentUtterance) {
+        speechSynthesis.cancel();
+    }
+
+playFunction(params['mediaEmbedded']);
 
 
+ setTimeout(function() {
+    playMedia(params['mediaEmbedded'], params['mediaLink'], params['startTime'], params['endTime']);
+}, 4000);
+
+
+
+   };
+
+} else {
+   playClipBtn.style.display = "none";
+   buttonsDiv.style.display = "block";
+}
+
+// if audio
+if(params['mediaEmbedded'] == 'audio') {
+    playClipBtn.innerText = "Play audio";
+}
+// else if video
+else if(params['mediaEmbedded'] == 'video') {
+    playClipBtn.innerText = "Play video";
+}
+// else if image
+else if(params['mediaEmbedded'] == 'image') {
+    playClipBtn.innerText = "Show image";
+}
 
     
+} else {
+// if params not available or invalid JSON
+    playClipBtn.style.display = "none";
+    buttonsDiv.style.display = "block";
+}
+
+
+// if question is a passed one, and the media has been played at least once, do not hide the options in case of media based questions 
+
+if(pass && timesMediaPlayed[currentQuestionIndex] >= 1) {
+   buttonsDiv.style.display = "block";
+}
+
+
+// display question weightage
+document.getElementById('weightageText').innerText = '(question carries ' + weightage + (weightage > 1 ? ' points' : ' point') + ')';
+
+
+// student selection starts
+
     let randomStudent; 
     
     if(dataPickedFromCookie) {
@@ -1003,12 +1306,32 @@ else {
 
 
   // function to get next student in case of rotational selection
-  let nextIndex = 0;
+  
 function getNextStudent() {
-    const student = window.students[nextIndex]; // get the student at the current index
-    nextIndex = (nextIndex + 1) % window.students.length; // move to the next index, looping back to 0 if end is reached
-    return student; // return the current student
-  }
+    const student = window.students[currentStudentIndex]; // get the student at the current index
+    currentStudentIndex = (currentStudentIndex + 1) % window.students.length; // move to the next index, looping back to 0 if end is reached
+
+    // if selected student has no chances left, keep looping forward until you find a student with chamces left or reach the end
+   
+    if(maxChances - (chances[student] || 0) > 0) {
+    	return student; // return the current student
+    } else {
+    	let start = currentStudentIndex;
+    	for(let i = start; i<students.length; i++) {
+    		if(maxChances - (chances[students[i]] || 0) > 0) {
+    			return students[i]
+    		}
+    	}
+    	// if end has been reached, start over from index 0 and continue until just the previous student
+    	for(let i = 0; i<(currentStudentIndex-1); i++) {
+    		if(maxChances - (chances[students[i]] || 0) > 0) {
+    			return students[i]
+    		}
+    	}
+    	return 'no one (all students have exhausted their chances). Click on "End Quiz" to display scores.';
+    }  
+}
+
 
   
 
@@ -1039,12 +1362,19 @@ function pickRandomStudent() {
 
 
 function pickRandomStudentFromTeam() {
+
+    // container for showing the currently chosen team name
+    const teamName = document.getElementById('teamText');
+
     // Initialize team order
     const teams = Object.keys(teammap);
 
     // Get students for the current team
     const currentTeam = teammap[teams[currentTeamIndex]];
     const currentTeamName = teams[currentTeamIndex];
+
+   // set current team name
+       teamName.innerText = '(Team: ' + currentTeamName + ')';
 
     // Create weighted array of students based on remaining chances
     let weightedArray = [];
@@ -1085,9 +1415,9 @@ const currentStudent = text.substring(index + 4);
 
 
     if (scores[currentStudent] === undefined) {
-      scores[currentStudent] = 1;
+      scores[currentStudent] = weightage;
     } else {
-      scores[currentStudent]++;
+      scores[currentStudent] += weightage;
     }
 
 if (chances[currentStudent] === undefined) {
@@ -1102,6 +1432,8 @@ if (chances[currentStudent] === undefined) {
 
   // Function to handle partially correct answer
   function answeredPartiallyCorrectly() {
+
+    showAnimation(0.5);
     var text = document.getElementById('studentName').textContent;
 
 var index = text.indexOf('for');
@@ -1110,9 +1442,9 @@ const currentStudent = text.substring(index + 4);
 
 
     if (scores[currentStudent] === undefined) {
-      scores[currentStudent] = 0.5;
+      scores[currentStudent] = (weightage/2);
     } else {
-      scores[currentStudent] += 0.5;
+      scores[currentStudent] += (weightage/2);
     }
 
 if (chances[currentStudent] === undefined) {
@@ -1459,6 +1791,7 @@ function resetCountdown() {
 
 function pauseCountdown() {
   countdownPaused = !countdownPaused;
+  countdownPauseStateBeforeMedia = countdownPaused;
   if(countdownPaused) {
     countdown++;
   }
@@ -1821,12 +2154,27 @@ const encouragingWords = [
     "Learning is a journey!",
     "Every attempt counts!"
 ];
+const partiallyCorrectWords = [
+    "Close, keep going!",
+    "Almost there!",
+    "You're halfway there!",
+    "You're making progress!",
+    "You're getting closer!",
+    "Not quite, but you're close!",
+    "Getting closer, keep trying!"
+];
 
 
     function showAnimation(isCorrect) {
 
 
-      const randomWord = isCorrect ? congratulatoryWords[Math.floor(Math.random() * congratulatoryWords.length)] : encouragingWords[Math.floor(Math.random() * encouragingWords.length)];
+      let randomWord = isCorrect ? congratulatoryWords[Math.floor(Math.random() * congratulatoryWords.length)] : encouragingWords[Math.floor(Math.random() * encouragingWords.length)];
+
+// in case of partially correct answers
+if (isCorrect === 0.5) {
+    randomWord = partiallyCorrectWords[Math.floor(Math.random() * partiallyCorrectWords.length)];
+}
+
 
       const animationDiv = document.createElement('div');
 
@@ -1836,7 +2184,11 @@ const encouragingWords = [
       animationDiv.textContent = randomWord;
       }
       animationDiv.classList.add('animation');
-      animationDiv.classList.add(isCorrect ? 'correct' : 'wrong');
+      if (isCorrect === 0.5) {
+    animationDiv.classList.add('half-correct');
+} else {
+    animationDiv.classList.add(isCorrect ? 'correct' : 'wrong');
+}
 
       animationContainer.innerHTML = '';
       animationContainer.appendChild(animationDiv);
@@ -1850,11 +2202,203 @@ const encouragingWords = [
 
 
 
+
+
+// script to handle additionally embedded JSON parameters and media-based operations
+
+function playMedia(mediaType, link, startTime = 0, endTime = 0) {
+    var container = document.getElementById('mediaContainer');
+    container.style.display = 'block';
+    
+
+   // increase number of times played
+ timesMediaPlayed[currentQuestionIndex]++;
+
+    if (player) {
+      player.destroy();
+    }
+
+    if(mediaType === 'image') {
+      showMediaImage(link);
+    }
+
+    else if (mediaType === 'video') {
+      player = new YT.Player('player', {
+        height: '100%',
+        width: '100%',
+        videoId: getVideoId(link),
+        playerVars: {
+          'autoplay': 1,
+          'start': startTime,
+          'end': endTime,
+          'controls': 0,
+          'fs': 1
+        },
+        events: {
+          'onReady': function(event) {
+            event.target.playVideo();
+            document.getElementById('audioText').style.display = 'none';
+          },
+          'onStateChange': function(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+              hideMediaContainer();
+            }
+          }
+        }
+      });
+    } else if (mediaType === 'audio') {
+      player = new YT.Player('player', {
+        height: '0',
+        width: '0',
+        videoId: getVideoId(link),
+        playerVars: {
+          'autoplay': 1,
+          'start': startTime,
+          'end': endTime,
+          'controls': 0,
+          'fs': 1
+        },
+        events: {
+          'onReady': function(event) {
+            event.target.playVideo();
+            document.getElementById('audioText').style.display = 'block';
+          },
+          'onStateChange': function(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+              hideMediaContainer();
+            }
+          }
+        }
+      });
+    }
+  }
+
+  function hideMediaContainer() {
+    const container = document.getElementById('mediaContainer');
+    const buttonsDiv = document.getElementById('optionBtnContainer');
+    container.style.display = 'none';
+    buttonsDiv.style.display = 'block';
+    document.getElementById('audioText').style.display = 'none';
+    if (player) {
+      player.destroy();
+    }
+
+    var image = container.querySelector('img');
+    if (image) {
+        container.removeChild(image);
+    }
+    var loadingAnimation = container.querySelector('.loading-animation');
+    if (loadingAnimation) {
+        container.removeChild(loadingAnimation);
+    }
+
+    // resume countdown
+    countdownPaused = countdownPauseStateBeforeMedia;
+  }
+
+
+
+  function getVideoId(link) {
+    var regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    var match = link.match(regExp);
+    if (match && match[1].length === 11) {
+      return match[1];
+    } else {
+      console.error('Invalid YouTube URL');
+    }
+  }
+
+// function to extract the JSON parameters from question string
+function extractJSONFromString(inputString) {
+    const jsonStartIndex = inputString.indexOf('JSONParams:');
+    if (jsonStartIndex === -1) {
+        return null; // JSON part not found in the string
+    }
+
+    const jsonString = inputString.substring(jsonStartIndex + 'JSONParams:'.length);
+    const trimmedJsonString = jsonString.trim();
+    const firstCurlyBraceIndex = trimmedJsonString.indexOf('{');
+    const lastCurlyBraceIndex = trimmedJsonString.lastIndexOf('}');
+    if (firstCurlyBraceIndex === -1 || lastCurlyBraceIndex === -1) {
+        console.error('Error: Invalid JSON structure');
+        return null;
+    }
+
+    const jsonSubstring = trimmedJsonString.substring(firstCurlyBraceIndex, lastCurlyBraceIndex + 1);
+    try {
+        const jsonObject = JSON.parse(jsonSubstring);
+        return jsonObject;
+    } catch (error) {
+        console.error('Error parsing JSON:', error);
+        return null;
+    }
+}
+
+// function to extract the question string before the JSONParams part
+function extractStringBeforeJSON(inputString) {
+    const jsonStartIndex = inputString.indexOf('JSONParams:');
+    if (jsonStartIndex === -1) {
+        return inputString; 
+    }
+    
+    return inputString.substring(0, jsonStartIndex);
+}
+
+
+function showMediaImage(imageUrl) {
+    var container = document.getElementById('mediaContainer');
+
+    // Create and append the loading animation
+    var loadingAnimation = document.createElement('div');
+    loadingAnimation.className = 'loading-animation';
+    container.appendChild(loadingAnimation);
+
+    // Create and append the image
+    var image = new Image();
+    image.src = imageUrl;
+    image.onload = function() {
+        // Remove loading animation
+        container.removeChild(loadingAnimation);
+
+        // Calculate the maximum width and height
+        var maxWidth = container.offsetWidth;
+        var maxHeight = container.offsetHeight;
+
+        // Set image width and height to its original dimensions or the container's maximum dimensions, whichever is smaller
+        if (image.width > maxWidth || image.height > maxHeight) {
+            var widthRatio = maxWidth / image.width;
+            var heightRatio = maxHeight / image.height;
+            var ratio = Math.min(widthRatio, heightRatio);
+            image.width = image.width * ratio;
+            image.height = image.height * ratio;
+        }
+
+        // Set image position to the middle of the container
+        image.style.top = '50%';
+        image.style.left = '50%';
+        image.style.transform = 'translate(-50%, -50%)';
+
+        // Append the image
+        container.appendChild(image);
+       // Set timeout to close the media container after 5 seconds
+      setTimeout(hideMediaContainer, 5000);
+    };
+
+    image.onerror = function() {
+        // Remove loading animation
+        container.removeChild(loadingAnimation);
+
+        // Display "Failed to load image"
+        alert('Failed to load image');
+    };
+}
+
+
+
 </script>
 
-
-
-
+<!-- Include the YouTube iframe API -->
+<script src="https://www.youtube.com/iframe_api"></script>
 
 </body>
 </html>
