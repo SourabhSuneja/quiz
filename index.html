@@ -1801,8 +1801,8 @@ function startCountdown() {
         timer.textContent = minutes + ':' + seconds;
 
         if (countdown === 0 && !countdownPaused) {
-            if (quizType == 'group' || (quizType != 'group' && (students.length - timesPassed <= 1 || (students.length > 1 && timesPassed == 0)))) {
-    // programmatically click the pick another student button to give chance to another student in case of group quiz or individual quiz with more than one participant with passes still left
+            if (quizType == 'group' || students.length > 1) {
+    // programmatically click the pick another student button to give chance to another student in case of group quiz or individual quiz with more than one participant 
     document.getElementById("pickAnotherBtn").click();
 } else {
     // move to next question in case of individual quiz
