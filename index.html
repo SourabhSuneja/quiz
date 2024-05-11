@@ -454,6 +454,7 @@ let studentShuffleMap = null;
 let questionShuffleMap = null;
 let player;
 let timesMediaPlayed = [];
+let timesPassed = 0;
 let playFunction;
 
 
@@ -1204,6 +1205,9 @@ if(!countdownDuration) {
 
 if(!pass) {
 timesMediaPlayed[currentQuestionIndex] = 0;
+timesPassed = 0;
+} else {
+timesPassed++;
 }
 
 // if params available
@@ -1797,8 +1801,8 @@ function startCountdown() {
         timer.textContent = minutes + ':' + seconds;
 
         if (countdown === 0 && !countdownPaused) {
-            if(quizType == 'group') {
-    // programmatically click the pick another student button to give chance to another student in case of group quiz
+            if(quizType == 'group' || (quizType != 'group' && (students.length - timesPassed <= 1) ) ) {
+    // programmatically click the pick another student button to give chance to another student in case of group quiz or individual quiz with more than one participant with passes still left
     document.getElementById("pickAnotherBtn").click();
 } else {
     // move to next question in case of individual quiz
