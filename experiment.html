@@ -230,6 +230,10 @@
     #teamScoresHeading {
        font-size: 20px;
     }
+
+    #scoreTableContainer table td:first-child {
+      text-align: left;
+    }
     
     /* Media query for small screens */
     @media (max-width: 600px) {
@@ -301,6 +305,7 @@
     cursor: pointer;
     color: #fff;
     font-size: 24px;
+    z-index: 10000;
   }
   #audioText {
     position: absolute;
@@ -336,6 +341,17 @@
     transform: translate(-50%, -50%);
     max-width: 100%;
     max-height: 100%;
+}
+
+#videoTitleHider {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120px;
+    z-index: 999;
+    display: none;
+    background: black;
 }
 
 
@@ -383,7 +399,7 @@
   <table id="scoreTable">
     <thead>
       <tr>
-        <th>Student</th>
+        <th>Participant</th>
         <th>Score</th>
         <th>Chances</th>
         <th>%</th>
@@ -407,7 +423,7 @@
 </div>
 
 
-
+<div id="videoTitleHider"></div>
 
 <script>
 
@@ -416,6 +432,7 @@ let studentsFileName;
 let questionsFileName;
 let quizType;
 let maxIndividualChances;
+let forcedSelectionMethod;
 let currentQuestionIndex;
 let weightage = 1;
 let currentStudentIndex;
@@ -449,6 +466,7 @@ let studentShuffleMap = null;
 let questionShuffleMap = null;
 let player;
 let timesMediaPlayed = [];
+let timesPassed = 0;
 let playFunction;
 
 
@@ -631,7 +649,7 @@ initialVolume = parseInt(getParameterByName ('volume')) || 50 // Initial volume 
 // other parameters
 
 customselect = retrieveQuizData("customselect") || getParameterByName('customselect');
-m = retrieveQuizData("m") || getParameterByName('m');
+m = forcedSelectionMethod || retrieveQuizData("m") || getParameterByName('m');
 title = retrieveQuizData("title") || getParameterByName('title');
 shuffle = retrieveQuizData("shuffle") ||  getParameterByName('shuffle');
 qshuffle = retrieveQuizData("qshuffle") ||  getParameterByName('qshuffle') || 'n';
@@ -1046,10 +1064,15 @@ if (!questionsFileName) {
          studentsData = await fetchData(studentsFileName);
     }
     else {
-         studentsData = [studentsFileName]
-         maxIndividualChances = questionsData.length;
-         document.getElementById('pickAnotherBtn').style.display = 'none';
+    if (studentsFileName.includes(',')) {
+        studentsData = studentsFileName.split(',').map(item => item.trim());
+    } else {
+        studentsData = [studentsFileName];
+        document.getElementById('pickAnotherBtn').style.display = 'none';
     }
+    maxIndividualChances = 9999999;
+    forcedSelectionMethod = 'rotation';
+}
     // capitalize first letter of each student name
     studentsData = studentsData.map(capitalizeEachWord);
     startQuiz(studentsData, questionsData);
@@ -1194,6 +1217,9 @@ if(!countdownDuration) {
 
 if(!pass) {
 timesMediaPlayed[currentQuestionIndex] = 0;
+timesPassed = 0;
+} else {
+timesPassed++;
 }
 
 // if params available
@@ -1787,8 +1813,8 @@ function startCountdown() {
         timer.textContent = minutes + ':' + seconds;
 
         if (countdown === 0 && !countdownPaused) {
-            if(quizType == 'group') {
-    // programmatically click the pick another student button to give chance to another student in case of group quiz
+            if (students.length > 1) {
+    // programmatically click the pick another student button to give chance to another student in case of group quiz or individual quiz with more than one participant 
     document.getElementById("pickAnotherBtn").click();
 } else {
     // move to next question in case of individual quiz
@@ -2260,6 +2286,7 @@ function playMedia(mediaType, link, startTime = 0, endTime = 0) {
     }
 
     else if (mediaType === 'video') {
+      document.getElementById('videoTitleHider').style.display = "block";
       player = new YT.Player('player', {
         height: '100%',
         width: '100%',
@@ -2316,6 +2343,7 @@ function playMedia(mediaType, link, startTime = 0, endTime = 0) {
     container.style.display = 'none';
     buttonsDiv.style.display = 'block';
     document.getElementById('audioText').style.display = 'none';
+    document.getElementById('videoTitleHider').style.display = "none";
     if (player) {
       player.destroy();
     }
