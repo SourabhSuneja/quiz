@@ -1801,7 +1801,7 @@ function startCountdown() {
         timer.textContent = minutes + ':' + seconds;
 
         if (countdown === 0 && !countdownPaused) {
-            if(quizType == 'group' || (quizType != 'group' && (students.length - timesPassed <= 1) ) ) {
+            if (quizType == 'group' || (quizType != 'group' && (students.length - timesPassed <= 1 || (students.length > 1 && timesPassed == 0)))) {
     // programmatically click the pick another student button to give chance to another student in case of group quiz or individual quiz with more than one participant with passes still left
     document.getElementById("pickAnotherBtn").click();
 } else {
