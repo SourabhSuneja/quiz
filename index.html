@@ -1058,7 +1058,7 @@ if (!questionsFileName) {
         studentsData = [studentsFileName];
         document.getElementById('pickAnotherBtn').style.display = 'none';
     }
-    maxIndividualChances = questionsData.length;
+    maxIndividualChances = 9999999;
     forcedSelectionMethod = 'rotation';
 }
     // capitalize first letter of each student name
@@ -1801,7 +1801,7 @@ function startCountdown() {
         timer.textContent = minutes + ':' + seconds;
 
         if (countdown === 0 && !countdownPaused) {
-            if (quizType == 'group' || students.length > 1) {
+            if (students.length > 1) {
     // programmatically click the pick another student button to give chance to another student in case of group quiz or individual quiz with more than one participant 
     document.getElementById("pickAnotherBtn").click();
 } else {
