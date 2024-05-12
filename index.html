@@ -342,6 +342,30 @@
     max-height: 100%;
 }
 
+#startScreen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 99999;
+    background: black;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+#startScreenInner {
+    text-align: center;
+    padding: 20px;
+    border: 3px solid white;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
 
 </style>
 </head>
@@ -411,6 +435,15 @@
 </div>
 
 
+
+<div id="startScreen">
+ <div id="startScreenInner">
+  <h1>Kwizee Go App</h1>
+  <h3>Developed by Sourabh Suneja</h3>
+  <p id="quizIntro">You are about to start the quiz</p>
+  <button id="startQuizBtn">Start Quiz</button>
+ </div>
+</div>
 
 
 <script>
@@ -1048,6 +1081,7 @@ if (!questionsFileName) {
       throw new Error("Invalid file names");
     }
     const questionsData = await fetchData(questionsFileName);
+    window.questions = questionsData;
     if(quizType == 'group') {
          studentsData = await fetchData(studentsFileName);
     }
@@ -1062,8 +1096,19 @@ if (!questionsFileName) {
     forcedSelectionMethod = 'rotation';
 }
     // capitalize first letter of each student name
-    studentsData = studentsData.map(capitalizeEachWord);
-    startQuiz(studentsData, questionsData);
+    window.students = studentsData.map(capitalizeEachWord);
+
+    // intialize all quiz variables
+   intializeQuizVariables();
+
+    // add quiz intro to the start screen
+    document.getElementById('quizIntro').innerText += ' with ' + students.length + ' participants and ' + questions.length + ' questions.';
+   // attach event listener to start quiz button
+    document.getElementById('startQuizBtn').addEventListener("click", function() {
+    document.getElementById('startScreen').style.display = 'none';
+    startQuiz();
+});
+
   } catch (error) {
     console.error(error.message);
   }
@@ -1095,13 +1140,7 @@ if (!questionsFileName) {
   }
 
   // Function to start the quiz after questions and students are loaded
-  function startQuiz(students, questions) {
-    window.students = students;
-    window.questions = questions;
-
-    // intialize all quiz variables
-   intializeQuizVariables();
-
+  function startQuiz() {
     
 
     // change footer text in case of rotational selection and when teaming is not done
