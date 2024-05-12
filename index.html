@@ -1102,7 +1102,7 @@ if (!questionsFileName) {
    intializeQuizVariables();
 
     // add quiz intro to the start screen
-    document.getElementById('quizIntro').innerText += ' with ' + students.length + ' participants and ' + questions.length + ' questions.';
+    document.getElementById('quizIntro').innerText += ' with ' + students.length + ' ' + (students.length === 1 ? 'participant' : 'participants') + ' and ' + questions.length + ' ' + (questions.length === 1 ? 'question' : 'questions') + '.';
    // attach event listener to start quiz button
     document.getElementById('startQuizBtn').addEventListener("click", function() {
     document.getElementById('startScreen').style.display = 'none';
