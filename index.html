@@ -1032,6 +1032,9 @@ function getParameterByName(name, url) {
   async function initializeQuiz() {
   try {
 
+     // pause countdown until the quiz starts
+    countdownPaused = true;
+
      let studentsData;
 
     // wait till the presence of cookies is checked
@@ -1106,6 +1109,8 @@ if (!questionsFileName) {
    // attach event listener to start quiz button
     document.getElementById('startQuizBtn').addEventListener("click", function() {
     document.getElementById('startScreen').style.display = 'none';
+    // resume countdown, if exists
+    countdownPaused = false;
     startQuiz();
 });
 
@@ -2494,3 +2499,4 @@ function showMediaImage(imageUrl) {
 
 </body>
 </html>
+
