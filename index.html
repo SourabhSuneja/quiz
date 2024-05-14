@@ -1578,16 +1578,23 @@ const currentStudent = text.substring(index + 4);
    let currentPauseState = countdownPaused;
    countdownPaused = true;
    countdown++;
-   let timeoutId = setTimeout(function() {
-    countdownPaused = currentPauseState;
+
+   // proceed only when a click is done anywhere on the screen
+   waitForClick().then(() => {
+
+   countdownPaused = currentPauseState;
+
+   // hide animation container
+   document.getElementById('animation-container').style.display = 'none';
+
     if (currentQuestionIndex < window.questions.length) {
       displayQuestion(false, false);
     } else {
       displayScores();
     }
 
-    clearTimeout(timeoutId);
-}, 3000); 
+});
+
 
 
     
@@ -2289,9 +2296,7 @@ if (isCorrect === 0.5) {
       animationContainer.appendChild(animationDiv);
       animationContainer.style.display = 'block';
 
-      setTimeout(() => {
-        animationContainer.style.display = 'none';
-      }, 3000);
+      
     }
 
 
@@ -2489,6 +2494,26 @@ function showMediaImage(imageUrl) {
         alert('Failed to load image');
     };
 }
+
+
+// function to wait for click before proceeding to the next question, after a promise is returned
+function waitForClick() {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      function clickHandler() {
+
+     if (event.target.id !== 'scoresButton') {
+        document.body.removeEventListener('click', clickHandler);
+        resolve();
+     }
+
+      }
+      
+      document.body.addEventListener('click', clickHandler);
+    }, 500); // Adjust the delay time as needed
+  });
+}
+
 
 
 
