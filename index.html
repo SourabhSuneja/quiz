@@ -521,18 +521,30 @@ function preloadAudio() {
     const audio = new Audio();
     const video = new Audio();
     const image = new Audio();
+    const correct = new Audio();
+    const wrong = new Audio();
     
     audio.src = 'before-audio.mp3';
     video.src = 'before-video.mp3';
     image.src = 'before-image.mp3';
+   correct.src = 'correct.wav';
+   wrong.src = 'wrong.wav';
 
     // Preload the audio files
     audio.load();
     video.load();
     image.load();
+    correct.load();
+    wrong.load();
 
     function playAudio(type) {
         switch (type) {
+            case "correct":
+                correct.play();
+                break;
+            case "wrong":
+                wrong.play();
+                break;
             case "audio":
                 audio.play();
                 break;
@@ -1506,7 +1518,7 @@ function pickRandomStudentFromTeam() {
 
   // Function to handle correct answer
   function answeredCorrectly() {
-
+    playFunction('correct');
     showAnimation(true);
     var text = document.getElementById('studentName').textContent;
 
@@ -1533,7 +1545,7 @@ if (chances[currentStudent] === undefined) {
 
   // Function to handle partially correct answer
   function answeredPartiallyCorrectly() {
-
+    playFunction('correct');
     showAnimation(0.5);
     var text = document.getElementById('studentName').textContent;
 
@@ -1560,6 +1572,7 @@ if (chances[currentStudent] === undefined) {
 
   // Function to handle incorrect answer
   function answeredIncorrectly() {
+    playFunction('wrong');
     showAnimation(false);
     var text = document.getElementById('studentName').textContent;
 
