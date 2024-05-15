@@ -126,6 +126,9 @@ select:focus {
         <option value="video">Video</option>
     </select>
 
+    <label for="ans-explanation">Explanation for correct answer (optional):</label>
+    <textarea id="ans-explanation" name="ans-explanation" rows="4" cols="50"></textarea>
+
     <label for="media-url">Media URL (link to a YouTube video or image available online):</label>
     <input type="text" id="media-url" name="media-url">
 
@@ -157,6 +160,7 @@ function parseJSONData() {
     var weightageInput = document.getElementById("points").value;
     var startTimeInput = document.getElementById("start-time").value;
     var endTimeInput = document.getElementById("end-time").value;
+    var ansExplanation = document.getElementById("ans-explanation").value;
     
 
     var weightage = (weightageInput !== "") ? parseFloat(weightageInput) : 1;
@@ -165,6 +169,7 @@ function parseJSONData() {
 
     var formData = {
         "weightage": weightage,
+        "ansExplanation": ansExplanation,
         "mediaEmbedded": document.getElementById("media-type").value,
         "mediaLink": document.getElementById("media-url").value,
         "startTime": startTime,
