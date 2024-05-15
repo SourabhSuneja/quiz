@@ -93,6 +93,9 @@ select:focus {
         #copyButton:hover {
             background-color: #45a049;
         }
+        #ans-explanation {
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -115,6 +118,10 @@ select:focus {
         <select id="correctOption" name="correctOption" onfocus="populateCorrectOptionDropdown()"></select>
 
 
+       <label for="ans-explanation">Explanation for correct answer (optional):</label>
+    <textarea id="ans-explanation" name="ans-explanation" rows="4"></textarea>
+
+
 <label for="points">Points for this question:</label>
     <input type="number" id="points" name="points" value="1">
 
@@ -126,8 +133,6 @@ select:focus {
         <option value="video">Video</option>
     </select>
 
-    <label for="ans-explanation">Explanation for correct answer (optional):</label>
-    <textarea id="ans-explanation" name="ans-explanation" rows="4" cols="25"></textarea>
 
     <label for="media-url">Media URL (link to a YouTube video or image available online):</label>
     <input type="text" id="media-url" name="media-url">
