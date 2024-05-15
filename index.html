@@ -480,6 +480,7 @@ let volume;
 let slider;
 let dataPickedFromCookie = false;
 let correctAnsAvailable = null;
+let ansExplanation = null;
 let useteam;
 let teammap;
 let currentTeamIndex;
@@ -1235,6 +1236,8 @@ if(!countdownDuration) {
 
   // reset question weightage to 1
     weightage = 1;
+  // reset ansExplanation to null
+    ansExplanation = null;
     
    if(!handleMCQ(question)) {
    questionText.textContent = question;
@@ -1263,6 +1266,11 @@ if(params) {
 
 // set question weightage
 weightage = params['weightage'];
+
+// store explanation for correct answer, if available
+if(params['ansExplanation']) {
+  ansExplanation = params['ansExplanation'];
+}
 
 // if JSON params contain embedded media
 if(params['mediaEmbedded'] == 'audio' || params['mediaEmbedded'] == 'video' || params['mediaEmbedded'] == 'image') {
@@ -2301,7 +2309,14 @@ if (isCorrect === 0.5) {
 
       if(correctAnsAvailable && !isCorrect) {
         animationDiv.textContent = 'No. The correct answer is: ' + correctAnsAvailable;
-      } else {
+        if(ansExplanation) {
+             animationDiv.textContent += "\n" + ansExplanation;
+        }
+      } 
+      else if(isCorrect == 0.5 && ansExplanation) {
+          animationDiv.textContent = "Good try! But the exact answer is: " + "\n" + ansExplanation;
+      }
+      else {
       animationDiv.textContent = randomWord;
       }
       animationDiv.classList.add('animation');
