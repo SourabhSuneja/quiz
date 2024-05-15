@@ -274,7 +274,7 @@
 
     .wrong {
       color: white;
-      background-color: rgba(255, 0, 0, 1);
+      background-color: rgba(178, 16, 16, 1);
     }
 
     .half-correct {
@@ -2310,11 +2310,11 @@ if (isCorrect === 0.5) {
       if(correctAnsAvailable && !isCorrect) {
         animationDiv.textContent = 'No. The correct answer is: ' + correctAnsAvailable;
         if(ansExplanation) {
-             animationDiv.textContent += "\n" + ansExplanation;
+             animationDiv.innerHTML += "<br>" + ansExplanation;
         }
       } 
       else if(isCorrect == 0.5 && ansExplanation) {
-          animationDiv.textContent = "Good try! But the exact answer is: " + "\n" + ansExplanation;
+          animationDiv.innerHTML = "Good try! But the exact answer is: " + "<br>" + ansExplanation;
       }
       else {
       animationDiv.textContent = randomWord;
