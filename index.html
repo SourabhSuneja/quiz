@@ -393,7 +393,7 @@
   </div>
   <div id="buttonContainer" class="buttons">
 
-  <div class="nonOptBtn" id="optionBtnContainer"></div>
+  <div id="optionBtnContainer"></div>
     <button class="nonOptBtn" id="correctBtn">Answered correctly</button>
     <button class="nonOptBtn" id="incorrectBtn">Couldn't answer correctly</button>
     <button class="nonOptBtn" id="partiallyCorrectBtn">Partially correct</button>
@@ -1231,6 +1231,13 @@ if(!countdownDuration) {
       console.log("Students or questions data not loaded.");
       return;
     }
+
+    // enable all non-option buttons after animation
+    const nonOptBtns = document.querySelectorAll('.nonOptBtn');
+    nonOptBtns.forEach(function(button) {
+    button.disabled = false;
+    });
+
     const questionText = document.getElementById("questionText");
     const studentName = document.getElementById("studentName");
 
@@ -2302,6 +2309,12 @@ const partiallyCorrectWords = [
 
 
     function showAnimation(isCorrect) {
+
+     // disable all non-option buttons while the animation is displayed on the screen
+    const nonOptBtns = document.querySelectorAll('.nonOptBtn');
+    nonOptBtns.forEach(function(button) {
+    button.disabled = true;
+    });
 
 
       let randomWord = isCorrect ? congratulatoryWords[Math.floor(Math.random() * congratulatoryWords.length)] : encouragingWords[Math.floor(Math.random() * encouragingWords.length)];
