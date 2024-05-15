@@ -1,4 +1,4 @@
-The highest mountain peak in India is: (Options: Option A} Mount Everest Option B} Kanchenjunga Option C} Nanda Devi Option D} Annapurna Correct: Kanchenjunga)
+The highest mountain peak in India is: (Options: Option A} Mount Everest Option B} Kanchenjunga Option C} Nanda Devi Option D} Annapurna Correct: Kanchenjunga)JSONParams:{"weightage":1,"ansExplanation":"Third highest mountain, between Nepal and India, loved by climbers for its stunning height and beauty.","mediaEmbedded":"none","mediaLink":"","startTime":0,"endTime":0}
 Which popular brand does this radio ad belong to? (Options: Option A} Reid & Taylor Option B} Cadbury Option C} Amul Option D} Nestle  Correct: Cadbury)JSONParams:{"weightage":1,"mediaEmbedded":"audio","mediaLink":"https://youtu.be/K5UNz3GVlcE?si=PcYbDvfzGHevYUhs","startTime":0,"endTime":42}
 The Indian state with the largest area is: (Options: Option A} Rajasthan Option B} Madhya Pradesh Option C} Maharashtra Option D} Uttar Pradesh Correct: Rajasthan)
 The Indian athlete known as the "Flying Sikh" is: (Options: Option A} Milkha Singh Option B} P.T. Usha Option C} Sardar Singh Option D} Dhanraj Pillay Correct: Milkha Singh)
