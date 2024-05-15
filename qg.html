@@ -160,7 +160,7 @@ function parseJSONData() {
     var weightageInput = document.getElementById("points").value;
     var startTimeInput = document.getElementById("start-time").value;
     var endTimeInput = document.getElementById("end-time").value;
-    var ansExplanation = document.getElementById("ans-explanation").value;
+    var ansExplanation = document.getElementById("ans-explanation").value.trim();
     
 
     var weightage = (weightageInput !== "") ? parseFloat(weightageInput) : 1;
