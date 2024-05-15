@@ -1571,7 +1571,7 @@ const currentStudent = text.substring(index + 4);
   }
 
   // Function to move to the next question
-  function nextQuestion() {
+  function nextQuestion(oneParticipant = false) {
     currentQuestionIndex++;
     
     // delay until the animations complete
@@ -1595,6 +1595,14 @@ const currentStudent = text.substring(index + 4);
 
 });
 
+
+// programmatically click the document body after 3 seconds to move to the next question automatically in case of automatic proceeding
+if(oneParticipant) {
+   setTimeout(() => {
+  triggerClick();
+}, 3000);
+
+}
 
 
     
@@ -1856,7 +1864,7 @@ function startCountdown() {
     // programmatically click the pick another student button to give chance to another student in case of group quiz or individual quiz with more than one participant 
     document.getElementById("pickAnotherBtn").click();
 } else {
-    // move to next question in case of individual quiz
+    // move to next question in case of individual quiz with just 1 participant
     let text = document.getElementById('studentName').textContent;
 
     let index = text.indexOf('for');
@@ -1869,7 +1877,7 @@ function startCountdown() {
     } else {
       chances[currentStudent]++;
     }
-    nextQuestion();
+    nextQuestion(true);
 }
 
             
@@ -2512,6 +2520,15 @@ function waitForClick() {
       document.body.addEventListener('click', clickHandler);
     }, 500); // Adjust the delay time as needed
   });
+}
+
+
+
+// Function to programmatically trigger a click on the page in order to proceed to next question automatically
+function triggerClick() {
+  // Simulate a click event on the document body
+  const event = new Event('click');
+  document.body.dispatchEvent(event);
 }
 
 
