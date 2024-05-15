@@ -269,7 +269,7 @@
 
     /* Media query for small screens */
     @media (max-width: 600px) {
-      .animation {
+      .animation-fs-reduced {
         font-size: 18px;
       }
     }
@@ -2331,6 +2331,12 @@ if (isCorrect === 0.5) {
     animationDiv.classList.add('half-correct');
 } else {
     animationDiv.classList.add(isCorrect ? 'correct' : 'wrong');
+}
+
+   // add class animation-fs-reduced in case the length of the explanation is too long, so as to make it adjust on small screens
+
+   if (animationDiv.textContent.length > 120) {
+  animationDiv.classList.add('animation-fs-reduced');
 }
 
       animationContainer.innerHTML = '';
