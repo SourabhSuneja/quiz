@@ -489,6 +489,7 @@ let player;
 let timesMediaPlayed = [];
 let timesPassed = 0;
 let playFunction;
+let qproceed;
 
 
 
@@ -674,6 +675,7 @@ m = forcedSelectionMethod || retrieveQuizData("m") || getParameterByName('m');
 title = retrieveQuizData("title") || getParameterByName('title');
 shuffle = retrieveQuizData("shuffle") ||  getParameterByName('shuffle');
 qshuffle = retrieveQuizData("qshuffle") ||  getParameterByName('qshuffle') || 'n';
+qproceed = retrieveQuizData("qproceed") ||  getParameterByName('qproceed') || 'auto';
 studentShuffleMap = retrieveQuizData("studentShuffleMap") || null;
 questionShuffleMap = retrieveQuizData("questionShuffleMap") || null;
 currentStudentIndex = retrieveQuizData("currentStudentIndex") || 0;
@@ -732,7 +734,8 @@ function storeQuizData(currentStudent) {
         teammap: teammap,
         studentShuffleMap: studentShuffleMap,
         questionShuffleMap: questionShuffleMap,
-        quizType: quizType
+        quizType: quizType,
+        qproceed: qproceed
     };
 
     // Store data as a cookie
@@ -1596,8 +1599,16 @@ const currentStudent = text.substring(index + 4);
 });
 
 
-// programmatically click the document body after 3 seconds to move to the next question automatically in case of automatic proceeding
+// programmatically click the document body after a negligible delay to move to the next question automatically in case of one participant quiz when it's timed out
 if(oneParticipant) {
+   setTimeout(() => {
+  triggerClick();
+}, 10);
+
+}
+
+// programmatically click the document body after 3 seconds to move to the next question automatically in case qproceed method is auto
+if(qproceed === 'auto') {
    setTimeout(() => {
   triggerClick();
 }, 3000);
