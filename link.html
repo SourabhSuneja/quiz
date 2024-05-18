@@ -441,7 +441,7 @@ function generateLink() {
     trimmedFormData['absent'] = JSON.stringify(absentIndices); // Add absent student indices to form data
     let queryString = new URLSearchParams(trimmedFormData).toString();
     const link = document.createElement('a');
-    link.href = `https://sourabhsuneja.github.io/quiz/?${queryString}`;
+    link.href = `https://sourabhsuneja.github.io/quiz/with-cards.html?${queryString}`;
     link.textContent = link.href;
     document.getElementById('quizLink').innerHTML = '';
     document.getElementById('quizLink').appendChild(link); 
