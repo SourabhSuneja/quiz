@@ -856,7 +856,7 @@ qproceed = retrieveQuizData("qproceed") ||  getParameterByName('qproceed') || 'a
 studentShuffleMap = retrieveQuizData("studentShuffleMap") || null;
 questionShuffleMap = retrieveQuizData("questionShuffleMap") || null;
 currentStudentIndex = retrieveQuizData("currentStudentIndex") || 0;
-usecards = getParameterByName('usecards') || 'y';
+usecards = getParameterByName('usecards') || 'n';
 
 // if cards are used, extract card indices and values
 
@@ -1099,6 +1099,9 @@ function displayTeamScoresAndChances() {
     // Calculate percentages and store team data
     for (var team in teamScores) {
       var percentage = (teamScores[team] / teamChances[team]) * 100;
+      if(usecards == 'y') {
+           percentage = (teamScores[team] / teamChances[team]).toFixed(2);
+      }
       teamData.push({ name: team, percentage: percentage });
     }
 
@@ -2024,6 +2027,9 @@ deleteQuizCookie();
     // Calculate percentages and store student data
     for (var student in scores) {
       var percentage = (scores[student] / chances[student]) * 100;
+      if(usecards == 'y') {
+           percentage = (scores[student] / chances[student]).toFixed(2);
+      }
       studentData.push({ name: student, percentage: percentage });
     }
 
@@ -2120,6 +2126,9 @@ function speakUp(text, speed) {
 function createCSV(scores, chances) {
   // Create a CSV header
   var csv = "Name, Score, Chance, Percentage\n";
+  if(usecards == 'y') {
+     csv = "Name, Score, Chance, Efficiency\n";
+  }
 
   // Iterate through the chances object to ensure all names are included
   Object.keys(chances).forEach(function(name) {
@@ -2129,6 +2138,9 @@ function createCSV(scores, chances) {
     var chance = chances[name];
    // Calculate percentage
     var percentage = (parseFloat(score)/parseInt(chance)) * 100;
+    if(usecards == 'y') {
+        percentage = (parseFloat(score)/parseInt(chance));
+    }
    // Round off percentage to two decimal places
    percentage = percentage.toFixed(2);
     // Append data to CSV
