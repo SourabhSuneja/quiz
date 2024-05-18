@@ -1117,7 +1117,7 @@ function displayTeamScoresAndChances() {
       shade = Math.max(shade, 50); // Ensure a minimum value for visibility
       bar.style.backgroundColor = 'rgb(0,' + '120' + ',0)'; // Set background color
       bar.classList.add('bar');
-      bar.style.width = team.percentage + '%';
+      bar.style.width = (team.percentage < 0 ? 0 : team.percentage) + '%';
       
       // Create span for text and percentage
       var barText = document.createElement('span');
@@ -2051,7 +2051,7 @@ console.log(percentage);
       shade = Math.max(shade, 50); // Ensure a minimum value for visibility
       bar.style.backgroundColor = 'rgb(0,' + '120' + ',0)'; // Set background color
       bar.classList.add('bar');
-      bar.style.width = student.percentage + '%';
+      bar.style.width = (student.percentage < 0 ? 0 : student.percentage) + '%';
       
       // Create span for text and percentage
       var barText = document.createElement('span');
