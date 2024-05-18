@@ -1039,7 +1039,7 @@ function displayTeamScoresAndChances() {
     let thead = document.createElement('thead');
     let headerRow = thead.insertRow();
     let headers = ['Team', 'Score', 'Chances', '%'];
-    if(useteams == 'y') {
+    if(usecards == 'y') {
         headers[3] = 'Efficiency';
     }
     for (let header of headers) {
@@ -1063,7 +1063,7 @@ function displayTeamScoresAndChances() {
         let score = teamScores[team];
         let chance = teamChances[team];
         let percentage = ((score / chance) * 100).toFixed(2);
-        if(useteams == 'y') {
+        if(usecards == 'y') {
              percentage = ((score / chance)).toFixed(2);
         }
         percentage = isNaN(percentage) ? '-' : percentage;
