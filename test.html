@@ -877,7 +877,9 @@ async function checkQuizCookie() {
 
         if (cookieData) {
 
-            // if cards are being used, drop the cookies as resume support is not available with card plays if(getParameterByName('usecards') == 'y') {
+            // if cards are being used, drop the cookies as resume support is not available with card plays
+
+if(getParameterByName('usecards') == 'y') {
                  deleteQuizCookie();
                  resolve(false);
             } 
