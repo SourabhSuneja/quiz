@@ -1430,7 +1430,8 @@ if(usecards != 'y') {
 
    // handle question in case cookies were retrieved and cards are being used
      if(dataPickedFromCookie && usecards == 'y') {
-          
+          handleDisplayWithCookieAndCards();
+return;
      }
 
 
@@ -3102,7 +3103,7 @@ consolidateScoresAndChances();
 
 // fixes start
 
-function handleDisplayWithCookieAndCards(pass = false, isFirst = true) {
+async function handleDisplayWithCookieAndCards(pass = false, isFirst = true) {
 
 // get required DOM elements
 const playClipBtn = document.getElementById("playClipBtn");
