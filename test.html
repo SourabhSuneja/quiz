@@ -1429,7 +1429,7 @@ if(usecards != 'y') {
     });
 
    // handle question in case cookies were retrieved and cards are being used
-     if(dataPickedFromCookie && usecards = 'y') {
+     if(dataPickedFromCookie && usecards == 'y') {
           
      }
 
@@ -3095,6 +3095,336 @@ consolidateScoresAndChances();
 
  storeQuizData(student.trim());
 }
+
+
+
+
+
+// fixes start
+
+function handleDisplayWithCookieAndCards(pass = false, isFirst = true) {
+
+// get required DOM elements
+const playClipBtn = document.getElementById("playClipBtn");
+
+const questionText = document.getElementById("questionText");
+
+const studentName = document.getElementById("studentName");
+
+const nameInsideCardPicker = document.getElementById('nameInsideCardPicker');
+
+const buttonsDiv = document.getElementById('optionBtnContainer');
+
+const correctBtn = document.getElementById('correctBtn');
+
+const incorrectBtn = document.getElementById('incorrectBtn');
+
+const partiallyCorrectBtn = document.getElementById('partiallyCorrectBtn');
+
+// fetch student name
+student = retrieveQuizData('currentStudent');
+
+// set student name
+studentName.textContent = "Question for " + student.trim();
+nameInsideCardPicker.textContent = student.trim();
+
+// reset countdown
+resetCountdown();
+
+
+// check the last saved state of card selection
+if(retrieveQuizData('cardSelectionState') == 'selected') {
+   // hide the card select button because the card has already been chosen
+    document.getElementById("pickCardBtn").style.display = 'none';
+
+// handling the question
+      
+    const question = extractStringBeforeJSON(window.questions[currentQuestionIndex].trim());
+    const params = extractJSONFromString(window.questions[currentQuestionIndex].trim()); 
+
+  // reset question weightage to 1
+    weightage = 1;
+  // reset ansExplanation to null
+    ansExplanation = null;
+    
+   if(!handleMCQ(question)) {
+   questionText.textContent = question;
+
+  
+// Show the buttons
+  correctBtn.style.display = 'block';
+  incorrectBtn.style.display = 'block';
+  partiallyCorrectBtn.style.display = 'block';
+
+}
+
+if(!pass) {
+timesMediaPlayed[currentQuestionIndex] = 0;
+timesPassed = 0;
+} else {
+timesPassed++;
+}
+
+// if params available
+
+if(params) {
+
+// set question weightage
+weightage = params['weightage'] || 1;
+
+// store explanation for correct answer, if available
+if(params['ansExplanation']) {
+  ansExplanation = params['ansExplanation'];
+}
+
+// if JSON params contain embedded media
+if(params['mediaEmbedded'] == 'audio' || params['mediaEmbedded'] == 'video' || params['mediaEmbedded'] == 'image') {
+    playClipBtn.style.display = "inline-block";
+    buttonsDiv.style.display = 'none';
+    playClipBtn.onclick = function() {
+
+// pause countdown
+    countdownPaused = true;
+
+// Cancel previous speech synthesis if there is an ongoing utterance
+    if (currentUtterance) {
+        speechSynthesis.cancel();
+    }
+
+playFunction(params['mediaEmbedded']);
+
+
+ setTimeout(function() {
+    playMedia(params['mediaEmbedded'], params['mediaLink'], params['startTime'], params['endTime']);
+}, 3500);
+
+
+
+   };
+
+} else {
+   playClipBtn.style.display = "none";
+   buttonsDiv.style.display = "block";
+}
+
+// if audio
+if(params['mediaEmbedded'] == 'audio') {
+    playClipBtn.innerText = "Play audio";
+}
+// else if video
+else if(params['mediaEmbedded'] == 'video') {
+    playClipBtn.innerText = "Play video";
+}
+// else if image
+else if(params['mediaEmbedded'] == 'image') {
+    playClipBtn.innerText = "Show image";
+}
+
+    
+} else {
+// if params not available or invalid JSON
+    playClipBtn.style.display = "none";
+    buttonsDiv.style.display = "block";
+}
+
+
+// if question is a passed one, and the media has been played at least once, do not hide the options in case of media based questions 
+
+if(pass && timesMediaPlayed[currentQuestionIndex] >= 1) {
+   buttonsDiv.style.display = "block";
+}
+
+
+// display question weightage or card weightage
+
+if(usecards != 'y') {
+document.getElementById('weightageText').innerText = '(question carries ' + weightage + (weightage > 1 ? ' points' : ' point') + ')';
+} else {
+document.getElementById('weightageText').innerText = '(question carries ' + cardWeightage + (cardWeightage > 1 ? ' points' : ' point') + ')';
+}
+
+
+saveSession(randomStudent.trim());
+
+    if(!pass) {
+        if(isFirst) {
+          speakUp("Let's start with our first question: " + questionText.textContent, 0.8);
+        } else {
+          speakUp("Next question: " + questionText.textContent, 0.8);
+        } 
+}
+else {
+    speakUp("Question passed", 0.8);
+}
+
+
+   
+} 
+
+else {
+
+selectedCard = null;
+    document.getElementById("pickCardBtn").style.display = 'block';
+    cardSelectionState = 'waiting';
+
+// display text: question will be shown after a card is picked
+questionText.innerText = "Question will be shown after you pick a card";
+
+// display text: question weightage will be shown later
+document.getElementById('weightageText').innerText = '(question weightage will depend on the card chosen)';
+
+// hide play Clip button
+playClipBtn.style.display = "none";
+
+// hide option buttons
+buttonsDiv.style.display = 'none';
+
+// temporarily hide correct, incorrect and partially correct buttons
+  correctBtn.style.display = 'none';
+  incorrectBtn.style.display = 'none';
+  partiallyCorrectBtn.style.display = 'none';
+
+
+  // set card weightage to null until a card is picked
+     cardWeightage = null;
+
+ // temporarily pause countdown while waiting for the student to pick a card
+     let countdownStateBeforeCardPick = countdownPaused;
+     countdownPaused = true;
+
+
+     selectedCard = await selectCard();
+         let newQuestionIndex = getRandomItemAndRemove(selectedCard);
+         currentQuestionIndex = newQuestionIndex;
+        
+      // change card state to 'selected'
+      cardSelectionState = 'selected';
+
+// hide the card select button once a card has been chosen
+    document.getElementById("pickCardBtn").style.display = 'none';
+
+// bring countdown back to the prior state
+    countdownPaused = countdownStateBeforeCardPick;
+
+
+// handling the question
+      
+    const question = extractStringBeforeJSON(window.questions[currentQuestionIndex].trim());
+    const params = extractJSONFromString(window.questions[currentQuestionIndex].trim()); 
+
+  // reset question weightage to 1
+    weightage = 1;
+  // reset ansExplanation to null
+    ansExplanation = null;
+    
+   if(!handleMCQ(question)) {
+   questionText.textContent = question;
+
+  
+// Show the buttons
+  correctBtn.style.display = 'block';
+  incorrectBtn.style.display = 'block';
+  partiallyCorrectBtn.style.display = 'block';
+
+}
+
+if(!pass) {
+timesMediaPlayed[currentQuestionIndex] = 0;
+timesPassed = 0;
+} else {
+timesPassed++;
+}
+
+// if params available
+
+if(params) {
+
+// set question weightage
+weightage = params['weightage'] || 1;
+
+// store explanation for correct answer, if available
+if(params['ansExplanation']) {
+  ansExplanation = params['ansExplanation'];
+}
+
+// if JSON params contain embedded media
+if(params['mediaEmbedded'] == 'audio' || params['mediaEmbedded'] == 'video' || params['mediaEmbedded'] == 'image') {
+    playClipBtn.style.display = "inline-block";
+    buttonsDiv.style.display = 'none';
+    playClipBtn.onclick = function() {
+
+// pause countdown
+    countdownPaused = true;
+
+// Cancel previous speech synthesis if there is an ongoing utterance
+    if (currentUtterance) {
+        speechSynthesis.cancel();
+    }
+
+playFunction(params['mediaEmbedded']);
+
+
+ setTimeout(function() {
+    playMedia(params['mediaEmbedded'], params['mediaLink'], params['startTime'], params['endTime']);
+}, 3500);
+
+
+
+   };
+
+} else {
+   playClipBtn.style.display = "none";
+   buttonsDiv.style.display = "block";
+}
+
+// if audio
+if(params['mediaEmbedded'] == 'audio') {
+    playClipBtn.innerText = "Play audio";
+}
+// else if video
+else if(params['mediaEmbedded'] == 'video') {
+    playClipBtn.innerText = "Play video";
+}
+// else if image
+else if(params['mediaEmbedded'] == 'image') {
+    playClipBtn.innerText = "Show image";
+}
+
+    
+} else {
+// if params not available or invalid JSON
+    playClipBtn.style.display = "none";
+    buttonsDiv.style.display = "block";
+}
+
+
+// if question is a passed one, and the media has been played at least once, do not hide the options in case of media based questions 
+
+if(pass && timesMediaPlayed[currentQuestionIndex] >= 1) {
+   buttonsDiv.style.display = "block";
+}
+
+
+// display question weightage or card weightage
+
+if(usecards != 'y') {
+document.getElementById('weightageText').innerText = '(question carries ' + weightage + (weightage > 1 ? ' points' : ' point') + ')';
+} else {
+document.getElementById('weightageText').innerText = '(question carries ' + cardWeightage + (cardWeightage > 1 ? ' points' : ' point') + ')';
+}
+
+
+
+
+}
+
+dataPickedFromCookie = false;
+
+}
+
+
+// fixes end
+
 
 
 
