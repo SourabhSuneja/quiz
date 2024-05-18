@@ -1122,7 +1122,12 @@ function displayTeamScoresAndChances() {
       // Create span for text and percentage
       var barText = document.createElement('span');
       barText.classList.add('bar-text');
-      barText.textContent = team.name + ': ' + team.percentage.toFixed(2) + '%';
+      barText.textContent = team.name + ': ' + parseFloat(team.percentage).toFixed(2);
+
+      if(usecards != 'y') {
+            barText.textContent += '%';
+      }
+
       bar.appendChild(barText);
       
       chartContainer.appendChild(bar);
@@ -2052,6 +2057,11 @@ console.log(percentage);
       var barText = document.createElement('span');
       barText.classList.add('bar-text');
       barText.textContent = student.name + ': ' + parseFloat(student.percentage).toFixed(2);
+
+      if(usecards != 'y') {
+            barText.textContent += '%';
+      }
+
       bar.appendChild(barText);
       
       chartContainer.appendChild(bar);
