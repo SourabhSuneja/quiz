@@ -2051,7 +2051,7 @@ console.log(percentage);
       // Create span for text and percentage
       var barText = document.createElement('span');
       barText.classList.add('bar-text');
-      barText.textContent = student.name + ': ' + student.percentage.toFixed(2) + '%';
+      barText.textContent = student.name + ': ' + parseFloat(student.percentage).toFixed(2);
       bar.appendChild(barText);
       
       chartContainer.appendChild(bar);
