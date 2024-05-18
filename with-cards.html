@@ -2029,6 +2029,7 @@ deleteQuizCookie();
       var percentage = (scores[student] / chances[student]) * 100;
       if(usecards == 'y') {
            percentage = (scores[student] / chances[student]).toFixed(2);
+console.log(percentage);
       }
       studentData.push({ name: student, percentage: percentage });
     }
