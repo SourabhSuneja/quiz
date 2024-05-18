@@ -680,12 +680,14 @@ function preloadAudio() {
     const image = new Audio();
     const correct = new Audio();
     const wrong = new Audio();
+    const pop = new Audio();
     
     audio.src = 'before-audio.mp3';
     video.src = 'before-video.mp3';
     image.src = 'before-image.mp3';
    correct.src = 'correct.wav';
    wrong.src = 'wrong.wav';
+   pop.src = 'pop.wav';
 
     // Preload the audio files
     audio.load();
@@ -693,6 +695,7 @@ function preloadAudio() {
     image.load();
     correct.load();
     wrong.load();
+    pop.load();
 
     function playAudio(type) {
         switch (type) {
@@ -701,6 +704,9 @@ function preloadAudio() {
                 break;
             case "wrong":
                 wrong.play();
+                break;
+            case "pop":
+                pop.play();
                 break;
             case "audio":
                 audio.play();
@@ -2935,6 +2941,7 @@ let activeIndex = -1;
       item.classList.remove('active');
       if (i === index) {
         item.classList.add('active');
+        playFunction('pop');
       }
     });
     
