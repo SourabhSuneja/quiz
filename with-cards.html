@@ -658,6 +658,68 @@ let qproceed;
 let selectedCard = null;
 
 
+// global constants
+const animationContainer = document.getElementById('animation-container');
+
+const congratulatoryWords = [
+    "Excellent job!",
+    "Well done!",
+    "Outstanding!",
+    "Brilliant!",
+    "Perfect!",
+    "Bravo!",
+    "You nailed it!",
+    "Superb!",
+    "Impressive!",
+    "Terrific!",
+    "Awesome!",
+    "Great work!",
+    "Phenomenal!",
+    "Remarkable!",
+    "Marvelous!",
+    "Exceptional!",
+    "Top-notch!",
+    "Splendid!",
+    "Magnificent!",
+    "Fantastic!",
+    "Spectacular!",
+    "Stellar!",
+    "Exceptional!",
+    "Incredible!",
+    "Remarkable!",
+    "Amazing!",
+    "Fabulous!",
+    "Astounding!",
+    "Ingenious!",
+    "Exemplary!",
+    "Astonishing!"
+];
+
+const encouragingWords = [
+    "Nice try! Better luck next time!",
+    "Don't give up!",
+    "Learning is about trying!",
+    "Mistakes help us grow!",
+    "Every mistake is progress!",
+    "Learning from mistakes is key!",
+    "It's okay, keep going!",
+    "You're learning with every try!",
+    "Progress is made step by step!",
+    "You're making strides!",
+    "Learning is a journey!",
+    "Every attempt counts!"
+];
+const partiallyCorrectWords = [
+    "Close, keep going!",
+    "Almost there!",
+    "You're halfway there!",
+    "You're making progress!",
+    "You're getting closer!",
+    "Not quite, but you're close!",
+    "Getting closer, keep trying!"
+];
+
+
 
 // function to capitalise first letter of each word
 function capitalizeEachWord(str) {
@@ -2636,53 +2698,6 @@ function handleMCQ(question) {
 
 
 // code to handle congratulatory or encouraging messages upon answering
-
-const animationContainer = document.getElementById('animation-container');
-
-const congratulatoryWords = [
-    "Excellent job!",
-    "Well done!",
-    "Outstanding!",
-    "Brilliant!",
-    "Perfect!",
-    "Bravo!",
-    "You nailed it!",
-    "Superb!",
-    "Impressive!",
-    "Terrific!",
-    "Awesome!",
-    "Great work!",
-    "Phenomenal!",
-    "Remarkable!",
-    "Marvelous!",
-    "Exceptional!",
-    "Top-notch!"
-];
-
-const encouragingWords = [
-    "Nice try! Better luck next time!",
-    "Don't give up!",
-    "Learning is about trying!",
-    "Mistakes help us grow!",
-    "Every mistake is progress!",
-    "Learning from mistakes is key!",
-    "It's okay, keep going!",
-    "You're learning with every try!",
-    "Progress is made step by step!",
-    "You're making strides!",
-    "Learning is a journey!",
-    "Every attempt counts!"
-];
-const partiallyCorrectWords = [
-    "Close, keep going!",
-    "Almost there!",
-    "You're halfway there!",
-    "You're making progress!",
-    "You're getting closer!",
-    "Not quite, but you're close!",
-    "Getting closer, keep trying!"
-];
-
 
     function showAnimation(isCorrect) {
 
