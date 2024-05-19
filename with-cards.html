@@ -889,6 +889,7 @@ async function checkQuizCookie() {
 if(getParameterByName('usecards') == 'y') {
                  deleteQuizCookie();
                  resolve(false);
+                 return;
             } 
             // Prompt the user with a dialog box
             var pickUp = confirm("The previous quiz session didn't complete properly. Do you want to pick up from where you left off?");
@@ -2933,6 +2934,7 @@ function triggerClick() {
 let activeIndex = -1;
 
   function activateCard(index) {
+    playFunction('pop');
     const carousel = document.querySelector('.carousel');
     const items = document.querySelectorAll('.carousel-item');
     
@@ -2941,7 +2943,6 @@ let activeIndex = -1;
       item.classList.remove('active');
       if (i === index) {
         item.classList.add('active');
-        playFunction('pop');
       }
     });
     
@@ -3085,7 +3086,7 @@ function filterCarouselItems() {
       // Remove hidden class
       item.classList.remove('hidden');
      // Specify number of questions remaining
-     item.querySelector('.cardQRemaining').innerText = cardIndices[cardValue].length + " questions remaining";
+     item.querySelector('.cardQRemaining').innerText = cardIndices[cardValue].length + (cardIndices[cardValue].length === 1 ? " question" : " questions") + " remaining";
     } else {
       // Add hidden class
       item.classList.add('hidden');
