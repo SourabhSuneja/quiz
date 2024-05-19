@@ -2405,7 +2405,7 @@ if(currentStudent != student) {
 
 
                 studentName.textContent = "Question for " + student;
-                document.getElementById('nameInsideCardPicker') = student;
+                document.getElementById('nameInsideCardPicker').textContent = student;
 resetCountdown();
                 document.body.removeChild(dialogBox); // Close dialog box
             });
