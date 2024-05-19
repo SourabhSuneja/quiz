@@ -1481,6 +1481,8 @@ const incorrectBtn = document.getElementById('incorrectBtn');
 
 const partiallyCorrectBtn = document.getElementById('partiallyCorrectBtn');
 
+const showAnsBtn = document.getElementById('showAnsBtn');
+
 
 
 if( (!pass && usecards == 'y') || (usecards == 'y' && pass && selectedCard == null) ) {
@@ -1496,6 +1498,9 @@ playClipBtn.style.display = "none";
 
 // hide option buttons
 buttonsDiv.style.display = 'none';
+
+// hide show answer button
+showAnsBtn.style.display = 'none';
 
    if(pass) {
      speakUp("Question passed", 0.8);
@@ -1557,10 +1562,11 @@ if(usecards == 'y' && pass) {
 }
 
 
-// temporarily hide correct, incorrect and partially correct buttons
+// temporarily hide correct, incorrect, partially correct and show answer buttons
   correctBtn.style.display = 'none';
   incorrectBtn.style.display = 'none';
   partiallyCorrectBtn.style.display = 'none';
+ showAnsBtn.style.display = 'none';
 
 
 // fetch a card if usecards is set to 'y' and card has not been chosen
@@ -1618,6 +1624,9 @@ saveSession(randomStudent.trim());
 
 }
 
+// show 'show answer' button
+showAnsBtn.style.display = 'block';
+
 if(!pass) {
 timesMediaPlayed[currentQuestionIndex] = 0;
 timesPassed = 0;
@@ -1641,6 +1650,7 @@ if(params['ansExplanation']) {
 if(params['mediaEmbedded'] == 'audio' || params['mediaEmbedded'] == 'video' || params['mediaEmbedded'] == 'image') {
     playClipBtn.style.display = "inline-block";
     buttonsDiv.style.display = 'none';
+    showAnsBtn.style.display = 'none';
     playClipBtn.onclick = function() {
 
 // pause countdown
@@ -1688,10 +1698,11 @@ else if(params['mediaEmbedded'] == 'image') {
 }
 
 
-// if question is a passed one, and the media has been played at least once, do not hide the options in case of media based questions 
+// if question is a passed one, and the media has been played at least once, do not hide the options and show answer button in case of media based questions 
 
 if(pass && timesMediaPlayed[currentQuestionIndex] >= 1) {
    buttonsDiv.style.display = "block";
+   showAnsBtn.style.display = 'block';
 }
 
 
@@ -2841,8 +2852,10 @@ function playMedia(mediaType, link, startTime = 0, endTime = 0) {
   function hideMediaContainer() {
     const container = document.getElementById('mediaContainer');
     const buttonsDiv = document.getElementById('optionBtnContainer');
+    const showAnsBtn = document.getElementById('showAnsBtn');
     container.style.display = 'none';
     buttonsDiv.style.display = 'block';
+    showAnsBtn.style.display = 'block';
     document.getElementById('audioText').style.display = 'none';
     if (player) {
       player.destroy();
