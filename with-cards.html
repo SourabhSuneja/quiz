@@ -284,7 +284,7 @@
       background-color: rgba(178, 16, 16, 1);
     }
 
-    .half-correct {
+    .half-correct, .answer {
       color: white;
       background-color: orange;
     }
@@ -507,6 +507,7 @@
     <button class="nonOptBtn" id="partiallyCorrectBtn">Partially correct</button>
     <button class="nonOptBtn" id="pickAnotherBtn">Pick another student</button>
     <button class="nonOptBtn" id="pauseBtn">Pause countdown</button>
+    <button class="nonOptBtn" id="showAnsBtn">Show answer</button>
     <button class="nonOptBtn" id="endBtn">End Quiz</button>
     <button id="scoresButton">Scores</button>
 
@@ -1414,6 +1415,8 @@ document.getElementById("partiallyCorrectBtn").addEventListener("click", answere
 
 document.getElementById("pauseBtn").addEventListener("click", pauseCountdown);
 
+document.getElementById("showAnsBtn").addEventListener("click", showAnswer);
+
 document.getElementById("endBtn").addEventListener("click", displayScores);
 
 document.getElementById("quizTitle").textContent = title || 'Quiz';
@@ -1813,6 +1816,25 @@ function pickRandomStudentFromTeam() {
 
 
 
+
+// Function to display correct answer and proceed to next question
+  function showAnswer() {
+    playFunction('pop');
+    showAnswerAnimation();
+    var text = document.getElementById('studentName').textContent;
+
+var index = text.indexOf('for');
+
+const currentStudent = text.substring(index + 4);
+
+
+    if (chances[currentStudent] === undefined) {
+      chances[currentStudent] = 1;
+    } else {
+      chances[currentStudent]++;
+    }
+    nextQuestion();
+  }
 
 
   // Function to handle correct answer
@@ -2698,12 +2720,50 @@ if (isCorrect === 0.5) {
       animationContainer.innerHTML = '';
       animationContainer.appendChild(animationDiv);
       animationContainer.style.display = 'block';
-
       
     }
 
 
 
+function showAnswerAnimation() {
+
+     // disable all non-option buttons while the animation is displayed on the screen
+    const nonOptBtns = document.querySelectorAll('.nonOptBtn');
+    nonOptBtns.forEach(function(button) {
+    button.disabled = true;
+    });
+
+
+      const animationDiv = document.createElement('div');
+      animationDiv.textContent = '';
+
+      if(correctAnsAvailable) {
+        animationDiv.textContent = 'The correct answer is: ' + correctAnsAvailable;
+      } 
+
+      if(ansExplanation) {
+             animationDiv.innerHTML += "<br>" + ansExplanation;
+        }
+
+      if(!correctAnsAvailable && !ansExplanation) {
+        animationDiv.textContent = "I'm sorry. No correct answer or explanation was provided to me for this question.";
+      } 
+
+      
+      animationDiv.classList.add('animation');
+      animationDiv.classList.add('answer');
+
+   // add class animation-fs-reduced in case the length of the explanation is too long, so as to make it adjust on small screens
+
+   if (animationDiv.textContent.length > 120) {
+  animationDiv.classList.add('animation-fs-reduced');
+}
+
+      animationContainer.innerHTML = '';
+      animationContainer.appendChild(animationDiv);
+      animationContainer.style.display = 'block';
+
+    }
 
 
 
