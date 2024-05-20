@@ -102,6 +102,17 @@ select:focus, textarea:focus {
     <h2>Question Data Generator</h2>
     <p class="subtitle">Powered by Sourabh Suneja</p>
     <form id="questionForm">
+        <label for="question-type">Question Type:</label>
+    <select id="question-type" name="question-type">
+        <option value="MCQ" selected>MCQ</option>
+        <option value="Fill up">Fill up</option>
+        <option value="True/False">True/False</option>
+        <option value="Very Short Answer Type">Very Short Answer Type</option>
+        <option value="Short Answer Type">Short Answer Type</option>
+        <option value="Long Answer Type">Long Answer Type</option>
+        <option value="Very Long Answer Type">Very Long Answer Type</option>     
+    </select>
+
         <label for="question">Enter Question:</label>
         <input type="text" id="question" name="question">
         <label for="option1">Option 1:</label>
