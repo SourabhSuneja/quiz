@@ -267,6 +267,40 @@ function parseJSONData() {
         if (option3 !== '') correctOptionDropdown.innerHTML += `<option value="C">C. ${option3}</option>`;
         if (option4 !== '') correctOptionDropdown.innerHTML += `<option value="D">D. ${option4}</option>`;
     }
+
+
+// script to automatically determine the question type (might make mistakes, please double check before adding questions
+document.getElementById("option1").addEventListener("blur", handleInputChange);
+document.getElementById("ans-explanation").addEventListener("input", handleInputChange);
+
+function handleInputChange() {
+    const option1 = document.getElementById("option1").value;
+    const question = document.getElementById("question").value;
+    const ansExplanation = document.getElementById("ans-explanation").value;
+    const questionTypeSelect = document.getElementById("question-type");
+
+    if (option1.trim() !== "") {
+        questionTypeSelect.value = "MCQ";
+    } else if (question.match(/_{3,30}/)) {
+        questionTypeSelect.value = "Fill up";
+    } else if (question.match(/\btrue\b/i) && question.match(/\bfalse\b/i)) {
+        questionTypeSelect.value = "True/False";
+    } else {
+        const wordCount = ansExplanation.trim().split(/\s+/).length;
+
+        if (wordCount <= 10) {
+            questionTypeSelect.value = "Very Short Answer Type";
+        } else if (wordCount <= 30) {
+            questionTypeSelect.value = "Short Answer Type";
+        } else if (wordCount <= 120) {
+            questionTypeSelect.value = "Long Answer Type";
+        } else {
+            questionTypeSelect.value = "Very Long Answer Type";
+        }
+    }
+}
+
+
 </script>
 
 </body>
