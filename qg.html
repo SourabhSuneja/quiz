@@ -191,6 +191,7 @@ function parseJSONData() {
     var endTime = (endTimeInput !== "") ? parseInt(endTimeInput) : 0;
 
     var formData = {
+        "qType": document.getElementById("question-type").value,
         "weightage": weightage,
         "ansExplanation": ansExplanation,
         "mediaEmbedded": document.getElementById("media-type").value,
