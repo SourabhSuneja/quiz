@@ -272,6 +272,7 @@ function parseJSONData() {
 // script to automatically determine the question type (might make mistakes, please double check before adding questions
 document.getElementById("option1").addEventListener("blur", handleInputChange);
 document.getElementById("ans-explanation").addEventListener("input", handleInputChange);
+document.getElementById("question").addEventListener("input", handleInputChange);
 
 function handleInputChange() {
     const option1 = document.getElementById("option1").value;
