@@ -188,7 +188,7 @@ function parseJSONData() {
     var weightageInput = document.getElementById("points").value;
     var startTimeInput = document.getElementById("start-time").value;
     var endTimeInput = document.getElementById("end-time").value;
-    var ansExplanation = document.getElementById("ans-explanation").value.trim();
+    var ansExplanation = addHtmlLineBreaks(document.getElementById("ans-explanation").value.trim());
     
 
     var weightage = (weightageInput !== "") ? parseFloat(weightageInput) : 1;
@@ -211,7 +211,7 @@ function parseJSONData() {
 
 
     function addQuestion() {
-        const question = document.getElementById('question').value.trim();
+        const question = addHtmlLineBreaks (document.getElementById('question').value.trim());
         const option1 = document.getElementById('option1').value.trim();
         const option2 = document.getElementById('option2').value.trim();
         const option3 = document.getElementById('option3').value.trim();
