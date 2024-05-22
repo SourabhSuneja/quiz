@@ -285,7 +285,7 @@ function handleInputChange() {
         questionTypeSelect.value = "MCQ";
     } else if (question.match(/_{3,30}/)) {
         questionTypeSelect.value = "Fill up";
-    } else if (question.match(/\btrue\b/i) && question.match(/\bfalse\b/i)) {
+    } else if ((question.match(/\btrue\b/i) && question.match(/\bfalse\b/i)) || /^(true|false|t|f)$/i.test(ansExplanation)) {
         questionTypeSelect.value = "True/False";
     } else {
         const wordCount = ansExplanation.trim().split(/\s+/).length;
