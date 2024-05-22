@@ -178,6 +178,11 @@ select:focus, textarea:focus {
     return (optionString.replace(regex, '')).trim();
 }
 
+// function to replace line breaks with <br> tags
+function addHtmlLineBreaks(inputString) {
+    return inputString.replace(/\n/g, "<br>");
+}
+
 
 function parseJSONData() {
     var weightageInput = document.getElementById("points").value;
