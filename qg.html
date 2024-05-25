@@ -70,6 +70,17 @@ select:focus, textarea:focus {
         button:hover {
             background-color: #45a049;
         }
+        #question-type-container {
+            position: relative;
+            top: 0;
+            width: 100%;
+            background: white;
+        }
+        .sticky-container {
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
         #questionList {
             margin-top: 20px;
             padding: 10px;
@@ -93,41 +104,92 @@ select:focus, textarea:focus {
         #copyButton:hover {
             background-color: #45a049;
         }
+        #animation-container {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      margin-top: 5px;
+      transform: translateX(-50%);
+      width: 98%;
+      max-width: 600px
+      display: none;
+      z-index: 9999;
+    }
 
+    @keyframes pop-up {
+      0% {transform: scale(0) translateY(20px);}
+      50% {transform: scale(1.1) translateY(-10px);}
+      100% {transform: scale(1) translateY(0);}
+    }
+
+    .animation {
+      animation: pop-up 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      font-size: 18px;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      border-radius: 3px;
+      padding: 12px;
+      box-shadow: 0px 0px 20px rgba(0,0,0,0.3);
+      color: white;
+      text-align: center;
+    }
+    .green {
+      background: #158a17;
+    }
+    .red {
+      background: rgba(178, 16, 16, 1);
+    }
+    #match-columns-container {
+      display: none;
+    }
     </style>
 </head>
 <body>
-
+<div id="animation-container"></div>
 <div class="container">
-    <h2>Question Data Generator</h2>
+    <h2 id="heading">Question Data Generator</h2>
     <p class="subtitle">Powered by Sourabh Suneja</p>
     <form id="questionForm">
+     <div id="question-type-container">
         <label for="question-type">Question Type:</label>
     <select id="question-type" name="question-type">
         <option value="MCQ" selected>MCQ</option>
         <option value="Fill up">Fill up</option>
         <option value="True/False">True/False</option>
+        <option value="Match items">Match items</option>
         <option value="Very Short Answer Type">Very Short Answer Type</option>
         <option value="Short Answer Type">Short Answer Type</option>
         <option value="Long Answer Type">Long Answer Type</option>
         <option value="Very Long Answer Type">Very Long Answer Type</option>     
     </select>
+   </div>
 
         <label for="question">Enter Question:</label>
-        <input type="text" id="question" name="question">
-        <label for="option1">Option 1:</label>
-        <input type="text" id="option1">
-        <label for="option2">Option 2:</label>
-        <input type="text" id="option2">
-        <label for="option3">Option 3:</label>
-        <input type="text" id="option3">
-        <label for="option4">Option 4:</label>
-        <input type="text" id="option4">
-        <label for="correctOption">Correct Option:</label>
-        <select id="correctOption" name="correctOption" onfocus="populateCorrectOptionDropdown()"></select>
+        <textarea id="question" name="name" rows="2"></textarea>
+        <label for="option1" class="options">Option 1:</label>
+        <input class="options" type="text" id="option1">
+        <label for="option2" class="options">Option 2:</label>
+        <input class="options" type="text" id="option2">
+        <label for="option3" class="options">Option 3:</label>
+        <input class="options" type="text" id="option3">
+        <label for="option4" class="options">Option 4:</label>
+        <input class="options" type="text" id="option4">
+        <label for="correctOption" class="options">Correct Option:</label>
+        <select class="options" id="correctOption" name="correctOption" onfocus="populateCorrectOptionDropdown()"></select>
+
+       <div id="match-columns-container">
+         <label for="columnA-heading">Column A Heading</label>
+        <input type="text" id="columnA-heading">
+         <label for="match-columnA">Column A Items (one item per line):</label>
+         <textarea id="match-columnA" name="match-columnA" rows="5"></textarea>
+        <label for="columnB-heading">Column B Heading</label>
+        <input type="text" id="columnB-heading">
+        <label for="match-columnB">Column B Items (one item per line, correctly matching with column A items positionally):</label>
+        <textarea id="match-columnB" name="match-columnB" rows="5"></textarea>
+       </div>
 
 
-       <label for="ans-explanation">Explanation for correct answer (optional):</label>
+       <label id="ans-explanation-label" for="ans-explanation">Explanation or correct answer (for non-MCQs):</label>
     <textarea id="ans-explanation" name="ans-explanation" rows="4"></textarea>
 
 
@@ -165,7 +227,7 @@ select:focus, textarea:focus {
 
         <button type="button" onclick="addQuestion()">Add Question</button>
     </form>
-    <div id="questionList"></div>
+    <div contenteditable="true" id="questionList"></div>
     <button id="copyButton" onclick="copyQuestions()">Copy Text Data</button>
 </div>
 
@@ -189,14 +251,22 @@ function parseJSONData() {
     var startTimeInput = document.getElementById("start-time").value;
     var endTimeInput = document.getElementById("end-time").value;
     var ansExplanation = addHtmlLineBreaks(document.getElementById("ans-explanation").value.trim());
-    
+    var qType = document.getElementById("question-type").value;
+    var errorFlag = '';
+
+    // for match items questions
+    var colAHeading = document.getElementById("columnA-heading").value.trim();
+    var colBHeading = document.getElementById("columnB-heading").value.trim();
+    var colAItems = document.getElementById('match-columnA').value.split('\n').map(item => item.trim()).filter(item => item !== '');
+    var colBItems = document.getElementById('match-columnB').value.split('\n').map(item => item.trim()).filter(item => item !== '');
+
 
     var weightage = (weightageInput !== "") ? parseFloat(weightageInput) : 1;
     var startTime = (startTimeInput !== "") ? parseInt(startTimeInput) : 0;
     var endTime = (endTimeInput !== "") ? parseInt(endTimeInput) : 0;
 
     var formData = {
-        "qType": document.getElementById("question-type").value,
+        "qType": qType,
         "weightage": weightage,
         "ansExplanation": ansExplanation,
         "mediaEmbedded": document.getElementById("media-type").value,
@@ -206,12 +276,44 @@ function parseJSONData() {
         "card": parseInt(document.getElementById("card-value").value)
     };
 
+    // attach additional JSON params for different types of questions
+    if(qType == 'Match items') {
+
+        if(!colAHeading) {
+            errorFlag = new Error("Please provide a heading for Column A");
+        }
+        else if(!colBHeading) {
+            errorFlag = new Error("Please provide a heading for Column B");
+        }
+        else if(!Array.isArray(colAItems) || colAItems.length === 0) {
+            errorFlag = new Error("Please provide items for Column A");
+        }
+        else if(!Array.isArray(colBItems) || colBItems.length === 0) {
+            errorFlag = new Error("Please provide items for Column B");
+        }
+        else if(colAItems.length !== colBItems.length) {
+            errorFlag = new Error("The number of items provided for match columns don't match");
+        }
+
+        if(errorFlag instanceof Error) {
+              return errorFlag;
+           }
+
+        formData['matchCols'] = {
+            [colAHeading]: colAItems,
+            [colBHeading]: colBItems
+        }
+    }
+
+
     return JSON.stringify(formData);
 }
 
 
     function addQuestion() {
-        const question = addHtmlLineBreaks (document.getElementById('question').value.trim());
+        const question = document.getElementById('question').value.trim();
+        const parsedJSONData = parseJSONData();
+        const qType = document.getElementById('question-type').value;
         const option1 = document.getElementById('option1').value.trim();
         const option2 = document.getElementById('option2').value.trim();
         const option3 = document.getElementById('option3').value.trim();
@@ -220,19 +322,20 @@ function parseJSONData() {
         var correctOption;
         
         if (question === '') {
-            alert('Please enter a question.');
+            showAnimation("Please enter a question!", "red");
             return;
         }
 
-        let questionText = question;
-        if (option1 !== '' || option2 !== '' || option3 !== '' || option4 !== '') {
+
+        let questionText = addHtmlLineBreaks(question);
+        if ((option1 !== '' || option2 !== '' || option3 !== '' || option4 !== '') && qType == 'MCQ') {
 
            try {
              const correctOptionWithChoiceMarker = selectBox.options[selectBox.selectedIndex].text.trim();
              correctOption = correctOptionWithChoiceMarker.replace(/^[A-D]\)\s*/, "");
              correctOption = removeOptionLetter(correctOption);
           } catch (error) {
-             alert("Please provide the correct answer for this question.");
+             showAnimation("Please provide the correct option for this question", "red");
              return;
           }
 
@@ -244,11 +347,27 @@ function parseJSONData() {
             questionText += ` Correct: ${correctOption})`;
         }
 
+
+        // if any error in JSON Params
+        if(parsedJSONData instanceof Error) {
+             showAnimation(parsedJSONData, "red");
+            return;
+        }
+
+
         const questionList = document.getElementById('questionList');
-        questionList.textContent += questionText + 'JSONParams:' + parseJSONData() + '\n';
+        questionList.textContent += questionText + 'JSONParams:' + parsedJSONData + '\n';
 
         // Clear form fields
         document.getElementById('questionForm').reset();
+        // show Question Added message
+       showAnimation("Question (" + qType +  ") added!", "green");
+        // scroll back to the top
+        window.scrollTo({
+  top: 0,
+  behavior: 'smooth' // Optional: adds smooth scrolling effect
+});
+       
     }
 
     function copyQuestions() {
@@ -276,7 +395,7 @@ function parseJSONData() {
 
 
 // script to automatically determine the question type (might make mistakes, please double check before adding questions
-document.getElementById("option1").addEventListener("blur", handleInputChange);
+document.getElementById("option1").addEventListener("input", handleInputChange);
 document.getElementById("ans-explanation").addEventListener("input", handleInputChange);
 document.getElementById("question").addEventListener("input", handleInputChange);
 
@@ -285,6 +404,11 @@ function handleInputChange() {
     const question = document.getElementById("question").value;
     const ansExplanation = document.getElementById("ans-explanation").value;
     const questionTypeSelect = document.getElementById("question-type");
+
+
+    if(questionTypeSelect.value === 'Match items') {
+        return;
+    }
 
     if (option1.trim() !== "") {
         questionTypeSelect.value = "MCQ";
@@ -306,6 +430,76 @@ function handleInputChange() {
         }
     }
 }
+
+// function to show animated messages on top
+function showAnimation(message, color) {
+  const animationContainer = document.getElementById('animation-container');
+  animationContainer.innerHTML = '';
+  const animationDiv = document.createElement('div');
+  animationDiv.textContent = message;
+  animationDiv.classList.add(color);
+  animationDiv.classList.add('animation');
+  animationContainer.appendChild(animationDiv);
+  animationContainer.style.display = 'block';
+  setTimeout(function() {
+    animationContainer.style.display = 'none';
+}, 3000);
+  
+}
+
+// event listener to handle event when question type is changed
+document.getElementById("question-type").addEventListener("change", function() {
+    var selectedOption = this.value;
+    var question = document.getElementById('question');
+    var matchContainer = document.getElementById('match-columns-container');
+    if (selectedOption === "Match items") {
+        // auto-set question text as "Match the following:"
+        question.value = "Match the following:";
+        // show columns text areas
+        matchContainer.style.display = "block";
+        // hide options input fields
+        var options = document.getElementsByClassName("options");
+        for (var i = 0; i < options.length; i++) {
+            options[i].style.display = "none";
+        }
+        // also hide ans explanation box and label
+        document.getElementById('ans-explanation-label').style.display = 'none';
+        document.getElementById('ans-explanation').style.display = 'none';
+    } else {
+        var options = document.getElementsByClassName("options");
+        for (var i = 0; i < options.length; i++) {
+            options[i].style.display = "block";
+        }
+        // hide columns text areas
+        matchContainer.style.display = "none";
+        document.getElementById('ans-explanation-label').style.display = 'block';
+        document.getElementById('ans-explanation').style.display = 'block';
+    }
+});
+
+
+
+// code to make question type select box stick at the top when scrolled out of view
+window.addEventListener('scroll', function() {
+    var sticky = document.getElementById('question-type-container');
+    var heading = document.getElementById('heading');
+    var stickyPosition = sticky.getBoundingClientRect().top;
+    var windowHeight = window.innerHeight;
+    
+    if (stickyPosition <= 0) {
+      sticky.style.position = 'fixed';
+      sticky.style.top = '0';
+      sticky.style.left = '0';
+      sticky.maxWidth = '558px';
+      sticky.classList.add('sticky-container');
+    } 
+    if (window.scrollY === 0) {
+      sticky.style.position = 'relative';
+      sticky.style.top = '0';
+      sticky.maxWidth = 'none';
+      sticky.classList.remove('sticky-container');
+    }
+  });
 
 
 </script>
