@@ -298,12 +298,21 @@ function parseJSONData() {
         if(errorFlag instanceof Error) {
               return errorFlag;
            }
-
+        // attach col items with JSON
         formData['matchCols'] = {
             [colAHeading]: colAItems,
             [colBHeading]: colBItems
-        }
+        };
+        // attach col names with JSON
+        formData['colHeadings'] = [
+            colAHeading,
+            colBHeading
+        ];
+
+
     }
+        
+        
 
 
     return JSON.stringify(formData);
