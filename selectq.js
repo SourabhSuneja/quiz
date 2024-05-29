@@ -1,21 +1,27 @@
 // global variables & constants
 let chapterNames;
 let chapterStartPoints;
+let questions;
+let mergedQuestions = {};
 
 // mapping card values with difficulty levels
 const difficultyLevels = { "easy": [10, 25], "medium": [50, 75], "hard": [100] };
 
+// mergeable question types
+const mergeableQTypes = ['Match items'];
+
 // question paper map
 const questionPaperMap = {
     "gk": {
-        "MCQ": 10,
+        "MCQ": 6,
         "Very Short Answer Type": 10,
         "Short Answer Type": 10,
         "Long Answer Type": 10,
         "True/False": 10,
         "Fill up": 10,
+        "Match items": 9999,
         "audio": false,
-        "image": false,
+        "image": true,
         "video": false
     },
     "ch-2": {
@@ -38,46 +44,59 @@ const qContainers = {
     ],
     qTypes: [
                  {
-                      "MCQ": 4,
-                      "Fill up": 1,
-                      "True/False": 0
+                      "MCQ": 0,
+                      "Fill up": 0,
+                      "True/False": 0,
+                      "Match items": 5
                  },
                  {
-                      "True/False": 4,                
+                      "True/False": 0, "Match items": 2             
                  },
                  {
-                      "Short Answer Type": 3,                
+                      "Short Answer Type": 2,                
+                      "True/False": 2,   "Match items": 0
                  },
                  {
-                      "Fill up": 5,                
+                      "Fill up": 4,      
+"Match items": 0          
                  },
     ],
     weightPerQ: [
                  {
                       "MCQ": 1,
                       "Fill up": 1,
-                      "True/False": 1
-                      
+                      "True/False": 1,
+                      "Match items": 1
                  },
                  {
-                      "True/False": 1,             
+                      "True/False": 1,              "Match items": 1
                  },
                  {
                       "Short Answer Type": 2,             
+                      "True/False": 1, "Match items": 1
                  },
                  {
-                      "Fill up": 1,             
+                      "Fill up": 1,            "Match items": 1 
                  },
     ],
     settings: {
-          randomiseSelection: false,
+          randomiseSelection: true,
           editable: false,
           hideWeightage: false,
           border: false,
           shuffleMCQOptions: true,
-          provideAnsOrSpace: "none",
+          provideAnsOrSpace: "ans",
           useDotPatternInBlanks: true,
           showHelpBoxInFillUp: true,
+          mergeMatchItems: false,
+          convertQForm: {
+             "MCQ": true,
+             "Fill up": true
+          },
+          convertRate: {
+             "MCQ": 0.5,
+             "Fill up": 0.2
+          },
           spaceForAns: {
               "True/False": 1,
               "Very Short Answer Type": 1,
@@ -88,14 +107,15 @@ const qContainers = {
              "MCQ",
              "Short Answer Type",
              "Fill up",
-             "True/False"
+             "True/False",
+             "Match items"
           ]
     }
 };
 
 
 // overall difficulty level of question paper
-const overallDifficulty = "easy";
+const overallDifficulty = "hard";
         
 // Function to fetch data from a file using AJAX and return a promise
 
@@ -262,7 +282,7 @@ function findCommonElements(...arrays) {
 // function to filter out items from array1 that exist in array2 until array1 has reached a specified minimum length
 function filterArray(array1, array2, minLen) {
 
-    if(array1.length === minLen) {
+    if(array1.length <= minLen) {
         return array1;
     }
     
@@ -342,7 +362,7 @@ function pickItemsAlternately(arr) {
 // function to filter questions based on supplied overall difficulty level for question paper
 function filterOnDifficultyLevel(q, overallDifficulty, numQuesReq, uniqueCardIndices, cardIndexMap) {
 
-  // sort card values based on difficult level demanded
+  // sort card values based on difficulty level demanded
   if(overallDifficulty == "easy") {
     uniqueCardIndices.sort((a, b) => b - a);
   }
@@ -378,7 +398,7 @@ function extractStringBeforeJSON(inputString) {
 async function start() {
 
   // fetch all questions from all files
-  let questions = await fetchMultipleFilesData("gk");
+  questions = await fetchMultipleFilesData("gk");
 
   // get total count of each type of questions on the basis of question paper map
   let totalQOfEachType = countEachQuestionType(questionPaperMap)
@@ -406,6 +426,10 @@ async function start() {
   // select questions
   const selectedQMap = selectQuestions(questions, chapterNames, chapterIndexMap, cardIndexMap, qTypeIndexMap, mediaEmbeddedIndexMap, totalQOfEachType, questionPaperMap, overallDifficulty, uniqueCardIndices, uniqueQTypeIndices,  qContainers['settings']['qTypesAllowedInImageQ']);
 
+// merge all match based questions
+selectedQMap['Match items']  = mergeMatchItems(questions, selectedQMap['Match items']);
+
+// fill questions in the DOM elements
 fillQuestions(selectedQMap, questions, qContainers);
 
 
@@ -415,7 +439,7 @@ fillQuestions(selectedQMap, questions, qContainers);
 // function to select questions based on supplied criteria
 function selectQuestions(questions, chapterNames, chapterIndexMap, cardIndexMap, qTypeIndexMap, mediaEmbeddedIndexMap, totalQOfEachType, questionPaperMap, overallDifficulty, uniqueCardIndices, uniqueQTypeIndices,  allowedQTypesForImages) {
 
-  // array holding selected questions
+  // object holding indices of selected questions of different types
   let selected = {};
 
 
@@ -493,6 +517,172 @@ function selectQuestions(questions, chapterNames, chapterIndexMap, cardIndexMap,
 
 return selected;
 } // End of function selectQuestions
+
+
+
+// function to merge match items questions (if allowed) and "package" them into a single question string with merged JSON params
+function mergeMatchItems(questions, matchItemsMap) {
+
+    // if no selected match based questions, return back
+    if(matchItemsMap.length === 0) {
+          return;
+    }
+
+    // sort map first, to achieve least question deficit in case merging isn't allowed   
+
+matchItemsMap = sortMergeableForLeastDeficit(matchItemsMap, 'Match items');
+
+    const mergedObj = {
+            "qType": "Match items",
+            "ansExplanation": "",
+            "mediaEmbedded": [],
+            "mediaLink": [],
+            "questions": [],
+            "colAHeadings": [],
+            "colBHeadings": [],
+            "breakpoints": [],
+            "colA": [],
+            "colB": [],
+            "pointer": 0
+    };
+    // fetch match items questions one by one, extract the relevant parameters and push them into the merged object
+
+    while(matchItemsMap.length > 0) {
+        const index = matchItemsMap[0];
+        const q = questions[index];
+        const JSONPart = extractJSONFromString(q);
+        const textPart = extractStringBeforeJSON(q);
+        const colAHeading = JSONPart['colHeadings'][0];
+        const colBHeading = JSONPart['colHeadings'][1];
+        // push items
+        mergedObj['mediaEmbedded'].push(JSONPart['mediaEmbedded']);
+        mergedObj['mediaLink'].push(JSONPart['mediaLink']);
+        mergedObj['questions'].push(textPart);
+
+        mergedObj['colAHeadings'].push(colAHeading);
+        mergedObj['colBHeadings'].push(colBHeading);
+        mergedObj['colA'].push(...(JSONPart['matchCols'][colAHeading]));
+        mergedObj['colB'].push(...(JSONPart['matchCols'][colBHeading]));
+        mergedObj['breakpoints'].push(mergedObj['colA'].length);
+        // clear index from Match items map
+        matchItemsMap.splice(0, 1);
+    }
+
+    // store new mergedObj in the mergedQuestions global object 
+    mergedQuestions['Match items'] = "JSONParams:" + JSON.stringify(mergedObj) ;
+
+    // insert a dummy value in the match items map, so that it doesn't look like there are no such questions, when used in other functions
+    matchItemsMap.push(-1);
+    return matchItemsMap;
+    
+
+}
+
+
+// function to sort the indices of mergeable questions (such as Match items) in the order they should be inserted to achieve least question deficit while filling questions in containers (in case, merging is not allowed). The questions will still be merged and stored as a single merged string but the questions will be filled as if they were never merged. 
+function sortMergeableForLeastDeficit(indexMap, qType) {
+
+    const oldIndexMap = [...indexMap];
+    const newIndexMap = [];
+    const array = qContainers['qTypes'];
+    let basisArray;
+    let diffArray = [];
+    let diffMatrix = [];
+    
+    for(let j = 0; j < array.length; j++) {
+
+     if(array[j][qType]) {
+        const qReq = array[j][qType] || 0;
+        diffArray = [];
+        
+        // looping through map indices
+         for(let i = 0; i < oldIndexMap.length; i++) {
+               let qIndex = oldIndexMap[i];
+               let q = questions[qIndex];
+               let params = extractJSONFromString(q);
+
+// get basis array
+               if(qType === 'Match items') {
+                   const colName = params['colHeadings'][0]; 
+                   basisArray = params['matchCols'][colName];
+               }
+
+               // find length of basis array and difference from qReq
+               const basisLen = basisArray.length;
+               const diff =  basisLen - qReq;
+                diffArray.push(diff);
+         }
+         // inner loop ends
+         diffMatrix.push(diffArray);
+     }
+    }
+    // outer for loop ends
+    let replacementIndices = extractReplacementIndicesFromMatrix(diffMatrix, indexMap.length);
+
+
+   // loop through replacement index and create a new map for returning
+    replacementIndices.forEach((i) => {
+
+        newIndexMap.push(indexMap[i]);
+
+    });
+    
+    return newIndexMap;
+}
+// function ends
+
+
+
+// helper function for merging
+function extractReplacementIndicesFromMatrix(matrix, indicesReq) {
+  const replacementIndices = [];
+  const lastMatrixArr = matrix[matrix.length - 1];
+
+  for(let j = 0; j < indicesReq; j++) {
+
+    // pick an array from matrix
+    let arr = matrix[j] || lastMatrixArr;
+
+    // replace items at indices which have already been utilised with -999999 (huge enough negative number)
+
+    arr = arr.map((item, index) => replacementIndices.includes(index) ? -999999 : item);
+
+    let sortedArr = sortForMinDiff(arr);
+
+   //pick the index of the first item (least difference item) from the sorted array and push it into replacementIndices if settings don't allow randomized selection or it is not the last array in the matrix. Otherwise, randomly pick any non-negative item from the sorted diff array
+
+    if(qContainers['settings']['randomiseSelection'] && j === matrix.length - 1) {
+
+        let nonNegativeItem = sortedArr.filter(item => item >= 0)[Math.floor(Math.random() * sortedArr.filter(item => item >= 0).length)];
+        replacementIndices.push(arr.indexOf(nonNegativeItem));
+
+    } else {
+
+    replacementIndices.push(arr.indexOf(sortedArr[0]));
+    }
+
+    
+  }
+  // matrix loop ends
+  return replacementIndices;
+}
+// function ends
+
+
+// helper function for sorting a difference array so that min difference elements are more likely to be picked
+function sortForMinDiff(array) {
+  
+  // separate positive and negative numbers
+  let pos = array.filter(item => item >= 0);
+  let neg = array.filter(item => item < 0);
+
+  // sort and combine
+  pos.sort((a, b) => a - b);
+  neg.sort((a, b) => b - a);
+  const newArr = [...pos, ...neg];
+  
+  return newArr;
+}
 
 
 
