@@ -2,17 +2,52 @@
 const examDetails = {
   "schoolName": "Jamna Vidyapeeth",
   "schoolLogo": "https://i.postimg.cc/Y0qB2Wyc/images-2024-05-21-T183208-408.jpg",
-  "examName": "Periodic Test - I",
-  "subject": "Computer",
+  "examName": "Periodic Test - I (2024-25)",
+  "subject": "GK",
   "grade": "VIII",
-  "maxMarks": 20,
   "date": "2.05.24",
-  "durationHrs": "1"
+  "duration": "90"
+}
+
+// function to fill paper header
+function fillHeader() {
+  const schoolName = document.getElementById('schoolName');
+  const examName = document.getElementById('examName');
+  const grade = document.getElementById('grade');
+  const subject = document.getElementById('subject');
+  const logo = document.getElementById('logo');
+  const duration = document.getElementById('duration');
+  const mm = document.getElementById('mm');
+  schoolName.textContent = examDetails['schoolName'];
+  examName.textContent = examDetails['examName'];
+  subject.textContent = "Subject: " + examDetails['subject'];
+  grade.textContent = "Class " + examDetails['grade'];
+  logo.src = examDetails['schoolLogo'];
+  duration.innerHTML = "Time: " +  convertMinutesToHours(parseInt(examDetails['duration']))
+}
+
+// function to convert mins to hours
+function convertMinutesToHours(minutes) {
+    if (minutes >= 60) {
+        var hours = Math.floor(minutes / 60);
+        var remainingMinutes = minutes % 60;
+        var hourString = hours > 1 ? "hours" : "hour";
+        if (remainingMinutes === 0) {
+            return hours + " " + hourString;
+        } else {
+            return hours + " " + hourString + " " + remainingMinutes + " minutes";
+        }
+    } else {
+        return minutes + " minutes";
+    }
 }
 
 // function to populate table with selected questions
 function fillQuestions(selectedQMap, questions, qContainers) {
   let outerQuestionCounter = 1;
+
+  // populate question paper header
+  fillHeader();
   
   // fetch table element
   let table = document.getElementById("qTable");
@@ -20,15 +55,13 @@ function fillQuestions(selectedQMap, questions, qContainers) {
   // array holding weightages of all containers
   const containerWeights = [];
 
-  // variable to keep track of questions inserted in the container (to find shortfall later on)
-  let quesInsertedInContainer;
 
   // loop through all headings of qContainers
   for(let i = 0; i < qContainers['headings'].length;  i++) {
     let containerHeading = qContainers['headings'][i];
     let weightageText = "";
     let innerQuestionCounter = 1;
-    quesInsertedInContainer = 0;
+    
     // Create a new table row
     let tr = document.createElement("tr");
 
@@ -55,6 +88,11 @@ function fillQuestions(selectedQMap, questions, qContainers) {
               qTypeInCaseOfOneQ = key;
         }
 
+    }
+
+    // if questions required for this container is 0, continue to the next container
+    if(quesRequiredForContainer === 0) {
+        continue;
     }
 
     // check whether container has a mix of questions
@@ -106,7 +144,7 @@ function fillQuestions(selectedQMap, questions, qContainers) {
     table.appendChild(tr);
 
     // get required number of questions of specified types for this question container along with their respective weightage arrays
-    const {questions: fetchedQ, weightages: weightageArr} = getQuestionsForContainer(qContainers['qTypes'][i], questions, selectedQMap, qContainers['weightPerQ'][i]);
+    const {questions: fetchedQ, weightages: weightageArr, qTypesFetched: qTypesArr} = getQuestionsForContainer(qContainers['qTypes'][i], questions, selectedQMap, qContainers['weightPerQ'][i]);
 
 
     // creating Fill up Help Box
@@ -155,11 +193,18 @@ function fillQuestions(selectedQMap, questions, qContainers) {
       // Create a new table row
       let tr = document.createElement("tr");
 
+
       // Create three table data cells and add them to the row
       let td1 = document.createElement("td");
-      td1.textContent = innerQuestionCounter + ".";
+
+          // determine whether to show the inner question counter or not
+      if(!areQuesMixed && mergeableQTypes.includes(qTypeInCaseOfOneQ)) {
+          td1.textContent = "";
+      } else {
+          td1.textContent = innerQuestionCounter + ".";
+      }
       let td2 = document.createElement("td");
-      td2.appendChild(getQuestionNode(fetchedQ[j], areQuesMixed, qContainers['settings']));
+      td2.appendChild(getQuestionNode(fetchedQ[j], areQuesMixed, qContainers['settings'], questions, qContainers['qTypes'][i], selectedQMap));
       let td3 = document.createElement("td");
       td3.innerHTML = "(" + decimalToFraction(weightageArr[j]) + ")";
 
@@ -192,22 +237,22 @@ function fillQuestions(selectedQMap, questions, qContainers) {
       // Append the tr to table
       table.appendChild(tr);
 
-      quesInsertedInContainer++;
+      
       innerQuestionCounter++;
     }
     // end of questions loop
 
     // if fetched questions are less than required number, insert blank rows and ask user to enter remaining questions manually
-    if(quesInsertedInContainer < quesRequiredForContainer) {
-        const shortfall = quesRequiredForContainer - quesInsertedInContainer;
-        let qNum = quesInsertedInContainer + 1;
+    if(qTypesArr.length < quesRequiredForContainer) {
+        const shortfall = quesRequiredForContainer - qTypesArr.length;
+        let qNum = qTypesArr.length + 1;
 
         for(let s=0; s<shortfall; s++) {
             const tr = document.createElement('tr');
             const td1 = document.createElement('td');
             const td2 = document.createElement('td');
             const td3 = document.createElement('td');
-            td1.textContent = qNum;
+            td1.textContent = qNum + '.';
             td2.innerHTML = "Question Deficit: The question bank lacks enough suitable questions for your paper criteria. Please input a question manually or upgrade your question bank.";
 
             // make all table cells editable if editable is set to true
@@ -282,18 +327,29 @@ if(!qContainers['settings']['border']) {
 function getQuestionsForContainer(obj, questions, selectedQMap, weightageObj) {
     const array = [];
     const weightages = [];
+    const qTypesFetched = [];
     for(const key in obj) {
         const qIndices = selectedQMap[key];
         const qRequired = obj[key];
         const selectedQIndices = extractAndRemove(qIndices, qRequired);
+
         for(const x of selectedQIndices) {
+              // fetch the merged question string from global mergedQuestions object in case of mergeable qTypes, otherwise pull questions from the selected indices in the questions object itself
+              if(mergeableQTypes.includes(key)) {
+              array.push(mergedQuestions[key]);
+              weightages.push(qRequired * weightageObj[key]);
+              const arrayTemp = new Array(qRequired).fill(key); 
+              qTypesFetched.push(...arrayTemp);
+              } else {
               array.push(questions[x]);
               weightages.push(weightageObj[key]);
+              qTypesFetched.push(key);
+              }
         }
         // inner for loop ends
     }
     // outer for loop ends
-    return {"questions": array, "weightages": weightages};
+    return {"questions": array, "weightages": weightages, "qTypesFetched": qTypesFetched};
 }
 
 
@@ -305,7 +361,7 @@ function extractAndRemove(array, n) {
 }
 
 // function to fetch an HTML question node based on qType
-function getQuestionNode(question, areQuesMixed, settings) {
+function getQuestionNode(question, areQuesMixed, settings, questions, qTypesReq, selectedQMap) {
 
     // create a parent container
     const parent = document.createElement('div');
@@ -359,7 +415,7 @@ function getQuestionNode(question, areQuesMixed, settings) {
     }
 
     else if (qType == 'Match items') {
-         parent.appendChild(DOMHandleMatchItems(questionText, showAns, ansExplanation, qType, provideAnsSpace, spaceForAns, mediaEmbedded, mediaLink, isPaperEditable));
+         parent.appendChild(DOMHandleMatchItems(questionParams, showAns, ansExplanation, qType, provideAnsSpace, spaceForAns, mediaEmbedded, mediaLink, isPaperEditable, questions, qTypesReq['Match items'], settings, selectedQMap['Match items'], areQuesMixed));
     }
 
 
@@ -584,14 +640,267 @@ function DOMHandleSingleLineQ(question, showAns, answer, qType, provideAnsSpace,
 }
 
 // function to handle Match items based questions
-function DOMHandleMatchItems(question, showAns, answer, qType, provideAnsSpace, spaceForAns, mediaEmbedded, mediaLink, isPaperEditable) {
+function DOMHandleMatchItems(JSONObj, showAns, answer, qType, provideAnsSpace, spaceForAns, mediaEmbedded, mediaLink, isPaperEditable, questions, qRequired, settings, matchItemsMap, areQuesMixed) {
 
+    // fetch the selected match items from the merged object
+    const selectedData = getMatchItemsFromMergedObj(JSONObj, qRequired, settings, questions, matchItemsMap, qType);
+
+    let isImageBased = false;
+  
+    let colA = selectedData['colAItems'];
+    let colB = selectedData['colBItems'];
+    const colAHeading = selectedData['colAHeading'];
+    const colBHeading = selectedData['colBHeading'];
+    const question = selectedData['question'];
+    
+
+    // store answers before shuffling the match items
+    answer = {};
+    for(let i = 0; i < colA.length; i++) {
+        answer[colA[i]] = colB[i];
+    }
+
+   // shuffle items of both columns
+    colA = shuffleMatchItems(colA, settings['randomiseSelection'], "A");
+    colB = shuffleMatchItems(colB, settings['randomiseSelection'], "B");
+  
+
+    // create a parent container
     const parent = document.createElement('div');
     parent.style.width = "100%";
-    
+
+    // create a question container and append it to parent (only if this question appears in a mixed question container)
+    if(areQuesMixed) {
+        const qHolder = document.createElement('div');
+        qHolder.innerHTML = question;
+        parent.appendChild(qHolder);
+    }
+
+    // Create table
+     const table = document.createElement('table');
+     table.classList.add('match-table');
+     const tr = document.createElement('tr');
+     const th1 = document.createElement('th');
+     const th2 = document.createElement('th');
+     const th3 = document.createElement('th');
+     const th4 = document.createElement('th');
+     const th5 = document.createElement('th');
+     th2.textContent = colAHeading;
+    th4.textContent = colBHeading;
+     tr.appendChild(th1);
+     tr.appendChild(th2);
+     tr.appendChild(th3);
+     tr.appendChild(th4);
+     tr.appendChild(th5);
+     table.appendChild(tr);
+
+     // table body
+     for(let k=0; k<qRequired; k++) {
+      const tr = document.createElement('tr');
+     const td1 = document.createElement('td');
+     const td2 = document.createElement('td');
+     const td3 = document.createElement('td');
+     const td4 = document.createElement('td');
+     const td5 = document.createElement('td');
+
+     if(provideAnsSpace) {
+        td5.textContent = "(......)";
+     }
+
+     td1.textContent = (k+1) + ".";
+
+     // handle image URLs in match items
+     
+     if(isValidURL(colA[k])) {
+          td2.appendChild(getImageNode(colA[k], isPaperEditable, "15%") );
+          isImageBased = true;
+     } else {
+          td2.textContent = colA[k];
+     }
+
+     if(isValidURL(colB[k])) {
+          td4.appendChild(getImageNode(colB[k], isPaperEditable, "15%") );
+          isImageBased = true;
+     } else {
+          td4.textContent = colB[k];
+     }
+
+     if(isImageBased) {
+          td1.style.verticalAlign = "middle";
+          td2.style.verticalAlign = "middle";
+          td3.style.verticalAlign = "middle";
+          td4.style.verticalAlign = "middle";
+          td5.style.verticalAlign = "middle";
+     }
+
+     td3.textContent = String.fromCharCode(97+k) + ") ";
+     tr.appendChild(td1);
+     tr.appendChild(td2);
+     tr.appendChild(td3);
+     tr.appendChild(td4);
+     tr.appendChild(td5);
+     table.appendChild(tr);
+
+     }
+
+   // append table to parent
+   parent.appendChild(table);
+
+  // create answer node, if answers requested
+   if(showAns) {
+      const ansHolder = document.createElement('div');
+      ansHolder.style.paddingTop = "0.4cm";
+      ansHolder.innerHTML = "<strong>Answers: <br></strong>";
+      for(let k = 0; k < colA.length; k++) {
+             const item1 = colA[k];
+             const item2 = answer[colA[k]];
+             if(item1 !== "Enter manually" && item2 !== "Enter manually") {
+                 if(!isImageBased) {
+                     ansHolder.innerHTML += item1 + " –> " + item2 + ( (k === colA.length - 1) ? "" : ", " ) ;
+                 } else {
+                     ansHolder.style.display = "flex";
+                     ansHolder.style.alignItems = "center";
+                     ansHolder.style.flexWrap = "wrap";
+                     ansHolder.appendChild(getSmallImageNode(item1));
+                     ansHolder.appendChild(getSmallImageNode(item2));
+                 }
+             }
+         }
+   parent.appendChild(ansHolder);
+   }
+   
+    return parent;
 
 
 }
+
+// function to generate a very small image node to be included in answers of match items
+function getSmallImageNode(src, width="6%") {
+   // if not a valid src (or, it is simply text), return the text as it is inside a div container
+    if(!isValidURL(src)) {
+       const div = document.createElement('div');
+       div.innerHTML = " -> " + src;
+       div.style.marginLeft = "0.2cm";
+       return div;
+    }
+    const image = document.createElement('img');
+    image.src = src;
+    image.style.width = width;
+    image.style.marginLeft = "0.25cm";
+    return image;
+}
+
+// function to extract the required number of match pairs (items) from the merged match-based question object (when merging is allowed)
+function getMatchItemsFromMergedObj(JSONObj, qRequired, settings, questions, matchItemsMap, qType) {
+
+    let returnable;
+    let initial;
+    let final;
+    let question = "Match the following:";
+    let colAHeading = "Column A";
+    let colBHeading = "Column B";
+    const colAItems = [];
+    const colBItems = [];
+    const selectedItemIndices = [];
+    let pointer = JSONObj['pointer'];
+    initial = pointer;
+    const breakpoints = JSONObj['breakpoints'];
+    // find the breakpoint to loop until
+    let breakpoint = breakpoints[breakpoints.length - 1];
+
+    for (let i = 0; i < breakpoints.length; i++) {
+        if (breakpoints[i] >= (qRequired+pointer)) {
+            breakpoint = breakpoints[i];
+            break;
+        }
+    }
+
+
+    // flag variable just to keep track of whether the loop is in first run
+    let firstRun = true;
+// variable to keep track of breakpoints crossed
+    let bpCrossed = 0;
+
+    // if match items are still remaining (our pointer hasn't reached this breakpoint yet)
+    if(pointer < breakpoint) {
+
+        // loop till the selected breakpoint
+        for(; pointer<breakpoint; pointer++) {
+
+            // if pointer has reached any new breakpoint and settings don't allow mixing, or we have got the requested no. of items, break the loop
+            if( (breakpoints.includes(pointer) && !settings['mergeMatchItems'] && !firstRun) || colAItems.length === qRequired) {
+                break;
+            }
+
+            // update bpCrossed
+            if(!firstRun && breakpoints.includes(pointer)) {
+                bpCrossed++;
+            }
+
+            // push col items
+            colAItems.push(JSONObj['colA'][pointer]);
+            colBItems.push(JSONObj['colB'][pointer]);
+            selectedItemIndices.push(pointer); 
+
+            // set firstRun to false as the loop has run at least once
+            firstRun = false;
+        }
+        // end for loop
+ 
+        final = pointer;
+
+        // if we haven't crossed any new breakpoints, we can simply pick the question sentence and headings associated with the specific selected items
+        if(bpCrossed === 0) {
+            let k = findUpperRange(breakpoints, pointer);
+            question = JSONObj['questions'][k];
+            colAHeading = JSONObj['colAHeadings'][k];
+            colBHeading = JSONObj['colBHeadings'][k];
+        }
+
+
+    }
+    // end if condition (pointer based)
+
+    // fill empty column items with the text "Enter manually" until the item count reaches the required count (qRequired)
+    while(colAItems.length < qRequired) {
+        colAItems.push("Enter manually");
+        colBItems.push("Enter manually");
+    }
+    
+   
+    returnable = {"question": question, "colAHeading": colAHeading, "colBHeading": colBHeading, "colAItems": colAItems, "colBItems": colBItems};
+
+    // re-package new pointer value back into the merged JSON object and store it back as a string to the associated key in the global mergedQuestions object
+
+    let newPointerVal;     if(settings['mergeMatchItems']) {
+        newPointerVal = final;
+    } else {
+        newPointerVal = breakpoints[findUpperRange(breakpoints, pointer)];
+}
+
+    JSONObj['pointer'] = newPointerVal;
+    mergedQuestions[qType] = "JSONParams:" + JSON.stringify(JSONObj);
+
+   // insert a dummy value in the match items map
+    matchItemsMap.push(-1);
+
+    return returnable;
+
+}
+// function end
+
+// helper functions for mergedObj handling
+function findUpperRange(breakpoints, pointer) {
+    let i = 0;
+    while(i < breakpoints.length) {
+    	if(pointer <= breakpoints[i]) {
+    		return i;
+    	}
+    	i++;
+    }
+    return i-1;
+}
+
 
 // function to append full stop
 function appendFullStop(str) {
@@ -599,6 +908,44 @@ function appendFullStop(str) {
         return str + '.';
     }
     return str;
+}
+
+// function to shuffle match items
+function shuffleMatchItems(array, dynamicShufflePattern, col) {
+    let shuffledArray;
+    if(!dynamicShufflePattern) {
+        if(col === "A") {
+            shuffledArray = fixedShuffle(array, 2);
+        } else if(col === "B"){
+            shuffledArray = fixedShuffle(array, 1);
+        }
+    } else {
+            shuffledArray = shuffleArray(array);
+    }
+    return shuffledArray;
+}
+
+// function for shuffling on two fixed patterns
+function fixedShuffle(array, pattern) {
+    const length = array.length;
+    const middle = Math.floor(length / 2);
+    const shuffledArray = [...array];
+
+    if (pattern === 1) {
+        for (let i = 0; i < middle; i++) {
+            const temp = shuffledArray[i];
+            shuffledArray[i] = shuffledArray[length - 1 - i];
+            shuffledArray[length - 1 - i] = temp;
+        }
+    } else if (pattern === 2) {
+        for (let i = 0; i < length - 1; i += 2) {
+            const temp = shuffledArray[i];
+            shuffledArray[i] = shuffledArray[i + 1];
+            shuffledArray[i + 1] = temp;
+        }
+    }
+
+    return shuffledArray;
 }
 
 // function to convert decimals to fractions
@@ -668,7 +1015,7 @@ function getAnsSpaceNode(qType, spaceForAns) {
         const child = document.createElement('div');
         child.style.width = "100%";
         child.style.height = "0.6cm";
-        child.style.borderTop = "1px dotted black";
+        child.style.borderTop = "2px dotted black";
         parent.appendChild(child);
         // reduce the height of last line
         if(j == linesNeeded - 1) {
@@ -694,13 +1041,26 @@ function getTrueFalseVal(val) {
     } else { return val;}
 }
 
+// function to check whether a string is a valid URL
+function isValidURL(str) {
+  // Regular expression to match URL pattern
+  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+  
+  return !!pattern.test(str);
+}
+
 
 // function to generate an image node for questions
-function getImageNode(src, isPaperEditable) {
+function getImageNode(src, isPaperEditable, width="40%") {
         const img = document.createElement('img');
         img.setAttribute("src", src);
         img.style.display = "block";
-        img.style.width = "40%";
+        img.style.width = width;
         img.style.margin = "0.3cm 0";
         // enable dragging, replacement and resizing of image if paper is editable
         if(isPaperEditable) {
@@ -745,7 +1105,7 @@ function generateContainerHeading(areQuesMixed, qType) {
       case "True/False": 
         return "State whether the following statements are True or False:";
       case "Match items": 
-        return "Match the following items correctly:";
+        return "Match the following:";
       case "Very Short Answer Type": 
         return "Answer the following very short answer type questions:";
       case "Short Answer Type": 
