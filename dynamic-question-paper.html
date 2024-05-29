@@ -84,7 +84,7 @@
         .clearfix {
             clear: both;
         }
-        table {
+        #qtable {
             border-collapse: collapse;
             width: 100%;
             font-size: 0.42cm; 
@@ -165,20 +165,36 @@
              .hide-weightage td:first-child, .hide-weightage th:first-child {
               width: 10%;
              }
+             .match-table {
+        border-collapse: collapse;
+             }
+             .match-table th, .match-table td {
+    text-transform: none;
+    text-align: left;
+    border: 0;
+    width: auto;
+    padding-bottom: 0.01cm;
+             }
+             .match-table td:last-child {
+       text-align: left;
+          }
+             .match-table td:nth-child(2) {
+      padding-right: 1.5cm;
+          }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 </head>
 <body>
     <div class="container">
      <div id="paper-header">
-        <h1 id="schoolName" contenteditable="true">Jamna Vidyapeeth</h1>
-        <h2 id="examName" contenteditable="true">Periodic Test - I (2024-25)</h2>
-        <h2 id="grade" contenteditable="true">Class VIII</h2>
-        <h2 id="subject" contenteditable="true">Subject: GK</h2>
-        <img id="logo" src="https://i.postimg.cc/Y0qB2Wyc/images-2024-05-21-T183208-408.jpg">
+        <h1 id="schoolName" contenteditable="true"></h1>
+        <h2 id="examName" contenteditable="true"></h2>
+        <h2 id="grade" contenteditable="true"></h2>
+        <h2 id="subject" contenteditable="true"></h2>
+        <img id="logo" src="">
   </div>
         <div class="two-sided">
-              <div id="duration" class="left" contenteditable="true">TIME: 1 HR.</div>
+              <div id="duration" class="left" contenteditable="true"></div>
               <div id="mm" class="right" contenteditable="true"></div>
               <div class="clearfix"></div>
         </div>
