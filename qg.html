@@ -205,7 +205,7 @@ select:focus, textarea:focus {
         <option value="100">100</option>
     </select>
 
-    <label for="media-type">Media Type:</label>
+    <label for="media-type">Media Type:<br><i>(for question)</i></label>
     <select id="media-type" name="media-type">
         <option value="none" selected>None</option>
         <option value="image">Image</option>
@@ -214,14 +214,35 @@ select:focus, textarea:focus {
     </select>
 
 
-    <label for="media-url">Media URL (link to a YouTube video or image available online):</label>
+    <label for="media-url">Media URL (link to a YouTube video or image available online):<br><i>(for question)</i></label>
     <input type="text" id="media-url" name="media-url">
 
-    <label for="start-time">Start time for audio/video (in seconds):</label>
+    <label for="start-time">Start time for audio/video embedded in question (in seconds):</label>
     <input type="number" id="start-time" name="start-time" value="0">
 
-    <label for="end-time">End time for audio/video (in seconds):</label>
+    <label for="end-time">End time for audio/video embedded in question (in seconds):</label>
     <input type="number" id="end-time" name="end-time" value="0">
+
+
+    <label for="media-type-a">Media Type:<br><i>(for answer)</i></label>
+    <select id="media-type-a" name="media-type-a">
+        <option value="none" selected>None</option>
+        <option value="image">Image</option>
+        <option value="audio">Audio</option>
+        <option value="video">Video</option>
+    </select>
+
+
+    <label for="media-url-a">Media URL (link to a YouTube video or image available online):<br><i>(for answer)</i></label>
+    <input type="text" id="media-url-a" name="media-url-a">
+
+
+    <label for="start-time-a">Start time for audio/video embedded in answer (in seconds):</label>
+    <input type="number" id="start-time-a" name="start-time-a" value="0">
+
+    <label for="end-time-a">End time for audio/video embedded in answer (in seconds):</label>
+    <input type="number" id="end-time-a" name="end-time-a" value="0">
+
 
 
 
@@ -250,6 +271,8 @@ function parseJSONData() {
     var weightageInput = document.getElementById("points").value;
     var startTimeInput = document.getElementById("start-time").value;
     var endTimeInput = document.getElementById("end-time").value;
+    var startTimeInputA = document.getElementById("start-time-a").value;
+    var endTimeInputA = document.getElementById("end-time-a").value;
     var ansExplanation = addHtmlLineBreaks(document.getElementById("ans-explanation").value.trim());
     var qType = document.getElementById("question-type").value;
     var errorFlag = '';
@@ -264,17 +287,28 @@ function parseJSONData() {
     var weightage = (weightageInput !== "") ? parseFloat(weightageInput) : 1;
     var startTime = (startTimeInput !== "") ? parseInt(startTimeInput) : 0;
     var endTime = (endTimeInput !== "") ? parseInt(endTimeInput) : 0;
+    var startTimeA = (startTimeInputA !== "") ? parseInt(startTimeInputA) : 0;
+    var endTimeA = (endTimeInputA !== "") ? parseInt(endTimeInputA) : 0;
 
     var formData = {
         "qType": qType,
         "weightage": weightage,
         "ansExplanation": ansExplanation,
         "mediaEmbedded": document.getElementById("media-type").value,
-        "mediaLink": document.getElementById("media-url").value,
+        "mediaLink": document.getElementById("media-url").value.trim(),
         "startTime": startTime,
         "endTime": endTime,
         "card": parseInt(document.getElementById("card-value").value)
     };
+
+    // attach answer-related media params
+    var mediaTypeA = document.getElementById("media-type-a").value;
+    if(mediaTypeA !== "none") {
+        formData["mediaEmbeddedA"] = mediaTypeA;
+formData["mediaLinkA"] = document.getElementById("media-url-a").value.trim();
+formData["startTimeA"] = startTimeA;
+formData["endTimeA"] = endTimeA;
+    }
 
     // attach additional JSON params for different types of questions
     if(qType == 'Match items') {
@@ -383,7 +417,7 @@ function parseJSONData() {
         const questionList = document.getElementById('questionList');
         const text = questionList.textContent.trim();
         navigator.clipboard.writeText(text).then(() => {
-            alert('Questions copied to clipboard!');
+            showAnimation('Questions copied to clipboard!', "green");
         }, (err) => {
             console.error('Failed to copy questions: ', err);
         });
