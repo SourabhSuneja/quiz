@@ -160,7 +160,8 @@ select:focus, textarea:focus {
         <option value="Very Short Answer Type">Very Short Answer Type</option>
         <option value="Short Answer Type">Short Answer Type</option>
         <option value="Long Answer Type">Long Answer Type</option>
-        <option value="Very Long Answer Type">Very Long Answer Type</option>     
+        <option value="Very Long Answer Type">Very Long Answer Type</option> 
+        <option value="Diagram/Picture/Map Based">Diagram/Picture/Map Based</option>     
     </select>
    </div>
 
@@ -453,7 +454,11 @@ function handleInputChange() {
         return;
     }
 
-    if (option1.trim() !== "") {
+    if(question.toLowerCase().startsWith("draw")) {
+        questionTypeSelect.value = "Diagram/Picture/Map Based";
+    }
+
+    else if (option1.trim() !== "") {
         questionTypeSelect.value = "MCQ";
     } else if (question.match(/_{3,30}/)) {
         questionTypeSelect.value = "Fill up";
