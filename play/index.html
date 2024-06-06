@@ -610,9 +610,17 @@
 <script>
 
 // global variables
+const sLink = "https://sourabhsuneja.github.io/quiz/";
+const qbLink = "https://sourabhsuneja.github.io/question-paper/question-bank/";
 let studentsFileName;
 let questionsFileName;
 let quizType;
+let allowMCQ;
+let allowFillUp;
+let allowTF;
+let allowVSA;
+let allowSA;
+let allowLA;
 let maxIndividualChances;
 let forcedSelectionMethod;
 let currentQuestionIndex;
@@ -927,6 +935,15 @@ questionShuffleMap = retrieveQuizData("questionShuffleMap") || null;
 currentStudentIndex = retrieveQuizData("currentStudentIndex") || 0;
 usecards = getParameterByName('usecards') || 'n';
 
+// get allowed qTypes
+allowMCQ = retrieveQuizData("allowMCQ") ||  getParameterByName('allowMCQ') || 'n';
+allowFillUp = retrieveQuizData("allowFillUp") ||  getParameterByName('allowFillUp') || 'n';
+allowTF = retrieveQuizData("allowTF") ||  getParameterByName('allowTF') || 'n';
+allowVSA = retrieveQuizData("allowVSA") ||  getParameterByName("allowVSA") || 'n';
+allowSA = retrieveQuizData("allowSA") ||  getParameterByName("allowSA") || 'n';
+allowLA = retrieveQuizData("allowLA") ||  getParameterByName("allowLA") || 'n';
+
+
 // if cards are used, extract card indices and values
 
 if(usecards == 'y') {
@@ -998,7 +1015,13 @@ function storeQuizData(currentStudent) {
         studentShuffleMap: studentShuffleMap,
         questionShuffleMap: questionShuffleMap,
         quizType: quizType,
-        qproceed: qproceed
+        qproceed: qproceed,
+        allowMCQ: allowMCQ,
+        allowFillUp: allowFillUp,
+        allowTF: allowTF,
+        allowVSA: allowVSA,
+        allowSA: allowSA,
+        allowLA: allowLA
     };
 
     // Store data as a cookie
@@ -1306,6 +1329,64 @@ function getParameterByName(name, url) {
 
 
 
+// function to filter out non-supported or disallowed qTypes
+function filterQuestions() {
+
+  const supported = ['MCQ', 'Fill up', 'True/False', 'Very Short Answer Type', 'Short Answer Type', 'Long Answer Type'];
+
+  let selected = [];
+
+  if(allowMCQ !== 'y') {
+    supported[0] = null;
+  }
+  if(allowFillUp !== 'y') {
+    supported[1] = null;
+  }
+  if(allowTF !== 'y') {
+    supported[2] = null;
+  }
+  if(allowVSA !== 'y') {
+    supported[3] = null;
+  }
+  if(allowSA !== 'y') {
+    supported[4] = null;
+  }
+  if(allowLA !== 'y') {
+    supported[5] = null;
+  }
+
+  window.questions.forEach((question, index) => {
+    const JSONPart = extractJSONFromString(question); 
+    const qPart = extractStringBeforeJSON(question);
+    const qType = JSONPart['qType'];
+
+    // if True/False type, transform it into MCQ so that "True" and "False" option buttons can be shown
+    if(qType === 'True/False' && supported.includes(qType)) {
+        let ans = "False";
+        if(!qPart.endsWith('.')) {
+             qPart += ".";
+        }
+        qPart += " Is it true or false?" ;
+        if(JSONPart['ansExplanation'].toLowerCase() === 't' || JSONPart['ansExplanation'].toLowerCase() === 'true') {
+            ans = "True";
+        }
+        JSONPart['ansExplanation'] = "";
+        let transformed = qPart + '(Options: Option A} True Option B} False Correct: ' + ans + ')JSONParams:' + JSON.stringify(JSONPart);
+
+        selected.push(transformed);
+
+    }
+ 
+    if(supported.includes(qType) && qType !== 'True/False') {
+        selected.push(question);
+    }
+    
+  });
+  // forEach ends
+  window.questions = selected;
+}
+// function ends
+
 
 
  // Function to initialize quiz
@@ -1363,10 +1444,10 @@ if (!questionsFileName) {
     if (!studentsFileName || !questionsFileName) {
       throw new Error("Invalid file names");
     }
-    const questionsData = await fetchData(questionsFileName);
+    const questionsData = await fetchMultipleFilesData(questionsFileName, "questions");
     window.questions = questionsData;
     if(quizType == 'group') {
-         studentsData = await fetchData(studentsFileName);
+         studentsData = await fetchMultipleFilesData(studentsFileName, "students");
     }
     else {
     if (studentsFileName.includes(',')) {
@@ -1383,6 +1464,9 @@ if (!questionsFileName) {
 
     // intialize all quiz variables
    intializeQuizVariables();
+
+   // keep only allowed qTypes in questions
+   filterQuestions();
 
     // add quiz intro to the start screen
     document.getElementById('quizIntro').innerText += ' with ' + students.length + ' ' + (students.length === 1 ? 'participant' : 'participants') + ' and ' + questions.length + ' ' + (questions.length === 1 ? 'question' : 'questions') + '.';
@@ -1402,11 +1486,36 @@ if (!questionsFileName) {
 
 
   
+// function to take one or more filenames and return a consolidated array of data fetched from each file using fetchData function
+
+async function fetchMultipleFilesData (fileNames, kind) {
+  const files = fileNames.split('+');
+  const consolidatedData = [];
+  for (const fileName of files) {
+    try {
+      const f = fileName.endsWith('.txt') ? (fileName) : (fileName + '.txt') ;
+      const data = await fetchData(f, kind);
+      consolidatedData.push(...data);
+    } catch (error) {
+      console.error(`Error fetching data from ${fileName}:`, error);
+    }
+  }
+  
+  return consolidatedData;
+}
+
+
 
 
 
   // Function to fetch data from a file using AJAX and return a promise
-  function fetchData(fileName) {
+  function fetchData(fileName, kind) {
+    if(kind === "students") {
+      fileName = sLink + fileName;
+    }
+    else if(kind === "questions") {
+      fileName = qbLink + fileName;
+    }
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function() {
