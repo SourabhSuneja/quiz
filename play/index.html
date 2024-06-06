@@ -1331,8 +1331,8 @@ function getParameterByName(name, url) {
 
 // function to filter out non-supported or disallowed qTypes
 function filterQuestions() {
-return;
-  const supported = ['MCQ', 'Fill up', 'True/False', 'Very Short Answer Type', 'Short Answer Type', 'Long Answer Type'];
+
+  let supported = ['MCQ', 'Fill up', 'True/False', 'Very Short Answer Type', 'Short Answer Type', 'Long Answer Type'];
 
   let selected = [];
 
@@ -1356,9 +1356,9 @@ return;
   }
 
   window.questions.forEach((question, index) => {
-    const JSONPart = extractJSONFromString(question); 
-    const qPart = extractStringBeforeJSON(question);
-    const qType = JSONPart['qType'];
+    let JSONPart = extractJSONFromString(question); 
+    let qPart = extractStringBeforeJSON(question);
+    let qType = JSONPart['qType'];
 
     // if True/False type, transform it into MCQ so that "True" and "False" option buttons can be shown
     if(qType === 'True/False' && supported.includes(qType)) {
@@ -1444,7 +1444,7 @@ if (!questionsFileName) {
     if (!studentsFileName || !questionsFileName) {
       throw new Error("Invalid file names");
     }
-    let questionsData = await fetchMultipleFilesData(questionsFileName, "questions");
+    const questionsData = await fetchMultipleFilesData(questionsFileName, "questions");
     window.questions = questionsData;
     if(quizType == 'group') {
          studentsData = await fetchMultipleFilesData(studentsFileName, "students");
