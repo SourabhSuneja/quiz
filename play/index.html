@@ -10,7 +10,7 @@
     color: white;
     font-family: Arial, sans-serif;
     font-size: 18px;
-    background-image: url('night.jpg');
+    background-image: url('images/night.jpg');
     background-size: contain;
     background-position: center;
     background-attachment: fixed;
@@ -753,12 +753,12 @@ function preloadAudio() {
     const wrong = new Audio();
     const pop = new Audio();
     
-    audio.src = 'before-audio.mp3';
-    video.src = 'before-video.mp3';
-    image.src = 'before-image.mp3';
-   correct.src = 'correct.wav';
-   wrong.src = 'wrong.wav';
-   pop.src = 'pop.wav';
+    audio.src = './sounds/before-audio.mp3';
+    video.src = './sounds/before-video.mp3';
+    image.src = './sounds/before-image.mp3';
+   correct.src = './sounds/correct.wav';
+   wrong.src = './sounds/wrong.wav';
+   pop.src = './sounds/pop.wav';
 
     // Preload the audio files
     audio.load();
@@ -3347,5 +3347,6 @@ consolidateScoresAndChances();
 
 </body>
 </html>
+
 
 
