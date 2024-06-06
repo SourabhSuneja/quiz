@@ -2833,6 +2833,9 @@ if (isCorrect === 0.5) {
              animationDiv.innerHTML += "<br>" + ansExplanation;
         }
       } 
+      else if(ansExplanation && !isCorrect) {
+             animationDiv.innerHTML = randomWord + "<br><br>" + "Correct answer:" + "<br>" + ansExplanation;
+      }
       else if(isCorrect == 0.5 && ansExplanation) {
           animationDiv.innerHTML = "Good try! But the exact answer is: " + "<br>" + ansExplanation;
       }
