@@ -2877,7 +2877,7 @@ function showAnswerAnimation() {
       } 
 
       if(ansExplanation) {
-             animationDiv.innerHTML += "<br>" + ansExplanation;
+             animationDiv.innerHTML += ((correctAnsAvailable)? "<br>" : "") + ansExplanation;
         }
 
       if(!correctAnsAvailable && !ansExplanation) {
