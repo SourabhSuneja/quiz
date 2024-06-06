@@ -943,6 +943,8 @@ allowVSA = retrieveQuizData("allowVSA") ||  getParameterByName("allowVSA") || 'n
 allowSA = retrieveQuizData("allowSA") ||  getParameterByName("allowSA") || 'n';
 allowLA = retrieveQuizData("allowLA") ||  getParameterByName("allowLA") || 'n';
 
+// keep only allowed qTypes in questions
+   filterQuestions();
 
 // if cards are used, extract card indices and values
 
@@ -1465,9 +1467,7 @@ if (!questionsFileName) {
     // intialize all quiz variables
    intializeQuizVariables();
 
-   // keep only allowed qTypes in questions
-   filterQuestions();
-
+   
     // add quiz intro to the start screen
     document.getElementById('quizIntro').innerText += ' with ' + students.length + ' ' + (students.length === 1 ? 'participant' : 'participants') + ' and ' + questions.length + ' ' + (questions.length === 1 ? 'question' : 'questions') + '.';
    // attach event listener to start quiz button
