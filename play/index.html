@@ -1444,7 +1444,7 @@ if (!questionsFileName) {
     if (!studentsFileName || !questionsFileName) {
       throw new Error("Invalid file names");
     }
-    const questionsData = await fetchMultipleFilesData(questionsFileName, "questions");
+    let questionsData = await fetchMultipleFilesData(questionsFileName, "questions");
     window.questions = questionsData;
     if(quizType == 'group') {
          studentsData = await fetchMultipleFilesData(studentsFileName, "students");
