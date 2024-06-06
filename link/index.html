@@ -207,6 +207,26 @@ function capitalizeEachWord(str) {
         <input type="text" id="studentData" name="s" onblur="fetchStudents()">
         <label for="questionData">Question Data (q):</label>
         <input type="text" id="questionData" name="q">
+
+        <label>
+            <input type="checkbox" name="allowMCQ" value="y" checked> Allow MCQs
+       </label>
+       <label>
+            <input type="checkbox" name="allowFillUp" value="y" checked> Allow Fill ups
+       </label>
+       <label>
+            <input type="checkbox" name="allowTF" value="y" checked> Allow True/False Questions
+       </label>
+       <label>
+            <input type="checkbox" name="allowVSA" value="y"> Allow VSA Questions
+       </label>
+       <label>
+            <input type="checkbox" name="allowSA" value="y"> Allow SA Questions
+       </label>
+       <label>
+            <input type="checkbox" name="allowLA" value="y"> Allow LA Questions
+       </label><br>
+
         <label>Student Selection Method (m):</label>
         <label><input type="radio" name="m" value="random" checked> Random</label>
         <label><input type="radio" name="m" value="rotation"> Rotation</label>
