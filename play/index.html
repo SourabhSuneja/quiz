@@ -489,6 +489,7 @@
 <div class="container">
   <h1 id="quizTitle">Quiz</h1>
   <div class="question">
+    <p id="qType"></p>
     <p id="questionText"></p>
     <p><i id="weightageText"></i></p>
     <div>
@@ -1640,6 +1641,8 @@ const playClipBtn = document.getElementById("playClipBtn");
 
 const questionText = document.getElementById("questionText");
 
+const qType = document.getElementById("qType");
+
 const studentName = document.getElementById("studentName");
 
 const nameInsideCardPicker = document.getElementById('nameInsideCardPicker');
@@ -1785,7 +1788,7 @@ saveSession(randomStudent.trim());
     ansExplanation = null;
     
    if(!handleMCQ(question)) {
-   questionText.textContent = question;
+   questionText.innerHTML = question;
 
   
 // Show the buttons
@@ -1794,6 +1797,9 @@ saveSession(randomStudent.trim());
   partiallyCorrectBtn.style.display = 'block';
 
 }
+
+// display question type
+qType.textContent = params['qType'];
 
 // show 'show answer' button
 showAnsBtn.style.display = 'block';
@@ -2755,7 +2761,7 @@ function handleMCQ(question) {
 
 
   // Set inner content of questionText
-  questionTextNode.textContent = question.replace(mcqPattern, '').trim();
+  questionTextNode.innerHTML = question.replace(mcqPattern, '').trim();
 
   // Hide the buttons
   correctBtn.style.display = 'none';
@@ -3347,6 +3353,7 @@ consolidateScoresAndChances();
 
 </body>
 </html>
+
 
 
 
