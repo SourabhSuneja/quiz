@@ -2145,6 +2145,7 @@ const currentStudent = text.substring(index + 4);
 
     if ( (usecards != 'y' && currentQuestionIndex < window.questions.length) || (usecards == 'y' && Object.keys(cardIndices).length > 0) ) {
       displayQuestion(false, false);
+      document.getElementById("qType").textContent = "";
     } else {
       displayScores();
     }
