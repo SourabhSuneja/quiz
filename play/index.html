@@ -3571,7 +3571,7 @@ function appendToGoogleSheet() {
 
   
   // Unique Quiz Identifier
-  let quizIdentifier = "QUIZ123"; // Replace with the actual quiz identifier in your application
+  let quizIdentifier = quizID;
   
   // Create an array of participants' data
   let participantsData = Object.keys(scores).map(participant => {
@@ -3590,6 +3590,8 @@ function appendToGoogleSheet() {
     // Return participant data with quiz identifier
     return {
       name: participant,
+      grade: grade,
+      section: section,
       score: score,
       chances: chance,
       time: timestamp,
