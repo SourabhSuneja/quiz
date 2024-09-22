@@ -3591,7 +3591,8 @@ function appendToGoogleSheet() {
     body: JSON.stringify(participantsData), // Send the array of participants' data
     headers: {
       'Content-Type': 'application/json'
-    }
+    },
+    mode: 'no-cors'
   }).then(response => response.text())
     .then(() => {
       srHideOverlay(); // Hide overlay when submission is complete
