@@ -760,8 +760,8 @@ const sLink = "https://sourabhsuneja.github.io/quiz/";
 const qbLink = "https://sourabhsuneja.github.io/question-paper/question-bank/";
 let studentsFileName;
 let questionsFileName;
-let grade;
-let section;
+let grade = '';
+let section = '';
 let quizType;
 let allowMCQ;
 let allowFillUp;
@@ -813,7 +813,7 @@ let playFunction;
 let qproceed;
 let selectedCard = null;
 let killPrevSession = 'n';
-let quizIdentifier = 'none';
+let quizID = '';
 
 
 // global constants
@@ -998,6 +998,15 @@ playFunction = preloadAudio();
 
  // parsing and using team map
  useteam = retrieveQuizData('useteam') ||  getParameterByName('useteam') || 'n';
+
+ // parsing quizID
+ quizID = retrieveQuizData('quizID') ||  getParameterByName('quizID') || '';
+
+ // parsing grade
+ grade = retrieveQuizData('grade') ||  getParameterByName('grade') || '';
+
+ // parsing section
+ section = retrieveQuizData('section') ||  getParameterByName('section') || '';
 
 // check whether force kill previous sessions is set to 'y'
 killPrevSession = retrieveQuizData('killPrevSession') || 'n';
@@ -1209,7 +1218,10 @@ function storeQuizData(currentStudent) {
         allowTF: allowTF,
         allowVSA: allowVSA,
         allowSA: allowSA,
-        allowLA: allowLA
+        allowLA: allowLA,
+        grade: grade,
+        section: section,
+        quizID: quizID
     };
 
     // Store data as a cookie
