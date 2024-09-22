@@ -200,6 +200,8 @@ function capitalizeEachWord(str) {
     <form id="quizForm">
         <label for="quizTitle">Quiz Title:</label>
         <input type="text" id="quizTitle" name="title">
+        <label for="quizID">Quiz ID:<br><i>(if omitted, results will not be logged to Google Sheets)</i></label>
+        <input type="text" id="quizID" name="quizID">
         <label>Quiz Type:</label>
         <label><input type="radio" name="quizType" onchange="updateStudentDataLabel()" value="group" checked> Group</label>
         <label><input type="radio" name="quizType" onchange="updateStudentDataLabel()" value="individual"> Individual</label>
