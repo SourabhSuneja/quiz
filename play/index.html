@@ -3567,6 +3567,11 @@ consolidateScoresAndChances();
 
 // Function to call Google Apps Script to append data to the sheet
 function appendToGoogleSheet() {
+
+  // if quiz ID not available, do not post results to Google Sheets
+  if(!quizID) {
+    return;
+  }
   srShowOverlay(); // Show overlay when the submission starts
 
   
