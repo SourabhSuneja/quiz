@@ -1002,11 +1002,12 @@ playFunction = preloadAudio();
  // parsing quizID
  quizID = retrieveQuizData('quizID') ||  getParameterByName('quizID') || '';
 
- // parsing grade
+ // parsing grade and section
+if(!grade && !section) {
  grade = retrieveQuizData('grade') ||  getParameterByName('grade') || '';
-
- // parsing section
  section = retrieveQuizData('section') ||  getParameterByName('section') || '';
+}
+
 
 // check whether force kill previous sessions is set to 'y'
 killPrevSession = retrieveQuizData('killPrevSession') || 'n';
