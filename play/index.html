@@ -665,6 +665,7 @@ let timesPassed = 0;
 let playFunction;
 let qproceed;
 let selectedCard = null;
+let killPrevSession = 'n';
 
 
 // global constants
@@ -817,6 +818,9 @@ playFunction = preloadAudio();
  // parsing and using team map
  useteam = retrieveQuizData('useteam') ||  getParameterByName('useteam') || 'n';
 
+// check whether force kill previous sessions is set to 'y'
+killPrevSession = retrieveQuizData('killPrevSession') || 'n';
+
 teammap = retrieveQuizData('teammap') ||  getParameterByName('teammap') || null;
 
 // variable to track team turns
@@ -967,9 +971,9 @@ async function checkQuizCookie() {
 
         if (cookieData) {
 
-            // if cards are being used, drop the cookies as resume support is not available with card plays
+            // if cards are being used or killPrevSession is set to 'y', drop the cookies as resume support is not available with card plays
 
-if(getParameterByName('usecards') == 'y') {
+if(getParameterByName('usecards') == 'y' || getParameterByName('killPrevSession') == 'y') {
                  deleteQuizCookie();
                  resolve(false);
                  return;
