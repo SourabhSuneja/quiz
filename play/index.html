@@ -719,6 +719,8 @@ const sLink = "https://sourabhsuneja.github.io/quiz/";
 const qbLink = "https://sourabhsuneja.github.io/question-paper/question-bank/";
 let studentsFileName;
 let questionsFileName;
+let grade;
+let section;
 let quizType;
 let allowMCQ;
 let allowFillUp;
@@ -1569,6 +1571,8 @@ if (!studentsFileName) {
    } else {
        let studentInfo = await customPrompt();
        studentsFileName = studentInfo.name.trim();
+       grade = studentInfo.grade;
+       section = studentInfo.section;
    }
 
 }
