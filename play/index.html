@@ -554,6 +554,40 @@
             color: #999; /* Placeholder color */
         }
 
+    /* Full-screen result submission overlay */
+    .sr-overlay {
+      display: none; /* Hidden by default */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8); /* Dark overlay */
+      z-index: 1000000; /* Make sure it's on top */
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .sr-overlay-text {
+      font-size: 2rem;
+      text-align: center;
+      animation: sr-fadeIn 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes sr-fadeIn {
+      0% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    /* Styling the overlay text */
+    .sr-overlay-text {
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
+
 </style>
 </head>
 <body>
@@ -668,6 +702,13 @@
 
 
 
+  <!-- Quiz Results Submission Waiting Overlay -->
+  <div id="sr-loadingOverlay" class="sr-overlay">
+    <div class="sr-overlay-text">Submitting Results. Wait...</div>
+  </div>
+
+
+
 <div id="card-picker">
 <h1 id="nameInsideCardPicker"></h1>
 <h2 id="cardPickHeading">Please pick a card</h2>
@@ -772,6 +813,7 @@ let playFunction;
 let qproceed;
 let selectedCard = null;
 let killPrevSession = 'n';
+let quizIdentifier = 'none';
 
 
 // global constants
@@ -2340,6 +2382,8 @@ deleteQuizCookie();
     speechSynthesis.cancel();
     // stop the timer
     stopCountdown();
+    // send results to Google Sheets
+    appendToGoogleSheet();
     const container = document.querySelector(".container");
     container.innerHTML = "<h1>Scores</h1>";
     for (const student in scores) {
@@ -3497,12 +3541,71 @@ consolidateScoresAndChances();
 
 </script>
 
+
+  <script>
+    // Show the overlay when data is being submitted
+    function srShowOverlay() {
+      document.getElementById("sr-loadingOverlay").style.display = "flex";
+    }
+
+    // Hide the overlay when data submission is done
+    function srHideOverlay() {
+      document.getElementById("sr-loadingOverlay").style.display = "none";
+    }
+
+// Function to call Google Apps Script to append data to the sheet
+function appendToGoogleSheet() {
+  srShowOverlay(); // Show overlay when the submission starts
+
+  
+  // Unique Quiz Identifier
+  let quizIdentifier = "QUIZ123"; // Replace with the actual quiz identifier in your application
+  
+  // Create an array of participants' data
+  let participantsData = Object.keys(scores).map(participant => {
+    let score = scores[participant];
+    let chance = chances[participant];
+    let timestamp = new Date().toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    });
+
+    // Return participant data with quiz identifier
+    return {
+      name: participant,
+      score: score,
+      chances: chance,
+      time: timestamp,
+      quizId: quizIdentifier // Add quiz identifier to each row
+    };
+  });
+
+  // Send all data in one POST request
+  fetch('https://script.google.com/macros/s/AKfycbyIF3qCP0q8erRjZtOn4Q6tWfxQXkof1SXNzoy9hG6OlAWg6rtF1yHM_ahRKMx8ooYw/exec', {
+    method: 'POST',
+    body: JSON.stringify(participantsData), // Send the array of participants' data
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(response => response.text())
+    .then(() => {
+      srHideOverlay(); // Hide overlay when submission is complete
+      alert("All results have been successfully submitted!");
+    })
+    .catch(error => {
+      srHideOverlay(); // Hide overlay even in case of an error
+      console.error("Failed to submit results:", error);
+    });
+}
+  </script>
+
 <!-- Include the YouTube iframe API -->
 <script src="https://www.youtube.com/iframe_api"></script>
 
 </body>
 </html>
-
-
-
-
