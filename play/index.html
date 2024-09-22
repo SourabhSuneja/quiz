@@ -481,6 +481,79 @@
     cursor: not-allowed; 
 }
 
+        /* Style for the custom modal */
+        .cm-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Darker background */
+            z-index: 1000;
+        }
+
+        .cm-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff; /* Lighter background */
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Softer shadow */
+            text-align: center;
+            width: 320px;
+            max-width: 90%; /* Responsive size */
+            font-family: Arial, sans-serif;
+        }
+
+        .cm-modal-content h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .cm-modal-content input, .cm-modal-content select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .cm-modal-content input:focus, .cm-modal-content select:focus {
+            border-color: #4CAF50; /* Focus state color */
+            outline: none;
+        }
+
+        .cm-modal-content button {
+            margin-top: 15px;
+            padding: 12px 24px;
+            background-color: #4CAF50; /* Green button */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .cm-modal-content button:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+
+        .cm-modal-content button:focus {
+            outline: none;
+        }
+
+        .cm-modal-content input::placeholder {
+            color: #999; /* Placeholder color */
+        }
+
 </style>
 </head>
 <body>
@@ -560,6 +633,37 @@
   <p id="quizIntro">Loading...</p>
   <button id="startQuizBtn" style="visibility: hidden">Start Quiz</button>
  </div>
+</div>
+
+
+<div class="cm-modal-overlay" id="cmCustomModal">
+    <div class="cm-modal-content">
+        <h3>Enter your details to start the quiz:</h3>
+        <input type="text" id="cmNameInput" placeholder="Your name...">
+        <select id="cmGradeInput">
+            <option value="" disabled selected>Select Grade</option>
+            <option value="I">I</option>
+            <option value="II">II</option>
+            <option value="III">III</option>
+            <option value="IV">IV</option>
+            <option value="V">V</option>
+            <option value="VI">VI</option>
+            <option value="VII">VII</option>
+            <option value="VIII">VIII</option>
+            <option value="IX">IX</option>
+            <option value="X">X</option>
+            <option value="XI">XI</option>
+            <option value="XII">XII</option>
+        </select>
+        <select id="cmSectionInput">
+            <option value="" disabled selected>Select Section</option>
+            <option value="A1">A1</option>
+            <option value="A2">A2</option>
+            <option value="A3">A3</option>
+            <option value="A4">A4</option>
+        </select>
+        <button id="cmSubmitName">Submit</button>
+    </div>
 </div>
 
 
@@ -805,6 +909,39 @@ function deleteQuizCookie() {
     document.cookie = "quizData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }
 
+
+
+    // Function to create and display custom prompt dialog
+    function customPrompt() {
+        return new Promise((resolve) => {
+            const modal = document.getElementById('cmCustomModal');
+            const nameInput = document.getElementById('cmNameInput');
+            const gradeInput = document.getElementById('cmGradeInput');
+            const sectionInput = document.getElementById('cmSectionInput');
+            const submitButton = document.getElementById('cmSubmitName');
+
+            // Display the modal
+            modal.style.display = 'block';
+
+            // Focus on the input field when the modal is shown
+            nameInput.focus();
+
+            // Event listener for the submit button
+            submitButton.addEventListener('click', function() {
+                const name = nameInput.value.trim();
+                const grade = gradeInput.value;
+                const section = sectionInput.value;
+
+                if (name && grade && section) {
+                    // Hide the modal and resolve the promise with the entered name, grade, and section
+                    modal.style.display = 'none';
+                    resolve({ name, grade, section });
+                } else {
+                    alert('Please fill all fields.');
+                }
+            });
+        });
+    }
 
 
 
@@ -1430,7 +1567,8 @@ if (!studentsFileName) {
    if(quizType == "group") {
        studentsFileName = prompt("Enter the file name for students data (e.g., students.txt):").trim();
    } else {
-       studentsFileName = prompt("Enter your name to start the quiz:").trim();
+       let studentInfo = await customPrompt();
+       studentsFileName = studentInfo.name.trim();
    }
 
 }
