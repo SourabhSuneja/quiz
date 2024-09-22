@@ -558,7 +558,7 @@
   <h1>Kwizee Go App</h1>
   <h3>Developed by Sourabh Suneja</h3>
   <p id="quizIntro">Loading...</p>
-  <button id="startQuizBtn" style="display: none">Start Quiz</button>
+  <button id="startQuizBtn" style="visibility: hidden">Start Quiz</button>
  </div>
 </div>
 
@@ -1476,7 +1476,7 @@ if (!questionsFileName) {
     // add quiz intro to the start screen
     document.getElementById('quizIntro').innerText = 'You are about to start the quiz with ' + students.length + ' ' + (students.length === 1 ? 'participant' : 'participants') + ' and ' + questions.length + ' ' + (questions.length === 1 ? 'question' : 'questions') + '.';
    // make the start quiz button visible
-  document.getElementById('startQuizBtn').style.display = "block";
+  document.getElementById('startQuizBtn').style.visibility = "visible";
    // attach event listener to start quiz button
     document.getElementById('startQuizBtn').addEventListener("click", function() {
     document.getElementById('startScreen').style.display = 'none';
