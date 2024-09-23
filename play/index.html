@@ -1012,7 +1012,7 @@ playFunction = preloadAudio();
  allowCDPause = retrieveQuizData('allowCDPause') ||  getParameterByName('allowCDPause') || 'y';
 
 if(allowCDPause == 'n') {
-  document.getElementById('pauseBtn').classList.add('off-screen');
+  document.getElementById('pauseBtn').disabled = true;
 }
 
  // parsing quizID
