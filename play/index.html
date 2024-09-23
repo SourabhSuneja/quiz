@@ -1005,6 +1005,13 @@ playFunction = preloadAudio();
  // parsing and using team map
  useteam = retrieveQuizData('useteam') ||  getParameterByName('useteam') || 'n';
 
+ // allow countdown pause
+ allowCDPause = retrieveQuizData('allowCDPause') ||  getParameterByName('allowCDPause') || 'y';
+
+if(allowCDPause == 'n') {
+  document.getElementById('pauseBtn').classList.add('off-screen');
+}
+
  // parsing quizID
  quizID = retrieveQuizData('quizID') ||  getParameterByName('quizID') || '';
 
@@ -1228,7 +1235,8 @@ function storeQuizData(currentStudent) {
         allowLA: allowLA,
         grade: grade,
         section: section,
-        quizID: quizID
+        quizID: quizID,
+        allowCDPause: allowCDPause
     };
 
     // Store data as a cookie
