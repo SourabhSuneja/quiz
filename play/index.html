@@ -16,6 +16,11 @@
     background-attachment: fixed;
   }
 
+  .off-screen {
+    position: absolute;
+    left: -10000px;
+  }
+
   .overlay {
   position: fixed;
   top: 0;
@@ -782,6 +787,7 @@ let teamChances;
 let countdownParam;
 let countdownDuration;
 let countdown;
+let allowCDPause = 'y';
 let stopCountDown;
 let countdownPaused = false;
 let countdownPauseStateBeforeMedia = countdownPaused;
