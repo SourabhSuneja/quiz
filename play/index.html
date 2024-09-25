@@ -2421,15 +2421,20 @@ deleteQuizCookie();
     appendToGoogleSheet();
     const container = document.querySelector(".container");
     container.innerHTML = "<h1>Scores</h1>";
+
+// temporary
+var nameOnCertificate;
+
     for (const student in scores) {
       container.innerHTML += "<p>" + student + ": " + scores[student] + "/" + chances[student] + "</p>";
+      // temporary
+      nameOnCertificate = student;
     }
     displayTeamScores();
     displayChart();
     container.innerHTML += "<footer id='footerText'>Powered by Sourabh Suneja</footer>";
 
-// temporary certificate download
-var nameOnCertificate = document.getElementById('studentName').textContent;
+// temporary certificate download code
 if (quizID.trim() === "Quiz on Gandhi") {
     setTimeout(function() {
         // Construct the URL with the name, grade, and section
