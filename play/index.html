@@ -2427,6 +2427,21 @@ deleteQuizCookie();
     displayTeamScores();
     displayChart();
     container.innerHTML += "<footer id='footerText'>Powered by Sourabh Suneja</footer>";
+
+// temporary certificate download
+var nameOnCertificate = document.getElementById('studentName').textContent;
+if (quizID.trim() === "Quiz on Gandhi") {
+    setTimeout(function() {
+        // Construct the URL with the name, grade, and section
+        var url = "https://sourabhsuneja.github.io/redirect/certificate.html?name=" 
+                    + encodeURIComponent(nameOnCertificate + ", " + grade + "-" + section);
+
+        // Redirect to the constructed URL
+        window.location.href = url;
+    }, 1000); // 1 second delay
+}
+// temporary
+
   }
 
  
