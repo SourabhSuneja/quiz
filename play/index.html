@@ -1741,7 +1741,8 @@ if (!questionsFileName) {
 
 const hasExpired = await hasLinkExpired();
 if(hasExpired) {
-  document.getElementById('quizIntro').innerText = 'This link has expired. You cannot play the quiz.';
+ console.log('Expired');
+ document.getElementById('quizIntro').innerText = 'This link has expired. You cannot play the quiz.';
   return;
 }
 
