@@ -1717,6 +1717,15 @@ if (!questionsFileName) {
     // capitalize first letter of each student name
     window.students = studentsData.map(capitalizeEachWord);
 
+
+// if the quiz link has expired, return back without intializing any variables and notify the user that link has expired
+if(hasLinkExpired()) {
+  document.getElementById('quizIntro').innerText = 'This link has expired. You cannot play the quiz.';
+  return;
+}
+
+
+
     // intialize all quiz variables
    intializeQuizVariables();
 
