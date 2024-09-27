@@ -1190,7 +1190,7 @@ async function hasLinkExpired() {
     // Fetch the "exp" parameter from the URL
     const expParam = getParameterByName("exp");
 
-console.log("Expiry at ", expParam);
+
 
     // If the expParam is falsy (empty, 0, null, undefined, etc.), return false (link is still valid)
     if (!expParam) {
@@ -1214,7 +1214,7 @@ console.log("Expiry at ", expParam);
     if (currentTime === null) {
         return false;
     }
-console.log("Current time ", currentTime);
+
     // Compare the current time with the expiry time
     return currentTime > expTime;
 }
