@@ -495,7 +495,15 @@ function generateLink() {
     const formData = new FormData(form);
     let trimmedFormData = {};
     for (const [key, value] of formData.entries()) {
-        trimmedFormData[key] = typeof value === 'string' ? value.trim() : value;
+        const inputElement = form.elements[key]; // Get the form element for the current key
+
+        // Check if the input type is 'datetime-local'
+        if (inputElement && inputElement.type === 'datetime-local' && value) {
+            // Convert the datetime-local value to epoch time in seconds
+            trimmedFormData[key] = Math.floor(new Date(value).getTime() / 1000);
+        } else {
+            trimmedFormData[key] = typeof value === 'string' ? value.trim() : value;
+        }
     }
     trimmedFormData['teammap'] = JSON.stringify(teams); // Add team map to form data
     trimmedFormData['absent'] = JSON.stringify(absentIndices); // Add absent student indices to form data
