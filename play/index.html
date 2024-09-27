@@ -1191,11 +1191,15 @@ function hasLinkExpired() {
         return false;
     }
 
-    // Get the current Unix timestamp in seconds
-    const currentTime = Math.floor(Date.now() / 1000);
+    // Get the current Unix timestamp in seconds (IST)
+    const currentTimeUtc = Math.floor(Date.now() / 1000);
+    
+    // IST is UTC + 5 hours 30 minutes, adjust the current UTC time to IST
+    const offsetInSeconds = 5 * 3600 + 30 * 60;
+    const currentTimeIst = currentTimeUtc + offsetInSeconds;
 
     // Compare the current time with the expiry time
-    if (currentTime > expTime) {
+    if (currentTimeIst > expTime) {
         return true; // The link has expired
     } else {
         return false; // The link is still valid
