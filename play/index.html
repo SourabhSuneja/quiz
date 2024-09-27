@@ -1738,7 +1738,9 @@ if (!questionsFileName) {
 
 
 // if the quiz link has expired, return back without intializing any variables and notify the user that link has expired
-if(hasLinkExpired()) {
+
+const hasExpired = await hasLinkExpired();
+if(hasExpired) {
   document.getElementById('quizIntro').innerText = 'This link has expired. You cannot play the quiz.';
   return;
 }
