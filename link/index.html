@@ -76,7 +76,7 @@ function capitalizeEachWord(str) {
             color: #555;
         }
         input[type="text"],
-        input[type="number"] {
+        input[type="number"], input[type="datetime-local"] {
             width: calc(100% - 22px);
             padding: 10px;
             margin-bottom: 15px;
@@ -201,11 +201,13 @@ function capitalizeEachWord(str) {
         <label for="quizTitle">Quiz Title:</label>
         <input type="text" id="quizTitle" name="title">
         <label for="quizID">Quiz ID:<br><i>(if omitted, results will not be logged to Google Sheets)</i></label>
+        <input type="text" id="quizID" name="quizID">
+
 
     <label for="datetime">Quiz link expires at:</label>
     <input type="datetime-local" id="datetime" name="datetime" onchange="convertToEpoch()">
 
-        <input type="text" id="quizID" name="quizID">
+
         <label>Quiz Type:</label>
         <label><input type="radio" name="quizType" onchange="updateStudentDataLabel()" value="group" checked> Group</label>
         <label><input type="radio" name="quizType" onchange="updateStudentDataLabel()" value="individual"> Individual</label>
