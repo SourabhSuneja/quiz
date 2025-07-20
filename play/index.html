@@ -3010,7 +3010,7 @@
            // Create and append option buttons
            options.forEach((option, index) => {
              const btn = document.createElement('button');
-             btn.textContent = String.fromCharCode(65+index) + ') ' + ' ' + option.trim();
+             btn.innerHTML = String.fromCharCode(65+index) + ') ' + ' ' + option.trim();
              btn.classList.add('optionsBtn');
              btn.addEventListener('click', () => {
                if (option.trim() === correctAnswer.trim()) {
