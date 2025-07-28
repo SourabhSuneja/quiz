@@ -3013,7 +3013,7 @@
              btn.innerHTML = String.fromCharCode(65+index) + ') ' + ' ' + option.trim();
              btn.classList.add('optionsBtn');
              btn.addEventListener('click', () => {
-               if (option.trim() === correctAnswer.trim()) {
+               if (areStringsEqual(option.trim(), correctAnswer.trim())) {
                  handleCorrectChoice();
                } else {
                  handleIncorrectChoice();
@@ -3645,6 +3645,23 @@
            console.error("Failed to submit results:", error);
          });
          }
+
+function decodeHTMLEntities(str) {
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = str;
+  return textarea.value;
+}
+
+function areStringsEqual(a, b) {
+  // First, try direct comparison
+  if (a === b) return true;
+
+  // Decode both and compare again
+  const decodedA = decodeHTMLEntities(a);
+  const decodedB = decodeHTMLEntities(b);
+
+  return decodedA === decodedB;
+}
       </script>
       <!-- Include the YouTube iframe API -->
       <script src="https://www.youtube.com/iframe_api"></script>
